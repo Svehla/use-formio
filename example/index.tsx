@@ -4,6 +4,13 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useFormio } from '../.';
 
+const styles = {
+  redColor: { color: "red" }
+}
+const InputError = (props: { errors: string[]}) => (
+  <div style={styles.redColor}>{props.errors.join(', ')}</div>
+)
+  
 const App = () => {
   const form = useFormio(
     {
@@ -43,9 +50,7 @@ const App = () => {
       <form
         onSubmit={async e => {
           e.preventDefault();
-          console.log('xd')
           const [isValid, errors] = await form.validate();
-          console.log('xxxxd')
           if (!isValid) {
             console.error(`Form is not valid, `, JSON.stringify(errors, null, 2));
           }
@@ -62,7 +67,7 @@ const App = () => {
             disabled={f.firstName.isValidating}
             onBlur={() => f.firstName.validate()}
           />
-          <div style={{ color: "red" }}>{f.firstName.errors.join(", ")}</div>
+          <InputError errors={f.firstName.errors} />
         </div>
         <div>
           <h3>Last name</h3>
@@ -72,7 +77,7 @@ const App = () => {
             onChange={e => f.lastName.set(e.target.value)}
             onBlur={() => f.lastName.validate()}
           />
-          <div style={{ color: "red" }}>{f.lastName.errors.join(", ")}</div>
+          <InputError errors={f.lastName.errors} />
         </div>
         <div>
           <h3>Age</h3>
@@ -82,7 +87,7 @@ const App = () => {
             onChange={e => f.age.set(e.target.value)}
             onBlur={e => f.age.validate()}
           />
-          <div style={{ color: "red" }}>{f.age.errors.join(", ")}</div>
+          <InputError errors={f.age.errors} />
         </div>
 
         <div>

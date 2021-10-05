@@ -53,10 +53,6 @@ const convertInitStateToFormState = <T extends Record<string, any>>(initState: T
 
 type UserFormError = (string | null | undefined | string)[] | undefined | string;
 
-/**
- * Limitations:
- * - useFormio can't handle dynamically generated forms input fields like arrays and so on...
- */
 type UserFieldValue = string | boolean | number | null | undefined | null | Record<any, any>;
 export const useFormio = <T extends Record<string, UserFieldValue>>(
   initState: T,
