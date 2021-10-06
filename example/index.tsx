@@ -10,7 +10,7 @@ import {
   SyncSetValuesBasedOnPrevValue,
   AsyncValidations,
   RevertToInitState,
-} from './ReadmeExamples'
+} from './ExamplesReadme'
 
 const styles = {
   redColor: { color: "red" }

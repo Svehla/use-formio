@@ -29,11 +29,19 @@ npm install use-formio
 import * as React from 'react';
 import { useFormio } from 'useFormio';
 
+const validate3 = (val: string) => val.includes('3')
+  ? 'you cannot write tree into the input'
+  : undefined
+const isInteger = (val: string) => parseInt(val).toString() === val ? undefined : 'only int is valid input';
+const maxLen10 = (val: string) => val.length > 10 ? 'max len is 10' : undefined
+const minLen4 = (val: string) => val.length < 4 ? 'min len is 4' : undefined
+
 export const SyncValidations = () => {
   const form = useFormio(
     {
       firstName: "",
       lastName: "",
+      randomInt: "",
     },
     {
       firstName: {
@@ -53,7 +61,15 @@ export const SyncValidations = () => {
 
           return [err1, err2]
         }
-      }
+      },
+      randomInt: {
+        validator: value => [
+          validate3,
+          isInteger,
+          maxLen10,
+          minLen4,
+        ].map(fn => fn(value))
+      },
     }
   );
   const f = form.fields
@@ -66,18 +82,31 @@ export const SyncValidations = () => {
         alert(isValid)
       }}
     >
-      <input
-        type='text'
-        onChange={e => f.firstName.set(e.target.value)}
-        value={f.firstName.value}
-      />
-      {f.firstName.errors.join(',')}
-      <input
-        type='text'
-        onChange={e => f.lastName.set(e.target.value)}
-        value={f.lastName.value}
-      />
-      {f.lastName.errors.join(',')}
+      <div>
+        <input
+          type='text'
+          onChange={e => f.firstName.set(e.target.value)}
+          value={f.firstName.value}
+        />
+        {f.firstName.errors.join(',')}
+      </div>
+      <div>
+        <input
+          type='text'
+          onChange={e => f.randomInt.set(e.target.value)}
+          value={f.randomInt.value}
+        />
+        {f.randomInt.errors.join(',')}
+      </div>
+      <div>
+        <input
+          type='text'
+          onChange={e => f.lastName.set(e.target.value)}
+          value={f.lastName.value}
+        />
+        {f.lastName.errors.join(',')}
+      </div>
+      <button>submit</button>
     </form>
   )
 }
@@ -364,6 +393,8 @@ export const RevertToInitState = () => {
   )
 }
 ```
+
+### Multiple Validator functions
 
 ### Combined form
 
