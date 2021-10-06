@@ -53,7 +53,7 @@ const convertInitStateToFormState = <T extends Record<string, any>>(initState: T
 
 type UserFormError = (string | null | undefined | string)[] | undefined | string;
 
-type UserFieldValue = string | boolean | number | null | undefined | null | Record<any, any>;
+type UserFieldValue = string | boolean | number | null | undefined ;
 export const useFormio = <T extends Record<string, UserFieldValue>>(
   initState: T,
   stateSchema?: {

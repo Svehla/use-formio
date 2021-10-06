@@ -1,33 +1,9 @@
-# use-formio
-
-`use-formio` has 0 dependencies and less than 200 lines of code!
-
-This minimalistic approche brings you proper level of abstraction to abstract heavy lifting form boilerplate React code.
-
-Each of your application deserves custom UI solution so it does not make sense to use separate library to handle form UIs.
-
-If your application needs to have tons of forms is really easy for programmers to make custom form configurable UI.
-
-In useFormio you just define custom business model and don't waste a time with boilerplate around.
-
-At the top of this, useFormio package is different from the others with the uniqeu support of Typescript type inferring.
-
-You can write a huge form without writing any line of Typescript static types.
-Thanks to smart API we're able to infer static types and keep code clean and safe without runtime-errors.
-
-## installation
-
-```sh
-npm install use-formio
-```
-
-## use-cases
-
-### Sync validations
-
-```tsx
 import * as React from 'react';
-import { useFormio } from 'useFormio';
+import { useFormio } from '../dist';
+
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
 
 export const SyncValidations = () => {
   const form = useFormio(
@@ -78,21 +54,19 @@ export const SyncValidations = () => {
         value={f.lastName.value}
       />
       {f.lastName.errors.join(',')}
+      <button>submit</button>
     </form>
   )
 }
-```
 
-### Input constrains
-
-```tsx
-import * as React from 'react';
-import { useFormio } from 'useFormio';
-
-const isInteger = (val: string) => parseInt(val).toString() === val;
-const maxLen = (maxLenSize: number) => (value: string) => value.length <= maxLenSize;
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
 
 export const InputConstrains = () => {
+  const isInteger = (val: string) => parseInt(val).toString() === val;
+  const maxLen = (maxLenSize: number) => (value: string) => value.length <= maxLenSize;
+
   const form = useFormio(
     {
       ID: "",
@@ -129,25 +103,23 @@ export const InputConstrains = () => {
         />
         {f.age.errors.join(',')}
       </div>
+      <button>Submit</button>
     </form>
   )
 }
-```
 
-### Cross validations
 
-```tsx
-import * as React from 'react';
-import { useFormio } from 'useFormio';
-
-const isInteger = (val: string) => parseInt(val).toString() === val;
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
 
 /**
  * demonstrate how to do that 1 input validations depends on value of another input
  * 
  * for dependencies between inputs we use second argument of validator callback which is `state`
  */
-export const CrossValidations = () => {
+ export const CrossValidations = () => {
+  const isInteger = (val: string) => parseInt(val).toString() === val;
   const form = useFormio(
     {
       parentID: "",
@@ -188,21 +160,20 @@ export const CrossValidations = () => {
         />
         {f.age.errors.join(',')}
       </div>
+      <button>Submit</button>
     </form>
   )
 }
-```
 
-### Sync set form value based on previous state
 
-```tsx
-import * as React from 'react';
-import { useFormio } from 'useFormio';
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
 
 /**
  * set values synchronously from your JS function via prevState callbacks
  */
-export const SyncSetValueBasedOnPrevValue = () => {
+ export const SyncSetValuesBasedOnPrevValue = () => {
   const form = useFormio(
     {
       ID: "",
@@ -220,37 +191,36 @@ export const SyncSetValueBasedOnPrevValue = () => {
   const f = form.fields
 
   return (
-    <button
-      onClick={async () => {
-        f.ID.set('x')
-        f.ID.set(p => `${p}x`)
-        f.ID.set(p => `${p}x`)
-        // f.ID has value: 'xxx`
-        f.amount.set(0)
-        f.amount.set(p => p + 1)
-        f.amount.set(p => p + 4)
-        // f.amount has value 5
-        const [isValid, errors] = await form.validate()
-        if (isValid) return
-        if (errors.ID.length > 0) {
-          alert('there is problem with ID field')
-        }
-        if (errors.amount.length > 0) {
-          alert('there is problem with ID amount')
-        }
-      }}
-    >Submit</button>
+    <div>
+      <button
+        onClick={async () => {
+          f.ID.set('x')
+          f.ID.set(p => `${p}x`)
+          f.ID.set(p => `${p}x`)
+          // f.ID has value: 'xxx`
+          f.amount.set(0)
+          f.amount.set(p => p + 1)
+          f.amount.set(p => p + 4)
+          // f.amount has value 5
+          const [isValid, errors] = await form.validate()
+          if (isValid) return
+          if (errors.ID.length > 0) {
+            alert('there is problem with ID field')
+          }
+          if (errors.amount.length > 0) {
+            alert('there is problem with ID amount')
+          }
+        }}
+      >Submit</button>
+    </div>
   )
 }
-```
 
-### Async validations
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
 
-```tsx
-import * as React from 'react';
-import { useFormio } from 'useFormio';
-
-export const AsyncValidations = () => {
+ export const AsyncValidations = () => {
   const form = useFormio(
     {
       firstName: "",
@@ -302,22 +272,15 @@ export const AsyncValidations = () => {
         </button>
       </div>
 
-      <button 
-        type="submit"
-        disabled={form.isValidating}
-      >
-        submit
-      </button>
+      <button type="submit" disabled={form.isValidating}>Submit</button>
     </form>
   )
 }
-```
 
-### Revert to init state
 
-```tsx
-import * as React from 'react';
-import { useFormio } from 'useFormio';
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
 
 export const RevertToInitState = () => {
   const form = useFormio(
@@ -354,19 +317,7 @@ export const RevertToInitState = () => {
         onChange={e => f.lastName.set(e.target.value)}
         value={f.lastName.value}
       />
-      <button 
-        type="submit"
-        disabled={form.isValidating}
-      >
-        submit
-      </button>
+      <button disabled={form.isValidating}>Submit</button>
   </form>
   )
 }
-```
-
-### Combined form
-
-### Reusable input configuration
-
-## Dynamic form fields limitations

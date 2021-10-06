@@ -3,6 +3,14 @@ import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useFormio } from '../.';
+import {
+  SyncValidations,
+  InputConstrains,
+  CrossValidations,
+  SyncSetValuesBasedOnPrevValue,
+  AsyncValidations,
+  RevertToInitState,
+} from './ReadmeExamples'
 
 const styles = {
   redColor: { color: "red" }
@@ -104,8 +112,40 @@ const App = () => {
           Submit
         </button>
       </form>
+
+
+      <div>
+        <h1>readme examples</h1>
+
+        <div>
+          <h2>SyncValidations</h2>
+          <SyncValidations />
+        </div>
+        <div>
+          <h2>InputConstrains</h2>
+          <InputConstrains />
+        </div>
+        <div>
+          <h2>CrossValidations</h2>
+          <CrossValidations />
+        </div>
+        <div>
+          <h2>SyncSetValuesBasedOnPrevValue</h2>
+          <SyncSetValuesBasedOnPrevValue />
+        </div>
+        <div>
+          <h2>AsyncValidations</h2>
+          <AsyncValidations />
+        </div>
+        <div>
+          <h2>RevertToInitState</h2>
+          <RevertToInitState />
+        </div>
+
+      </div>
     </div>
   );
 };
 
 ReactDOM.render(<App />, document.getElementById('root'));
+
