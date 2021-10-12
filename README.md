@@ -30,7 +30,7 @@ import * as React from 'react';
 import { useFormio } from 'useFormio';
 
 const validate3 = (val: string) => val.includes('3')
-  ? 'you cannot write tree into the input'
+  ? 'you cannot write three into the input'
   : undefined
 const isInteger = (val: string) => parseInt(val).toString() === val ? undefined : 'only int is valid input';
 const maxLen10 = (val: string) => val.length > 10 ? 'max len is 10' : undefined
