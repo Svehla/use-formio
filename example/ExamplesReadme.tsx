@@ -354,7 +354,6 @@ export const RevertToInitState = () => {
 // ----------------------------------------------------------------
 
 export const MultipleValidatorFunctions = () => {
-  const 
   const form = useFormio(
     {
       firstName: "",
