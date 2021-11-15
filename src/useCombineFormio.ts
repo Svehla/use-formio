@@ -26,19 +26,18 @@ export const useCombineFormio = <T extends Record<string, any>>(forms: T) => {
   }
 
   const revertToInitState = () => {
-    return promiseAllObjectValues(mapObjectValues(v => v.revertToInitState(), forms) /*as {
+    return promiseAllObjectValues(mapObjectValues(v => v.revertToInitState(), forms) /* as {
 			[K in keyof T]: ReturnType<T[K]['revertToInitState']>
 		}*/)
   }
 
   const validate = async () => {
-    const results = await promiseAllObjectValues(mapObjectValues((v) => v.validate(), forms) 
-    /*as {
+    const results = await promiseAllObjectValues(mapObjectValues((v) => v.validate(), forms) /*as {
 			[K in keyof T]: ReturnType<T[K]['validate']>
 		}*/)
 
 		const isValid = Object.values(results).map(([isValid]) => isValid).every(i => i)
-    return [isValid, results] as const
+    return [isValid, results] as [boolean, typeof results]
   }
 
 	const isValidating = Object.values(forms).map(i => i.isValidating).every(i => i)

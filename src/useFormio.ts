@@ -116,7 +116,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
           errors: { ...p.errors, [key]: newErrors },
         }));
         const isFieldValid = newErrors.length === 0;
-        return [isFieldValid, newErrors] as const;
+        return [isFieldValid, newErrors] as [boolean, typeof newErrors]
       },
       setErrors: (userErrors: string[] | ((prevState: string[]) => string[])) => {
         setFormState(p => {
@@ -158,7 +158,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
 
     const isFormValid = Object.values(newErrors).flat().length === 0;
 
-    return [isFormValid, newErrors] as const;
+    return [isFormValid, newErrors] as [boolean, typeof newErrors]
   };
 
   const clearErrors = () => {
