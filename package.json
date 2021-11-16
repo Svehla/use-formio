@@ -1,6 +1,6 @@
 {
   "name": "use-formio",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "author": "Jakub Švehla",
   "main": "dist/index.js",
