@@ -25,7 +25,7 @@ const App = () => {
       firstName: "",
       lastName: "",
       age: "3",
-      isHappy: true as boolean,
+      isHappy: true,
     },
     {
       firstName: {
@@ -86,10 +86,8 @@ const App = () => {
 
         <div>
           <MyBoolInput
-            errors={form.fields.isHappy.errors}
             label="is happy"
-            set={f.isHappy.set}
-            value={f.isHappy.value} 
+            {...f.isHappy}
           />
           
         </div>
@@ -156,7 +154,6 @@ const MyTextInput = React.memo((props: MyTextInputProps)=> {
         type="text"
         disabled={props.isValidating}
         onChange={e => props.set(e.target.value)}
-        // onChange={onChange}
         onBlur={() => props.validate()}
       /> 
       <InputError errors={props.errors} />
