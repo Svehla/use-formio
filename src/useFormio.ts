@@ -1,44 +1,8 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState } from 'react';
+import { notNullable, mapObjectValues, promiseAllObjectValues } from './utils'
 
 // ----------------- util functions ----------------
-type Await<T> = T extends Promise<infer U> ? U : T;
 type MaybePromise<T> = T | Promise<T>;
-
-
-
-export const mapObjectValues = <Key extends string, Value, NewValue>(
-  fn: (value: Value, key: Key) => NewValue,
-  obj: Record<Key, Value>,
-  { stableKeyOrder = false } = {}
-) => {
-  let entries = Object.entries(obj) as [Key, Value][]
-
-  if (stableKeyOrder) {
-    entries = entries.sort(([firstKey], [secondKey]) => {
-      if (firstKey < secondKey) {
-        return -1
-      } else if (firstKey > secondKey) {
-        return 1
-      }
-      return 0
-    })
-  }
-
-  return Object.fromEntries(
-    entries.map(([key, value]) => [key, fn(value, key)], obj)
-  ) as Record<Key, NewValue>;
-}
-
-export const promiseAllObjectValues = async <T>(obj: T) => {
-  const entriesObj = await Promise.all(
-    Object.entries(obj).map(async ([key, value]) => [key, await value])
-  );
-  return Object.fromEntries(entriesObj) as { [K in keyof T]: Await<T[K]> };
-};
-
-export const notNullable = <T>(x: T | null | undefined | false): x is T =>
-  x !== undefined && x !== null && x !== false;
-
 
 const useAsyncState = <T>(defaultState: T) => {
   const [state, _setState] = useState(defaultState);
@@ -53,7 +17,8 @@ const useAsyncState = <T>(defaultState: T) => {
       })
     ), []);
 
-  // if p === p react shallow compare does not trigger rerender of component
+  // if new state is equal to the old one (aka `p => p`)
+  // react shallow compare does not trigger rerender of the component
   const getState = useCallback(() => setState(p => p), []);
 
   return [state, setState, getState] as const;
@@ -71,7 +36,7 @@ type UserFormError = (string | null | undefined | string)[] | undefined | string
 
 type UserFieldValue = string | boolean | number | null | undefined | any;
 export const useFormio = <T extends Record<string, UserFieldValue>>(
-  initState: T,
+  initStateArg: T,
   stateSchema?: {
     [K in keyof T]?: {
       shouldChangeValue?: (newValue: T[K], prevState: T) => boolean;
@@ -79,6 +44,8 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     };
   }
 ) => {
+  // we use this useState to memoize init componentDidMount value for the form
+  const [initState] = useState(initStateArg)
   const [formState, setFormState, getFormState] = useAsyncState(
     convertInitStateToFormState(initState)
   );

@@ -400,4 +400,6 @@ export const RevertToInitState = () => {
 
 ### Reusable input configuration
 
+### stable function pointers
+
 ## Dynamic form fields limitations

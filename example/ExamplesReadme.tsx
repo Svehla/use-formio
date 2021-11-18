@@ -1,5 +1,7 @@
+import { useCallback } from 'react';
 import * as React from 'react';
-import { useFormio } from '../dist';
+import { useCombineFormio, useFormio } from '../dist';
+import { isInteger, isRequired, maxLen } from "./validators";
 
 // ----------------------------------------------------------------
 // ----------------------------------------------------------------
@@ -50,39 +52,41 @@ export const SyncValidations = () => {
   const f = form.fields
 
   return (
-    <form
-      onSubmit={async e => {
-        e.preventDefault()
-        const [isValid] = await form.validate()
-        alert(isValid)
-      }}
-    >
-      <div>
-        <input
-          type='text'
-          onChange={e => f.firstName.set(e.target.value)}
-          value={f.firstName.value}
-        />
-        {f.firstName.errors.join(',')}
-      </div>
-      <div>
-        <input
-          type='text'
-          onChange={e => f.randomInt.set(e.target.value)}
-          value={f.randomInt.value}
-        />
-        {f.randomInt.errors.join(',')}
-      </div>
-      <div>
-        <input
-          type='text'
-          onChange={e => f.lastName.set(e.target.value)}
-          value={f.lastName.value}
-        />
-        {f.lastName.errors.join(',')}
-      </div>
-      <button>submit</button>
-    </form>
+    <FormWrapper form={form}>
+      <form
+        onSubmit={async e => {
+          e.preventDefault()
+          const [isValid] = await form.validate()
+          alert('form is valid: ' + isValid)
+        }}
+      >
+        <div>
+          <input
+            type='text'
+            onChange={e => f.firstName.set(e.target.value)}
+            value={f.firstName.value}
+          />
+          {f.firstName.errors.join(',')}
+        </div>
+        <div>
+          <input
+            type='text'
+            onChange={e => f.randomInt.set(e.target.value)}
+            value={f.randomInt.value}
+          />
+          {f.randomInt.errors.join(',')}
+        </div>
+        <div>
+          <input
+            type='text'
+            onChange={e => f.lastName.set(e.target.value)}
+            value={f.lastName.value}
+          />
+          {f.lastName.errors.join(',')}
+        </div>
+        <button>submit</button>
+      </form>
+    </FormWrapper>
   )
 }
 
@@ -111,27 +115,27 @@ export const InputConstrains = () => {
   const f = form.fields
 
   return (
-    <form
-      onSubmit={async e => e.preventDefault()}
-    >
-      <div>
-        <input
-          type='text'
-          onChange={e => f.ID.set(e.target.value)}
-          value={f.ID.value}
-        />
-        {f.ID.errors.join(',')}
-      </div>
-      <div>
-        <input
-          type='text'
-          onChange={e => f.age.set(e.target.value)}
-          value={f.age.value}
-        />
-        {f.age.errors.join(',')}
-      </div>
-      <button>Submit</button>
-    </form>
+    <FormWrapper form={form}>
+      <form onSubmit={async e => e.preventDefault()}>
+        <div>
+          <input
+            type='text'
+            onChange={e => f.ID.set(e.target.value)}
+            value={f.ID.value}
+          />
+          {f.ID.errors.join(',')}
+        </div>
+        <div>
+          <input
+            type='text'
+            onChange={e => f.age.set(e.target.value)}
+            value={f.age.value}
+          />
+          {f.age.errors.join(',')}
+        </div>
+        <button>Submit</button>
+      </form>
+    </FormWrapper>
   )
 }
 
@@ -168,27 +172,33 @@ export const InputConstrains = () => {
   const f = form.fields
 
   return (
-    <form
-      onSubmit={async e => e.preventDefault()}
-    >
-      <div>
-        <input
-          type='text'
-          onChange={e => f.parentID.set(e.target.value)}
-          value={f.parentID.value}
-        />
-        {f.parentID.errors.join(',')}
-      </div>
-      <div>
-        <input
-          type='text'
-          onChange={e => f.age.set(e.target.value)}
-          value={f.age.value}
-        />
-        {f.age.errors.join(',')}
-      </div>
-      <button>Submit</button>
-    </form>
+    <FormWrapper form={form}>
+      <form
+        onSubmit={async e => {
+          e.preventDefault()
+          const [isValid] = await form.validate()
+          if (isValid) alert('form is valid')
+        }}
+      >
+        <div>
+          <input
+            type='text'
+            onChange={e => f.parentID.set(e.target.value)}
+            value={f.parentID.value}
+          />
+          {f.parentID.errors.join(',')}
+        </div>
+        <div>
+          <input
+            type='text'
+            onChange={e => f.age.set(e.target.value)}
+            value={f.age.value}
+          />
+          {f.age.errors.join(',')}
+        </div>
+        <button>Submit</button>
+      </form>
+    </FormWrapper>
   )
 }
 
@@ -218,7 +228,7 @@ export const InputConstrains = () => {
   const f = form.fields
 
   return (
-    <div>
+    <FormWrapper form={form}>
       <button
         onClick={async () => {
           f.ID.set('x')
@@ -239,7 +249,7 @@ export const InputConstrains = () => {
           }
         }}
       >Submit</button>
-    </div>
+    </FormWrapper>
   )
 }
 
@@ -275,35 +285,74 @@ export const InputConstrains = () => {
   const f = form.fields
 
   return (
-    <form
-      onSubmit={async e => {
-        e.preventDefault()
-        const [isValid] = await form.validate()
-        if (isValid) alert('Successfully submitted')
-      }}
-    >
-      <div>
-        <button
-          type="button"
-          onClick={() => f.firstName.validate()}
-          disabled={f.firstName.isValidating}
-        >
-          validate firstName {f.firstName.errors.join(',')}
-        </button>
-        <button
-          type="button"
-          onClick={() => f.lastName.validate()}
-          disabled={f.lastName.isValidating}
-        >
-          validate lastName {f.firstName.errors.join(',')}
-        </button>
-      </div>
+    <FormWrapper form={form}>
+      <form
+        onSubmit={async e => {
+          e.preventDefault()
+          const [isValid] = await form.validate()
+          if (isValid) alert('form is valid')
+        }}
+      >
+        <div>
+          <button
+            type="button"
+            onClick={() => f.firstName.validate()}
+            disabled={f.firstName.isValidating}
+          >
+            validate firstName {f.firstName.errors.join(',')}
+          </button>
+          <button
+            type="button"
+            onClick={() => f.lastName.validate()}
+            disabled={f.lastName.isValidating}
+          >
+            validate lastName {f.firstName.errors.join(',')}
+          </button>
+        </div>
 
-      <button type="submit" disabled={form.isValidating}>Submit</button>
-    </form>
+        <button type="submit" disabled={form.isValidating}>Submit</button>
+      </form>
+    </FormWrapper>
+
   )
 }
 
+
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+
+export const StableMethodPointers = () => {
+  const form = useFormio(
+    {
+      firstName: "",
+      lastName: "",
+    },
+    {
+      firstName: {
+        validator: v => v === 'XXX' ? 'input cannot be XXX' : undefined
+      }
+    }
+  );
+  const f = form.fields
+
+  return (
+    <FormWrapper form={form}>
+      <form
+        onSubmit={async e => {
+          e.preventDefault()
+          const [isValid] = await form.validate()
+          if (isValid) alert('form is valid')
+        }}
+      >
+        {/* thanks to stable pointer + React.memo, the component is rerendered only if value is changed */}
+        <MyTextInput label={'f.firstName'} {...f.firstName} />
+        <MyTextInput label={'f.lastName'} {...f.lastName} />
+        <button disabled={form.isValidating}>Submit</button>
+      </form>
+    </FormWrapper>
+  )
+}
 
 // ----------------------------------------------------------------
 // ----------------------------------------------------------------
@@ -324,28 +373,19 @@ export const RevertToInitState = () => {
   const f = form.fields
 
   return (
-    <form
-      onSubmit={async e => {
-        e.preventDefault()
-        const [isValid] = await form.validate()
-        // if form is not valid, reset data
-        if (!isValid) { 
-          form.revertToInitState()
-        }
-      }}
-    >
-      <input
-        type='text'
-        onChange={e => f.firstName.set(e.target.value)}
-        value={f.firstName.value}
-      />
-      <input
-        type='text'
-        onChange={e => f.lastName.set(e.target.value)}
-        value={f.lastName.value}
-      />
-      <button disabled={form.isValidating}>Submit</button>
-  </form>
+    <FormWrapper form={form}>
+      <form
+        onSubmit={async e => {
+          e.preventDefault()
+          await form.revertToInitState()
+          
+        }}
+      >
+        <MyTextInput label={'f.firstName'} {...f.firstName} />
+        <MyTextInput label={'f.lastName'} {...f.lastName} />
+        <button disabled={form.isValidating}>Submit</button>
+      </form>
+    </FormWrapper>
   )
 }
 
@@ -358,37 +398,166 @@ export const MultipleValidatorFunctions = () => {
     {
       firstName: "",
       lastName: "",
+      age: ""
     },
     {
       firstName: {
         validator: v => v === 'XXX' ? 'input cannot be XXX' : undefined
+      },
+      lastName: {
+        validator: isRequired,
+        shouldChangeValue: maxLen(30)
+      },
+      age: {
+        shouldChangeValue: v => v.length === 0 ? true : isInteger(v) && maxLen(2)(v)
+        
       }
     }
   );
   const f = form.fields
 
   return (
-    <form
-      onSubmit={async e => {
-        e.preventDefault()
-        const [isValid] = await form.validate()
-        // if form is not valid, reset data
-        if (!isValid) { 
-          form.revertToInitState()
-        }
-      }}
-    >
-      <input
-        type='text'
-        onChange={e => f.firstName.set(e.target.value)}
-        value={f.firstName.value}
-      />
-      <input
-        type='text'
-        onChange={e => f.lastName.set(e.target.value)}
-        value={f.lastName.value}
-      />
-      <button disabled={form.isValidating}>Submit</button>
-    </form>
+    <FormWrapper form={form}>
+      <form
+        onSubmit={async e => {
+          e.preventDefault()
+          const [isValid] = await form.validate()
+          if (isValid) alert('form is valid')
+        }}
+      >
+        <MyTextInput label={'f.firstName'} {...f.firstName} />
+        <MyTextInput label={'f.lastName'} {...f.lastName} />
+        <MyTextInput label={'f.age'} {...f.age} />
+        <button disabled={form.isValidating}>Submit</button>
+      </form>
+    </FormWrapper>
   )
 }
+
+
+
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+
+export const UseCombineFormioExample = () => {
+  const form = useCombineFormio({
+    a: useFormio(
+      {
+        firstName: "",
+        lastName: "",
+      },
+      {
+        firstName: {
+          validator: v => v === 'XXX' ? 'input cannot be XXX' : undefined
+        }
+      }
+    ),
+    b: useFormio(
+      {
+        age: "",
+        id: "",
+      },
+    )
+  })
+
+  const a = form.forms.a.fields
+  const b = form.forms.b.fields
+
+  return (
+    <FormWrapper form={form.forms.a}>
+      <FormWrapper form={form.forms.b}>
+        <form
+          onSubmit={async e => {
+            e.preventDefault()
+            const [isValid] = await form.validate()
+            // if form is not valid, reset data
+            if (isValid) alert('form is valid')
+          }}
+        >
+          <MyTextInput label="a.firstName" {...a.firstName} />
+          <MyTextInput label="a.lastName" {...a.lastName} />
+          <MyTextInput label="b.age" {...b.age} />
+          <MyTextInput label="b.id" {...b.id} />
+          <button disabled={form.isValidating}>Submit</button>
+        </form>
+      </FormWrapper>
+    </FormWrapper>
+  )
+}
+
+// -------------------------------------------
+// ------- my custom component system --------
+  
+const styles = {
+  formWrapper: {
+    display: 'flex',
+    alignItems: 'flex-start'
+  },
+  redColor: {
+    color: "red" 
+  },
+  formWrapperForm: {
+    marginRight: '3rem'
+  }
+}
+
+const FormWrapper = (props: any) => {
+  const copy = props.form
+  delete copy.__dangerous
+
+  return (
+    <div style={styles.formWrapper}>
+      <div style={styles.formWrapperForm}>
+        {props.children}
+      </div>
+      <pre>{JSON.stringify(copy, null, 2)}</pre>
+    </div>
+  )
+}
+
+const InputError = (props: { errors: string[]}) => (
+  <div style={styles.redColor}>{props.errors.join(', ')}</div>
+)
+
+type MyTextInputProps = { 
+  label: string,
+  validateOnBlur?: boolean
+
+  value: string;
+  errors: string[];
+  isValidating: boolean;
+  set: (userValue: string) => void;
+  validate: () => Promise<[boolean, string[]]>;
+  setErrors: (newErrors: string[] | ((prevState: string[]) => string[])) => void;
+
+}
+
+const MyTextInput = React.memo((props: MyTextInputProps)=> {
+  console.log(`rerender label input ${props.label}`)
+
+  const onChange = useCallback((e: any) => props.set(e.target.value), [])
+  const onBlur = React.useMemo(() => props.validateOnBlur ? () => props.validate() : undefined, [props.validateOnBlur])
+
+  const getRandomColor = () => {
+    return `rgb(${[
+      150 + Math.random() * 100,
+      150 + Math.random() * 100,
+      150 + Math.random() * 100 
+    ].join(',')})`
+  }
+
+  return (
+    <div style={{ background: getRandomColor() }}>
+      <h3>{props.label}</h3>
+      <input
+        value={props.value}
+        type="text"
+        disabled={props.isValidating}
+        onChange={onChange}
+        onBlur={onBlur}
+      /> 
+      <InputError errors={props.errors} />
+    </div>
+  )
+})

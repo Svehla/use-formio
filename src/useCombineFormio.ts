@@ -1,22 +1,6 @@
+import { Await, promiseAllObjectValues, mapObjectValues } from './utils'
 
-type Await<T> = T extends Promise<infer U> ? U : T;
-
-export const promiseAllObjectValues = async <T>(obj: T) => {
-  const entriesObj = await Promise.all(
-    Object.entries(obj).map(async ([key, value]) => [key, await value])
-  );
-  return Object.fromEntries(entriesObj) as { [K in keyof T]: Await<T[K]> };
-};
-
-export const mapObjectValues = <Key extends string, Value, NewValue>(
-  fn: (value: Value, key: Key) => NewValue,
-  obj: Record<Key, Value>
-) =>
-  Object.fromEntries(
-    (Object.entries(obj) as [Key, Value][]).map(([key, value]) => [key, fn(value, key)], obj)
-  ) as Record<Key, NewValue>;
-
-
+// TODO: add useCallbacks and make sure that all useFormio functions are stable
 export const useCombineFormio = <T extends Record<string, any>>(forms: T) => {
 
   const clearErrors = () => {
@@ -26,17 +10,20 @@ export const useCombineFormio = <T extends Record<string, any>>(forms: T) => {
   }
 
   const revertToInitState = () => {
-    return promiseAllObjectValues(mapObjectValues(v => v.revertToInitState(), forms) /* as {
+    return promiseAllObjectValues(mapObjectValues(v => v.revertToInitState(), forms)) as any as {
 			[K in keyof T]: ReturnType<T[K]['revertToInitState']>
-		}*/)
+		}
   }
 
   const validate = async () => {
-    const results = await promiseAllObjectValues(mapObjectValues((v) => v.validate(), forms) /*as {
-			[K in keyof T]: ReturnType<T[K]['validate']>
-		}*/)
+    const results = await promiseAllObjectValues(mapObjectValues((v) => v.validate(), forms)) as {
+			[K in keyof T]: Await<ReturnType<T[K]['validate']>>
+		}
 
-		const isValid = Object.values(results).map(([isValid]) => isValid).every(i => i)
+		const isValid = Object.values(
+      // have to re-type results to bypass TS type-check
+      results as Record<string, any>
+    ).map(([isValid]) => isValid).every(i => i)
     return [isValid, results] as [boolean, typeof results]
   }
 
