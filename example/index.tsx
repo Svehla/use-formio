@@ -65,45 +65,33 @@ const App = () => {
         }}
       >
         <div>
-          <h3>First name</h3>
-          <input
-            value={f.firstName.value}
-            type="text"
-            onChange={async e => {
-              f.firstName.set(e.target.value);
-            }}
-            disabled={f.firstName.isValidating}
-            onBlur={() => f.firstName.validate()}
+          <MyTextInput
+            label={'First Name'}
+            {...f.firstName}
           />
-          <InputError errors={f.firstName.errors} />
+
         </div>
         <div>
-          <h3>Last name</h3>
-          <input
-            value={f.lastName.value}
-            type="text"
-            onChange={e => f.lastName.set(e.target.value)}
-            onBlur={() => f.lastName.validate()}
+          <MyTextInput
+            label={'Last Name'}
+            {...f.lastName}
           />
-          <InputError errors={f.lastName.errors} />
         </div>
         <div>
-          <h3>Age</h3>
-          <input
-            value={f.age.value}
-            type="text"
-            onChange={e => f.age.set(e.target.value)}
-            onBlur={e => f.age.validate()}
+          <MyTextInput
+            label={'Age'}
+            {...f.age}
           />
-          <InputError errors={f.age.errors} />
         </div>
 
         <div>
-          <h3>Is happy</h3>
-
-          <button type="button" onClick={() => f.isHappy.set(p => !p)}>
-            {f.isHappy.value ? "ano" : "ne"}
-          </button>
+          <MyBoolInput
+            errors={form.fields.isHappy.errors}
+            label="is happy"
+            set={f.isHappy.set}
+            value={f.isHappy.value} 
+          />
+          
         </div>
 
         <div>{form.isValidating && <h1>loading</h1>}</div>
@@ -146,6 +134,60 @@ const App = () => {
     </div>
   );
 };
+
+type MyTextInputProps = { 
+  label: string,
+  value: string;
+  errors: string[];
+  isValidating: boolean;
+  set: (userValue: string | ((prevState: string) => string)) => void;
+  validate: () => Promise<[boolean, string[]]>;
+  setErrors: (newErrors: string[] | ((prevState: string[]) => string[])) => void;
+}
+
+const MyTextInput = React.memo((props: MyTextInputProps)=> {
+  console.log(`rerender label input ${props.label}`)
+
+  return (
+    <div>
+      <h3>{props.label}</h3>
+      <input
+        value={props.value}
+        type="text"
+        disabled={props.isValidating}
+        onChange={e => props.set(e.target.value)}
+        // onChange={onChange}
+        onBlur={() => props.validate()}
+      /> 
+      <InputError errors={props.errors} />
+    </div>
+  )
+})
+
+type MyBoolInputProps = { 
+  label: string,
+  value: boolean,
+  set: (prevCb: (p: boolean) => boolean) => void, 
+  errors: string[],
+}
+
+const MyBoolInput = React.memo((props: MyBoolInputProps)=> {
+  console.log(`rerender boolean input ${props.label}`)
+
+  return (
+    <div>
+      <h3>{props.label}</h3>
+
+
+      <button type="button" onClick={() => props.set(p => !p)}>
+        {props.value ? "ano" : "ne"}
+      </button>
+      <InputError errors={props.errors} />
+
+    </div>
+  )
+})
+
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
