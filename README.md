@@ -1,4 +1,8 @@
-# use-formio
+# [use-formio](http://use-formio.svehlik.eu)
+
+
+[Online interactive documentation is availabe on http://use-formio.svehlik.eu](http://use-formio.svehlik.eu)
+
 
 `use-formio` has 0 dependencies and less than 200 lines of code!
 
@@ -395,8 +399,6 @@ export const RevertToInitState = () => {
 ```
 
 ### Multiple Validator functions
-
-### Combined form
 
 ### Reusable input configuration
 
