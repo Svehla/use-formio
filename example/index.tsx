@@ -81,7 +81,7 @@ const App = () => {
         <hr />
         
         <div>
-          <h2>UncontrolledInput</h2>
+          <h2>UncontrolledInput (+ React.memo optimization)</h2>
           <UncontrolledInput />
         </div>
 

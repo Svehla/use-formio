@@ -596,7 +596,7 @@ export const UncontrolledInput = () => {
   )
 }
 
-const MyTextArea = (props: { set: any }) => {
+const MyTextArea = React.memo((props: { set: any }) => {
   const debouncedSet = debounce(props.set, 400)
 
   const onChange = useCallback((e) => {
@@ -605,10 +605,11 @@ const MyTextArea = (props: { set: any }) => {
 
   return (
     <textarea 
+      style={{ background: getRandomRGBLightColor() }}
       onChange={onChange}
     />
   )
-}
+})
 
 // -------------------------------------------
 // ------- my custom component system --------
