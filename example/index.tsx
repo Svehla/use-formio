@@ -11,6 +11,7 @@ import {
   RevertToInitState,
   MultipleValidatorFunctions,
   UseCombineFormioExample,
+  UncontrolledInput,
   StableMethodPointers,
 } from './ExamplesReadme'
 
@@ -37,7 +38,7 @@ const App = () => {
         </div>
         <hr />
         <div>
-          <h2>InputConstrains</h2>
+          <h2>InputConstrains (shouldChangeValue)</h2>
           <InputConstrains />
         </div>
         <hr />
@@ -57,7 +58,7 @@ const App = () => {
         </div>
         <hr />
         <div>
-          <h2>StableMethodPointers</h2>
+          <h2>StableMethodPointers (useMemo)</h2>
           <StableMethodPointers />
         </div>
         <hr />
@@ -75,6 +76,13 @@ const App = () => {
         <div>
           <h2>UseCombineFormioExample</h2>
           <UseCombineFormioExample />
+        </div>
+
+        <hr />
+        
+        <div>
+          <h2>UncontrolledInput</h2>
+          <UncontrolledInput />
         </div>
 
       </div>

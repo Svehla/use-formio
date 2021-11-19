@@ -1,10 +1,10 @@
 import { useCallback, useState } from 'react';
 import { notNullable, mapObjectValues, promiseAllObjectValues } from './utils'
 
-// ----------------- util functions ----------------
 type MaybePromise<T> = T | Promise<T>;
 
-const useAsyncState = <T>(defaultState: T) => {
+// TODO: add docs how to handle useCallbacks with just stable `set` pointers
+export const useAsyncState = <T>(defaultState: T) => {
   const [state, _setState] = useState(defaultState);
 
   const setState = useCallback((setStateAction: Parameters<typeof _setState>[0]) =>
@@ -24,7 +24,6 @@ const useAsyncState = <T>(defaultState: T) => {
   return [state, setState, getState] as const;
 };
 
-// ---------------- useFormio --------------------
 
 const convertInitStateToFormState = <T extends Record<string, any>>(initState: T) => ({
   values: initState,

@@ -57,10 +57,13 @@ export const SyncValidations = () => {
         onSubmit={async e => {
           e.preventDefault()
           const [isValid] = await form.validate()
-          alert('form is valid: ' + isValid)
+          alert(isValid)
         }}
       >
         <div>
+          <div>
+            <label>first name</label>
+          </div>
           <input
             type='text'
             onChange={e => f.firstName.set(e.target.value)}
@@ -69,14 +72,20 @@ export const SyncValidations = () => {
           {f.firstName.errors.join(',')}
         </div>
         <div>
+          <div>
+            <label>random int</label>
+          </div>
           <input
-            type='text'
+            type='number'
             onChange={e => f.randomInt.set(e.target.value)}
             value={f.randomInt.value}
           />
           {f.randomInt.errors.join(',')}
         </div>
         <div>
+          <div>
+            <label>last name</label>
+          </div>
           <input
             type='text'
             onChange={e => f.lastName.set(e.target.value)}
@@ -116,8 +125,18 @@ export const InputConstrains = () => {
 
   return (
     <FormWrapper form={form}>
-      <form onSubmit={async e => e.preventDefault()}>
+
+      <form 
+        onSubmit={async e => {
+          e.preventDefault()
+          const [isValid] = await form.validate()
+          if (isValid) alert('form is valid')
+        }}
+      > 
         <div>
+          <div>
+            <label>ID</label>
+          </div>
           <input
             type='text'
             onChange={e => f.ID.set(e.target.value)}
@@ -126,6 +145,9 @@ export const InputConstrains = () => {
           {f.ID.errors.join(',')}
         </div>
         <div>
+          <div>
+            <label>age</label>
+          </div>
           <input
             type='text'
             onChange={e => f.age.set(e.target.value)}
@@ -181,6 +203,9 @@ export const InputConstrains = () => {
         }}
       >
         <div>
+          <div>
+            <label>parentID</label>
+          </div>
           <input
             type='text'
             onChange={e => f.parentID.set(e.target.value)}
@@ -189,6 +214,9 @@ export const InputConstrains = () => {
           {f.parentID.errors.join(',')}
         </div>
         <div>
+          <div>
+            <label>age</label>
+          </div>
           <input
             type='text'
             onChange={e => f.age.set(e.target.value)}
@@ -294,20 +322,26 @@ export const InputConstrains = () => {
         }}
       >
         <div>
-          <button
-            type="button"
-            onClick={() => f.firstName.validate()}
-            disabled={f.firstName.isValidating}
-          >
-            validate firstName {f.firstName.errors.join(',')}
-          </button>
-          <button
-            type="button"
-            onClick={() => f.lastName.validate()}
-            disabled={f.lastName.isValidating}
-          >
-            validate lastName {f.firstName.errors.join(',')}
-          </button>
+          <div>
+            <button
+              type="button"
+              onClick={() => f.firstName.validate()}
+              disabled={f.firstName.isValidating}
+            >
+              validate firstName
+            </button>
+            <div>{f.firstName.errors.join(',')}</div>
+          </div>
+          <div>
+            <button
+              type="button"
+              onClick={() => f.lastName.validate()}
+              disabled={f.lastName.isValidating}
+            >
+              validate lastName
+            </button>
+            <div>{f.lastName.errors.join(',')}</div>
+          </div>
         </div>
 
         <button type="submit" disabled={form.isValidating}>Submit</button>
@@ -346,8 +380,8 @@ export const StableMethodPointers = () => {
         }}
       >
         {/* thanks to stable pointer + React.memo, the component is rerendered only if value is changed */}
-        <MyTextInput label={'f.firstName'} {...f.firstName} />
-        <MyTextInput label={'f.lastName'} {...f.lastName} />
+        <MyTextInput showRerendering label={'f.firstName'} {...f.firstName} />
+        <MyTextInput showRerendering label={'f.lastName'} {...f.lastName} />
         <button disabled={form.isValidating}>Submit</button>
       </form>
     </FormWrapper>
@@ -449,7 +483,10 @@ export const UseCombineFormioExample = () => {
       },
       {
         firstName: {
-          validator: v => v === 'XXX' ? 'input cannot be XXX' : undefined
+          validator: isRequired
+        },
+        lastName: {
+          validator: isRequired
         }
       }
     ),
@@ -458,6 +495,14 @@ export const UseCombineFormioExample = () => {
         age: "",
         id: "",
       },
+      {
+        age: {
+          validator: isRequired
+        },
+        id: {
+          validator: isRequired
+        }
+      }
     )
   })
 
@@ -465,8 +510,8 @@ export const UseCombineFormioExample = () => {
   const b = form.forms.b.fields
 
   return (
-    <FormWrapper form={form.forms.a}>
-      <FormWrapper form={form.forms.b}>
+    <FormWrapper form={form.forms.b}>
+      <FormWrapper form={form.forms.a}>
         <form
           onSubmit={async e => {
             e.preventDefault()
@@ -483,6 +528,85 @@ export const UseCombineFormioExample = () => {
         </form>
       </FormWrapper>
     </FormWrapper>
+  )
+}
+
+
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+
+// inspiration
+// > https://www.educative.io/edpresso/how-to-use-the-debounce-function-in-javascript
+function debounce(func: any, wait: any, immediate?: any) {
+  var timeout;
+
+  return function executedFunction(...args: any[]) {
+    var context = this;
+    // var args = arguments;
+	    
+    var later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+
+    var callNow = immediate && !timeout;
+	
+    clearTimeout(timeout);
+
+    timeout = setTimeout(later, wait);
+	
+    if (callNow) func.apply(context, args);
+  };
+};
+
+export const UncontrolledInput = () => {
+  const form = useFormio(
+    {
+      text: "",
+    },
+    {
+      text: {
+        validator: v => v.length < 200 ? 'LENGTH SHOULD BE >= 200' : undefined
+      }
+    }
+  )
+  const f = form.fields
+
+  return (
+    <FormWrapper form={form}>
+      <form
+        onSubmit={async e => {
+          e.preventDefault()
+          const [isValid] = await form.validate()
+          // if form is not valid, reset data
+          if (isValid) alert('form is valid')
+        }}
+      >
+        <div>
+          <label>Text with 400ms debounce</label>
+        </div>
+        <MyTextArea
+          set={f.text.set}
+        />
+        <InputError errors={f.text.errors} />
+        <button disabled={form.isValidating}>Submit</button>
+      </form>
+    </FormWrapper>
+  )
+}
+
+const MyTextArea = (props: { set: any }) => {
+  const debouncedSet = debounce(props.set, 400)
+
+  const onChange = useCallback((e) => {
+    debouncedSet(e.target.value)
+  }, [])
+
+  return (
+    <textarea 
+      onChange={onChange}
+    />
   )
 }
 
@@ -523,14 +647,24 @@ const InputError = (props: { errors: string[]}) => (
 type MyTextInputProps = { 
   label: string,
   validateOnBlur?: boolean
+  showRerendering?: boolean
 
+  // use-formio one field interface
   value: string;
   errors: string[];
   isValidating: boolean;
   set: (userValue: string) => void;
   validate: () => Promise<[boolean, string[]]>;
   setErrors: (newErrors: string[] | ((prevState: string[]) => string[])) => void;
+}
 
+
+const getRandomRGBLightColor = () => {
+  return `rgb(${[
+    150 + Math.random() * 100,
+    150 + Math.random() * 100,
+    150 + Math.random() * 100 
+  ].join(',')})`
 }
 
 const MyTextInput = React.memo((props: MyTextInputProps)=> {
@@ -539,16 +673,8 @@ const MyTextInput = React.memo((props: MyTextInputProps)=> {
   const onChange = useCallback((e: any) => props.set(e.target.value), [])
   const onBlur = React.useMemo(() => props.validateOnBlur ? () => props.validate() : undefined, [props.validateOnBlur])
 
-  const getRandomColor = () => {
-    return `rgb(${[
-      150 + Math.random() * 100,
-      150 + Math.random() * 100,
-      150 + Math.random() * 100 
-    ].join(',')})`
-  }
-
   return (
-    <div style={{ background: getRandomColor() }}>
+    <div style={props.showRerendering ? { background: getRandomRGBLightColor() } : undefined}>
       <h3>{props.label}</h3>
       <input
         value={props.value}
