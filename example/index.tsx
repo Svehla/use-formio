@@ -11,17 +11,9 @@ import { MultipleValidatorFunctions } from './examples/MultipleValidatorFunction
 import { UseCombineFormioExample } from './examples/UseCombineFormioExample'
 import { UncontrolledInput } from './examples/UncontrolledInput'
 import { StableMethodPointers } from './examples/StableMethodPointers'
-// import SyntaxHighlighter from 'react-syntax-highlighter';
-// import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import Highlight from 'react-highlight'
+import 'highlight.js/styles/atom-one-dark.css'
 
-
-const styles = {
-  wrapper: { 
-
-    marginLeft: '3rem',
-    marginRight: '3rem',
-  }
-}
 
 const components = [
   {
@@ -75,7 +67,7 @@ const components = [
     Comp: StableMethodPointers,
   },
 ]
-  
+
 const App = () => {
   const [data, setData] = React.useState({})
 
@@ -97,7 +89,7 @@ const App = () => {
   }, [])
 
   return (
-    <div style={styles.wrapper}>
+    <div className="container">
       <h1>useFormio docs</h1>
 
       <div>
@@ -105,34 +97,50 @@ const App = () => {
         
         {components.map((i, index) => (
           <div key={index} >
-            <h2>{i.title}</h2>
-            <div>
-              <a href={`https://github.com/Svehla/use-formio/blob/main/example/examples/${i.githubFileName}.tsx`}>
-                GITHUB SOURCE CODE
-              </a>
-              <a href={`https://raw.githubusercontent.com/Svehla/use-formio/blob/main/example/examples/${i.githubFileName}.tsx`}>
-                raw
-              </a>
-            </div>
-            <div style={{ display: 'flex' }}>
-
-              <i.Comp />
-
-              <pre>
-                {data[i.githubFileName]}
-              </pre>
-              {/* <SyntaxHighlighter language="javascript" style={docco}>
-              </SyntaxHighlighter> */}
-            </div>
-
-            <hr />
+            <ListItem item={i} sourceCode={data[i.githubFileName]}/>
           </div>
         ))}
 
       </div>
     </div>
   );
-};
+}; 
+
+const ListItem = (props: any) => {
+  const [show, setShow] = React.useState(false)
+  const i = props.item
+
+  return (
+    <div>
+      <h2>{i.title}</h2>
+      <div>
+        <a href={`https://github.com/Svehla/use-formio/blob/main/example/examples/${i.githubFileName}.tsx`}>
+          GITHUB SOURCE CODE
+        </a>
+      </div>
+      <div className="row">
+        <i.Comp />
+      </div>
+
+      <div>
+        <div>
+          <button onClick={() => setShow(p => !p)}>
+            {show ? 'hide' : 'show'} source code
+          </button>
+        </div>
+
+        <div style={show ? undefined : { display: 'none' }}>
+          <Highlight className='xd.tsx' >
+            {props.sourceCode} 
+          </Highlight>
+        </div>
+
+      </div>
+
+      <hr />
+    </div>
+  )
+}
 
 
 
