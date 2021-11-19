@@ -2,18 +2,17 @@
 import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {
-  SyncValidations,
-  InputConstrains,
-  CrossValidations,
-  SyncSetValuesBasedOnPrevValue,
-  AsyncValidations,
-  RevertToInitState,
-  MultipleValidatorFunctions,
-  UseCombineFormioExample,
-  UncontrolledInput,
-  StableMethodPointers,
-} from './ExamplesReadme'
+import { SyncValidations } from './examples/SyncValidations'
+import { InputConstrains } from './examples/InputConstrains'
+import { CrossValidations } from './examples/CrossValidations'
+import { SyncSetValuesBasedOnPrevValue } from './examples/SyncSetValuesBasedOnPrevValue'
+import { AsyncValidations } from './examples/AsyncValidations'
+import { RevertToInitState } from './examples/RevertToInitState'
+import { MultipleValidatorFunctions } from './examples/MultipleValidatorFunctions'
+import { UseCombineFormioExample } from './examples/UseCombineFormioExample'
+import { UncontrolledInput } from './examples/UncontrolledInput'
+import { StableMethodPointers } from './examples/StableMethodPointers'
+
 
 const styles = {
   wrapper: { 
@@ -27,7 +26,7 @@ const styles = {
 const App = () => {
   return (
     <div style={styles.wrapper}>
-      <h1>useFormio</h1>
+      <h1>useFormio docs</h1>
 
       <div>
         <h1>Readme examples</h1>
