@@ -45,7 +45,7 @@ const MyTextArea = React.memo((props: {
 }) => {
   return (
     <textarea 
-      onChange={(e) => debounce(props.set, 400)(e.target.value)}
+      onChange={(e) => debounce(props.set, 1000)(e.target.value)}
     />
   )
 })
