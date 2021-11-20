@@ -62,7 +62,8 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
 
   const getFormInputErrors = async (key: keyof T, currFormState: typeof formState) => {
     const schemaDef = stateSchema?.[key];
-    if (!schemaDef) return [];
+    // we want to be sure that empty array pointer is not override with new empty array pointer
+    if (!schemaDef) return currFormState.errors[key as any]
 
     let errors = [] as (string | undefined | null)[];
 
@@ -74,7 +75,9 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
       errors.push(...(Array.isArray(userErrors) ? userErrors : [userErrors]));
     }
 
-    return errors.filter(notNullable);
+    const newErrors = errors.filter(notNullable);
+    // we want to be sure that empty array pointer is not override with new empty array pointer
+    return newErrors.length === 0 ? currFormState.errors[key as any] : newErrors
   };
 
   const fields = mapObjectValues(

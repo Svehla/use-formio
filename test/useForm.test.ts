@@ -173,4 +173,26 @@ describe('it', () => {
     expect(firstErrorPointer === thirdErrorPointer).toEqual(false);
     expect(thirdErrorPointer).toEqual(['err']);
   });
+
+  it('constant error pointers for valid validation process', async () => {
+    const { result } = renderHook(() =>
+      useFormio({
+        str1: 'str1',
+        str2: 'str2',
+      })
+    );
+
+    let firstErrorPointer
+    let secondErrorPointer
+
+    await act(async () => {
+      result.current.fields.str1.set('xxx')
+      firstErrorPointer = result.current.fields.str1.errors
+      await result.current.validate()
+      secondErrorPointer = result.current.fields.str1.errors
+    });
+    expect(firstErrorPointer === secondErrorPointer).toEqual(true);
+    expect(secondErrorPointer).toEqual([]);
+  });
+  
 });

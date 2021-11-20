@@ -35,7 +35,6 @@ export const DebouncedInput = () => {
         onSubmit={async e => {
           e.preventDefault()
           const [isValid] = await form.validate()
-          // if form is not valid, reset data
           if (isValid) alert('form is valid')
         }}
       >

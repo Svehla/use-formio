@@ -28,19 +28,33 @@ export const StableMethodPointers = () => {
         }}
       >
         {/* thanks to stable pointer + React.memo, the component is rerendered only if value is changed */}
-        <TextInput showRerendering label={'f.firstName'} {...f.firstName} />
-        <TextInput showRerendering label={'f.lastName'} {...f.lastName} />
+        <TextInput
+          label={'f.firstName'}
+          value={f.firstName.value}
+          set={f.firstName.set}
+          errors={f.firstName.errors}
+        />
+        <TextInput
+          label={'f.lastName'}
+          value={f.lastName.value}
+          set={f.lastName.set}
+          errors={f.lastName.errors}
+        />
         <button disabled={form.isValidating}>Submit</button>
       </form>
     </DEBUG_FormWrapper>
   )
 }
 
+type TextField = Field<string>
 type TextInputProps = { 
   label: string,
   validateOnBlur?: boolean
-  showRerendering?: boolean
-} & Field<string>
+
+  value: TextField['value']
+  set: TextField['set']
+  errors: TextField['errors']
+}
 
 export const TextInput = React.memo((props: TextInputProps)=> {
   return (
@@ -49,7 +63,6 @@ export const TextInput = React.memo((props: TextInputProps)=> {
       <input
         value={props.value}
         type="text"
-        disabled={props.isValidating}
         onChange={e => props.set(e.target.value)}
       /> 
       {/* TODO: add global css classes */}
