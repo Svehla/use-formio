@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { DEBUG_FormWrapper } from '../components';
-import { Field, useFormio } from '../../dist';
+import * as React from "react";
+import { DEBUG_FormWrapper } from "../components";
+import { Field, useFormio } from "../../dist";
 
 export const debounce = <CB extends (...args: any[]) => any>(
   callback: CB,
@@ -17,13 +17,12 @@ export const debounce = <CB extends (...args: any[]) => any>(
 export const DebouncedInput = () => {
   const form = useFormio(
     {
-      text: '',
+      text: ""
     },
     {
       text: {
-        validator: v =>
-          v.length < 200 ? 'LENGTH SHOULD BE >= 200' : undefined,
-      },
+        validator: v => (v.length < 200 ? "LENGTH SHOULD BE >= 200" : undefined)
+      }
     }
   );
   const f = form.fields;
@@ -34,14 +33,14 @@ export const DebouncedInput = () => {
         onSubmit={async e => {
           e.preventDefault();
           const [isValid] = await form.validate();
-          if (isValid) alert('form is valid');
+          if (isValid) alert("form is valid");
         }}
       >
         <div>
           <label>Text with 1000ms debounce</label>
         </div>
         <MyTextArea {...f.text} />
-        <div style={{ color: 'red' }}>{f.text.errors.join(', ')}</div>
+        <div style={{ color: "red" }}>{f.text.errors.join(", ")}</div>
         <button disabled={form.isValidating}>Submit</button>
       </form>
     </DEBUG_FormWrapper>

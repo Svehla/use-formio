@@ -27,11 +27,11 @@
       "pre-commit": "tsdx lint"
     }
   },
-  "backup-comment-prettier": {
-    "printWidth": 80,
+  "// prettier": {
+    "printWidth": 100,
     "semi": true,
-    "singleQuote": true,
-    "trailingComma": "es5"
+    "singleQuote": false,
+    "trailingComma": "all"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^5.0.5",

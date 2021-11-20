@@ -1,5 +1,5 @@
-import { mapObjectValues, notNullable, promiseAllObjectValues } from './utils';
-import { useCallback, useState } from 'react';
+import { mapObjectValues, notNullable, promiseAllObjectValues } from "./utils";
+import { useCallback, useState } from "react";
 
 type MaybePromise<T> = T | Promise<T>;
 
@@ -34,7 +34,7 @@ const convertInitStateToFormState = <T extends Record<string, any>>(
 ) => ({
   values: initState,
   errors: mapObjectValues(() => [] as string[], initState),
-  isValidating: mapObjectValues(() => false, initState),
+  isValidating: mapObjectValues(() => false, initState)
 });
 
 type UserFormError =
@@ -130,21 +130,21 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
           return {
             ...prevFormState,
             values: { ...prevFormState.values, [key]: newValue },
-            errors: newErrors,
+            errors: newErrors
           };
         });
       }, []),
       validate: useCallback(async () => {
         setFormState(p => ({
           ...p,
-          isValidating: { ...p.isValidating, [key]: true },
+          isValidating: { ...p.isValidating, [key]: true }
         }));
         const prevFormState = await getFormState();
         const newErrors = await getFormInputErrors(key, prevFormState);
         setFormState(p => ({
           ...p,
           isValidating: { ...p.isValidating, [key]: false },
-          errors: { ...p.errors, [key]: newErrors },
+          errors: { ...p.errors, [key]: newErrors }
         }));
         const isFieldValid = newErrors.length === 0;
         return [isFieldValid, newErrors] as [boolean, typeof newErrors];
@@ -160,7 +160,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
           });
         },
         []
-      ),
+      )
     }),
     formState.values,
     // we use stable iteration because we need to keep calling of hooks in the same order
@@ -177,7 +177,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
   const validate = useCallback(async () => {
     setFormState(p => ({
       ...p,
-      isValidating: mapObjectValues(() => true, p.isValidating),
+      isValidating: mapObjectValues(() => true, p.isValidating)
     }));
 
     const prevFormState = await getFormState();
@@ -194,7 +194,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     setFormState(p => ({
       ...p,
       errors: newErrors,
-      isValidating: mapObjectValues(() => false, p.isValidating),
+      isValidating: mapObjectValues(() => false, p.isValidating)
     }));
 
     const isFormValid = Object.values(newErrors).flat().length === 0;
@@ -207,7 +207,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
       ...prevFormState,
       values: prevFormState.values,
       errors: mapObjectValues(() => [], initState),
-      isValidating: mapObjectValues(() => false, initState),
+      isValidating: mapObjectValues(() => false, initState)
     }));
   };
 
@@ -228,7 +228,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     isValid,
     __dangerous: {
       setFormState,
-      formState,
-    },
+      formState
+    }
   };
 };

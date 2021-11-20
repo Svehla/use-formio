@@ -1,40 +1,40 @@
-import * as React from 'react';
-import { DEBUG_FormWrapper } from '../components';
-import { Field, useCombineFormio, useFormio } from '../../dist';
+import * as React from "react";
+import { DEBUG_FormWrapper } from "../components";
+import { Field, useCombineFormio, useFormio } from "../../dist";
 
 export const isRequired = (value: string) =>
-  value.trim() === '' ? 'Field cannot be empty' : undefined;
+  value.trim() === "" ? "Field cannot be empty" : undefined;
 
 export const UseCombineFormioExample = () => {
   const form = useCombineFormio({
     a: useFormio(
       {
-        firstName: '',
-        lastName: '',
+        firstName: "",
+        lastName: ""
       },
       {
         firstName: {
-          validator: isRequired,
+          validator: isRequired
         },
         lastName: {
-          validator: isRequired,
-        },
+          validator: isRequired
+        }
       }
     ),
     b: useFormio(
       {
-        age: '',
-        id: '',
+        age: "",
+        id: ""
       },
       {
         age: {
-          validator: isRequired,
+          validator: isRequired
         },
         id: {
-          validator: isRequired,
-        },
+          validator: isRequired
+        }
       }
-    ),
+    )
   });
 
   const a = form.forms.a.fields;
@@ -46,7 +46,7 @@ export const UseCombineFormioExample = () => {
         onSubmit={async e => {
           e.preventDefault();
           const [isValid] = await form.validate();
-          if (isValid) alert('form is valid');
+          if (isValid) alert("form is valid");
         }}
       >
         <TextInput label="a.firstName" {...a.firstName} />
@@ -75,7 +75,7 @@ const TextInput = React.memo((props: TextInputProps) => {
         disabled={props.isValidating}
         onChange={e => props.set(e.target.value)}
       />
-      <div style={{ color: 'red' }}>{props.errors.join(', ')}</div>
+      <div style={{ color: "red" }}>{props.errors.join(", ")}</div>
     </div>
   );
 });

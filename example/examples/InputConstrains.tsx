@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { DEBUG_FormWrapper } from '../components';
-import { useFormio } from '../../dist';
+import * as React from "react";
+import { DEBUG_FormWrapper } from "../components";
+import { useFormio } from "../../dist";
 
 const isInteger = (val: string) => parseInt(val).toString() === val;
 const maxLen = (maxLenSize: number) => (value: string) =>
@@ -9,16 +9,16 @@ const maxLen = (maxLenSize: number) => (value: string) =>
 export const InputConstrains = () => {
   const form = useFormio(
     {
-      ID: '',
-      age: '',
+      ID: "",
+      age: ""
     },
     {
       ID: {
-        shouldChangeValue: maxLen(10),
+        shouldChangeValue: maxLen(10)
       },
       age: {
-        shouldChangeValue: isInteger,
-      },
+        shouldChangeValue: isInteger
+      }
     }
   );
   const f = form.fields;
@@ -29,7 +29,7 @@ export const InputConstrains = () => {
         onSubmit={async e => {
           e.preventDefault();
           const [isValid] = await form.validate();
-          if (isValid) alert('form is valid');
+          if (isValid) alert("form is valid");
         }}
       >
         <div>
@@ -41,7 +41,7 @@ export const InputConstrains = () => {
             onChange={e => f.ID.set(e.target.value)}
             value={f.ID.value}
           />
-          <div style={{ color: 'red' }}>{f.ID.errors.join(',')}</div>
+          <div style={{ color: "red" }}>{f.ID.errors.join(",")}</div>
         </div>
         <div>
           <div>
@@ -52,7 +52,7 @@ export const InputConstrains = () => {
             onChange={e => f.age.set(e.target.value)}
             value={f.age.value}
           />
-          <div style={{ color: 'red' }}>{f.age.errors.join(',')}</div>
+          <div style={{ color: "red" }}>{f.age.errors.join(",")}</div>
         </div>
         <button>Submit</button>
       </form>

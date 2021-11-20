@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { DEBUG_FormWrapper } from '../components';
-import { useFormio } from '../../dist';
+import * as React from "react";
+import { DEBUG_FormWrapper } from "../components";
+import { useFormio } from "../../dist";
 
 export const AsyncValidations = () => {
   const form = useFormio(
     {
-      firstName: '',
-      lastName: '',
+      firstName: "",
+      lastName: ""
     },
     {
       firstName: {
@@ -14,21 +14,21 @@ export const AsyncValidations = () => {
           new Promise(res =>
             setTimeout(() => {
               const error =
-                Math.random() > 0.5 ? 'Random error thrower' : undefined;
+                Math.random() > 0.5 ? "Random error thrower" : undefined;
               res(error);
             }, 200)
-          ),
+          )
       },
       lastName: {
         validator: () =>
           new Promise(res =>
             setTimeout(() => {
               const error =
-                Math.random() > 0.5 ? 'Random error thrower' : undefined;
+                Math.random() > 0.5 ? "Random error thrower" : undefined;
               res(error);
             }, 1000)
-          ),
-      },
+          )
+      }
     }
   );
   const f = form.fields;
@@ -39,7 +39,7 @@ export const AsyncValidations = () => {
         onSubmit={async e => {
           e.preventDefault();
           const [isValid] = await form.validate();
-          if (isValid) alert('form is valid');
+          if (isValid) alert("form is valid");
         }}
       >
         <div>
@@ -51,7 +51,7 @@ export const AsyncValidations = () => {
             >
               validate firstName
             </button>
-            <div style={{ color: 'red' }}>{f.firstName.errors.join(',')}</div>
+            <div style={{ color: "red" }}>{f.firstName.errors.join(",")}</div>
           </div>
           <div>
             <button
@@ -61,7 +61,7 @@ export const AsyncValidations = () => {
             >
               validate lastName
             </button>
-            <div style={{ color: 'red' }}>{f.lastName.errors.join(',')}</div>
+            <div style={{ color: "red" }}>{f.lastName.errors.join(",")}</div>
           </div>
         </div>
 

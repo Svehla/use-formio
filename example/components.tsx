@@ -1,17 +1,17 @@
-import * as React from 'react';
-import Highlight from 'react-highlight';
+import * as React from "react";
+import Highlight from "react-highlight";
 
 const styles = {
   formWrapper: {
-    display: 'flex',
-    alignItems: 'flex-start',
+    display: "flex",
+    alignItems: "flex-start"
   },
   redColor: {
-    color: 'red',
+    color: "red"
   },
   formWrapperForm: {
-    marginRight: '3rem',
-  },
+    marginRight: "3rem"
+  }
 };
 
 export const DEBUG_FormWrapper = (props: any) => {

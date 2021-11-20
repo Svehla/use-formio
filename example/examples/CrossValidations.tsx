@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { DEBUG_FormWrapper } from '../components';
-import { useFormio } from '../../dist';
+import * as React from "react";
+import { DEBUG_FormWrapper } from "../components";
+import { useFormio } from "../../dist";
 
 const isInteger = (val: string) => parseInt(val).toString() === val;
 /**
@@ -11,22 +11,22 @@ const isInteger = (val: string) => parseInt(val).toString() === val;
 export const CrossValidations = () => {
   const form = useFormio(
     {
-      parentID: '',
-      age: '',
+      parentID: "",
+      age: ""
     },
     {
       parentID: {
         validator: (value, state) => {
           const isOlder18 = parseInt(state.age) < 18;
           if (isOlder18) return undefined;
-          return value.trim() === ''
-            ? 'parent ID is required for people younger 18 years'
+          return value.trim() === ""
+            ? "parent ID is required for people younger 18 years"
             : undefined;
-        },
+        }
       },
       age: {
-        shouldChangeValue: isInteger,
-      },
+        shouldChangeValue: isInteger
+      }
     }
   );
   const f = form.fields;
@@ -37,7 +37,7 @@ export const CrossValidations = () => {
         onSubmit={async e => {
           e.preventDefault();
           const [isValid] = await form.validate();
-          if (isValid) alert('form is valid');
+          if (isValid) alert("form is valid");
         }}
       >
         <div>
@@ -49,7 +49,7 @@ export const CrossValidations = () => {
             onChange={e => f.parentID.set(e.target.value)}
             value={f.parentID.value}
           />
-          <div style={{ color: 'red' }}>{f.parentID.errors.join(',')}</div>
+          <div style={{ color: "red" }}>{f.parentID.errors.join(",")}</div>
         </div>
         <div>
           <div>
@@ -60,7 +60,7 @@ export const CrossValidations = () => {
             onChange={e => f.age.set(e.target.value)}
             value={f.age.value}
           />
-          <div style={{ color: 'red' }}>{f.age.errors.join(',')}</div>
+          <div style={{ color: "red" }}>{f.age.errors.join(",")}</div>
         </div>
         <button>Submit</button>
       </form>

@@ -1,18 +1,18 @@
-import * as React from 'react';
-import { DEBUG_FormWrapper } from '../components';
-import { Field } from '../../dist';
-import { useFormio } from '../../dist';
+import * as React from "react";
+import { DEBUG_FormWrapper } from "../components";
+import { Field } from "../../dist";
+import { useFormio } from "../../dist";
 
 export const RevertToInitState = () => {
   const form = useFormio(
     {
-      firstName: '',
-      lastName: '',
+      firstName: "",
+      lastName: ""
     },
     {
       firstName: {
-        validator: v => (v === 'XXX' ? 'input cannot be XXX' : undefined),
-      },
+        validator: v => (v === "XXX" ? "input cannot be XXX" : undefined)
+      }
     }
   );
   const f = form.fields;
@@ -25,8 +25,8 @@ export const RevertToInitState = () => {
           form.revertToInitState();
         }}
       >
-        <TextInput label={'f.firstName'} {...f.firstName} />
-        <TextInput label={'f.lastName'} {...f.lastName} />
+        <TextInput label={"f.firstName"} {...f.firstName} />
+        <TextInput label={"f.lastName"} {...f.lastName} />
         <button disabled={form.isValidating}>
           Submit and revert to init state
         </button>
@@ -51,7 +51,7 @@ const TextInput = React.memo((props: TextInputProps) => {
         disabled={props.isValidating}
         onChange={e => props.set(e.target.value)}
       />
-      <div style={{ color: 'red' }}>{props.errors.join(', ')}</div>
+      <div style={{ color: "red" }}>{props.errors.join(", ")}</div>
     </div>
   );
 });

@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { DEBUG_FormWrapper } from '../components';
-import { useFormio } from '../../dist';
+import * as React from "react";
+import { DEBUG_FormWrapper } from "../components";
+import { useFormio } from "../../dist";
 
 /**
  * set values synchronously from your JS function via prevState callbacks
@@ -8,18 +8,18 @@ import { useFormio } from '../../dist';
 export const SyncSetValuesBasedOnPrevValue = () => {
   const form = useFormio(
     {
-      ID: '',
-      amount: 0,
+      ID: "",
+      amount: 0
     },
     {
       ID: {
         validator: value =>
-          value === 'xxx' ? `ID cannot has value '${value}'` : undefined,
+          value === "xxx" ? `ID cannot has value '${value}'` : undefined
       },
       amount: {
         validator: value =>
-          value === 5 ? `ID cannot has value '${value}'` : undefined,
-      },
+          value === 5 ? `ID cannot has value '${value}'` : undefined
+      }
     }
   );
   const f = form.fields;
@@ -28,7 +28,7 @@ export const SyncSetValuesBasedOnPrevValue = () => {
     <DEBUG_FormWrapper form={form}>
       <button
         onClick={async () => {
-          f.ID.set('x');
+          f.ID.set("x");
           f.ID.set(p => `${p}x`);
           f.ID.set(p => `${p}x`);
           // f.ID has value: 'xxx`
@@ -39,10 +39,10 @@ export const SyncSetValuesBasedOnPrevValue = () => {
           const [isValid, errors] = await form.validate();
           if (isValid) return;
           if (errors.ID.length > 0) {
-            alert('there is problem with ID field');
+            alert("there is problem with ID field");
           }
           if (errors.amount.length > 0) {
-            alert('there is problem with ID amount');
+            alert("there is problem with ID amount");
           }
         }}
       >

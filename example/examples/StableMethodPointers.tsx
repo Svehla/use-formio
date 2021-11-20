@@ -1,26 +1,26 @@
-import * as React from 'react';
-import { DEBUG_FormWrapper } from '../components';
-import { Field } from '../../dist';
-import { useFormio } from '../../dist';
+import * as React from "react";
+import { DEBUG_FormWrapper } from "../components";
+import { Field } from "../../dist";
+import { useFormio } from "../../dist";
 
 const getRandomRGBLightColor = () => {
   return `rgb(${[
     150 + Math.random() * 100,
     150 + Math.random() * 100,
-    150 + Math.random() * 100,
-  ].join(',')})`;
+    150 + Math.random() * 100
+  ].join(",")})`;
 };
 
 export const StableMethodPointers = () => {
   const form = useFormio(
     {
-      firstName: '',
-      lastName: '',
+      firstName: "",
+      lastName: ""
     },
     {
       firstName: {
-        validator: v => (v === 'XXX' ? 'input cannot be XXX' : undefined),
-      },
+        validator: v => (v === "XXX" ? "input cannot be XXX" : undefined)
+      }
     }
   );
   const f = form.fields;
@@ -31,18 +31,18 @@ export const StableMethodPointers = () => {
         onSubmit={async e => {
           e.preventDefault();
           const [isValid] = await form.validate();
-          if (isValid) alert('form is valid');
+          if (isValid) alert("form is valid");
         }}
       >
         {/* thanks to stable pointer + React.memo, the component is rerendered only if value is changed */}
         <TextInput
-          label={'f.firstName'}
+          label={"f.firstName"}
           value={f.firstName.value}
           set={f.firstName.set}
           errors={f.firstName.errors}
         />
         <TextInput
-          label={'f.lastName'}
+          label={"f.lastName"}
           value={f.lastName.value}
           set={f.lastName.set}
           errors={f.lastName.errors}
@@ -58,9 +58,9 @@ type TextInputProps = {
   label: string;
   validateOnBlur?: boolean;
 
-  value: TextField['value'];
-  set: TextField['set'];
-  errors: TextField['errors'];
+  value: TextField["value"];
+  set: TextField["set"];
+  errors: TextField["errors"];
 };
 
 const TextInput = React.memo((props: TextInputProps) => {
@@ -72,7 +72,7 @@ const TextInput = React.memo((props: TextInputProps) => {
         type="text"
         onChange={e => props.set(e.target.value)}
       />
-      <div style={{ color: 'red' }}>{props.errors.join(', ')}</div>
+      <div style={{ color: "red" }}>{props.errors.join(", ")}</div>
     </div>
   );
 });

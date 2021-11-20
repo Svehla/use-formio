@@ -1,11 +1,11 @@
-import { Await, mapObjectValues, promiseAllObjectValues } from './utils';
+import { Await, mapObjectValues, promiseAllObjectValues } from "./utils";
 
 // TODO: add useCallbacks and make sure that all useFormio functions are stable
 export const useCombineFormio = <T extends Record<string, any>>(forms: T) => {
   const clearErrors = () => {
     return promiseAllObjectValues(
       mapObjectValues(v => v.clearErrors(), forms) as {
-        [K in keyof T]: ReturnType<T[K]['clearErrors']>;
+        [K in keyof T]: ReturnType<T[K]["clearErrors"]>;
       }
     );
   };
@@ -14,7 +14,7 @@ export const useCombineFormio = <T extends Record<string, any>>(forms: T) => {
     return (promiseAllObjectValues(
       mapObjectValues(v => v.revertToInitState(), forms)
     ) as any) as {
-      [K in keyof T]: ReturnType<T[K]['revertToInitState']>;
+      [K in keyof T]: ReturnType<T[K]["revertToInitState"]>;
     };
   };
 
@@ -22,7 +22,7 @@ export const useCombineFormio = <T extends Record<string, any>>(forms: T) => {
     const results = (await promiseAllObjectValues(
       mapObjectValues(v => v.validate(), forms)
     )) as {
-      [K in keyof T]: Await<ReturnType<T[K]['validate']>>;
+      [K in keyof T]: Await<ReturnType<T[K]["validate"]>>;
     };
 
     const isValid = Object.values(
@@ -47,6 +47,6 @@ export const useCombineFormio = <T extends Record<string, any>>(forms: T) => {
     forms,
     revertToInitState,
     validate,
-    clearErrors,
+    clearErrors
   };
 };

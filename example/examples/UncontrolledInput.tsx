@@ -1,28 +1,28 @@
-import * as React from 'react';
-import { DEBUG_FormWrapper } from '../components';
-import { Field, useFormio } from '../../dist';
+import * as React from "react";
+import { DEBUG_FormWrapper } from "../components";
+import { Field, useFormio } from "../../dist";
 
 export const getRandomRGBLightColor = () => {
   return `rgb(${[
     150 + Math.random() * 100,
     150 + Math.random() * 100,
-    150 + Math.random() * 100,
-  ].join(',')})`;
+    150 + Math.random() * 100
+  ].join(",")})`;
 };
 
 const MIN_TEXTAREA_LENGTH = 50;
 export const UncontrolledInput = () => {
   const form = useFormio(
     {
-      text: '',
+      text: ""
     },
     {
       text: {
         validator: v =>
           v.length < MIN_TEXTAREA_LENGTH
             ? `LENGTH SHOULD BE >= ${MIN_TEXTAREA_LENGTH}`
-            : undefined,
-      },
+            : undefined
+      }
     }
   );
   const f = form.fields;
@@ -33,7 +33,7 @@ export const UncontrolledInput = () => {
         onSubmit={async e => {
           e.preventDefault();
           const [isValid] = await form.validate();
-          if (isValid) alert('form is valid');
+          if (isValid) alert("form is valid");
         }}
       >
         <div>
@@ -56,9 +56,9 @@ type StringField = Field<string>;
 
 const UncontrolledTextarea = React.memo(
   (props: {
-    errors: StringField['errors'];
-    set: StringField['set'];
-    setErrors: StringField['setErrors'];
+    errors: StringField["errors"];
+    set: StringField["set"];
+    setErrors: StringField["setErrors"];
   }) => {
     const textareaRef = React.useRef<any>(undefined);
 
@@ -72,7 +72,7 @@ const UncontrolledTextarea = React.memo(
           onBlur={() => props.set(textareaRef.current.value)}
         />
 
-        <div style={{ color: 'red' }}>{props.errors.join(', ')}</div>
+        <div style={{ color: "red" }}>{props.errors.join(", ")}</div>
       </div>
     );
   }
