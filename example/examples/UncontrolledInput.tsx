@@ -1,16 +1,17 @@
 import * as React from 'react';
 import {  useFormio } from '../../dist';
 import { DEBUG_FormWrapper } from '../components';
-import { debounce } from '../utils';
 
+const MIN_TEXTAREA_LENGTH = 50
 export const UncontrolledInput = () => {
+  const textareaRef = React.useRef<any>(undefined)
   const form = useFormio(
     {
       text: "",
     },
     {
       text: {
-        validator: v => v.length < 200 ? 'LENGTH SHOULD BE >= 200' : undefined
+        validator: v => v.length < MIN_TEXTAREA_LENGTH ? `LENGTH SHOULD BE >= ${MIN_TEXTAREA_LENGTH}` : undefined
       }
     }
   )
@@ -20,6 +21,7 @@ export const UncontrolledInput = () => {
     <DEBUG_FormWrapper form={form}>
       <form
         onSubmit={async e => {
+          const textareaValue = textareaRef.current
           e.preventDefault()
           const [isValid] = await form.validate()
           // if form is not valid, reset data
@@ -27,25 +29,18 @@ export const UncontrolledInput = () => {
         }}
       >
         <div>
-          <label>Text with 400ms debounce</label>
+          <label>Text</label>
         </div>
-        <MyTextArea
-          set={f.text.set}
+
+        <textarea 
+          ref={textareaRef}
+          onFocus={() => f.text.setErrors([])}
+          onBlur={() => f.text.set(textareaRef.current.value)}
         />
+
         <div style={{color: 'red'}}>{f.text.errors.join(', ')}</div>
         <button disabled={form.isValidating}>Submit</button>
       </form>
     </DEBUG_FormWrapper>
   )
 }
-
-// this component si rendered only once per instance because set is stable pointer
-const MyTextArea = React.memo((props: {
-  set: (userValue: string | ((prevState: string) => string)) => void 
-}) => {
-  return (
-    <textarea 
-      onChange={(e) => debounce(props.set, 1000)(e.target.value)}
-    />
-  )
-})

@@ -11,6 +11,7 @@ import { MultipleValidatorFunctions } from './examples/MultipleValidatorFunction
 import { UseCombineFormioExample } from './examples/UseCombineFormioExample'
 import { UncontrolledInput } from './examples/UncontrolledInput'
 import { StableMethodPointers } from './examples/StableMethodPointers'
+import { DebouncedInput } from './examples/DebouncedInput'
 import Highlight from 'react-highlight'
 import 'highlight.js/styles/atom-one-dark.css'
 
@@ -66,6 +67,11 @@ const components = [
     githubFileName: 'StableMethodPointers',
     Comp: StableMethodPointers,
   },
+  {
+    title: 'DebouncedInput',
+    githubFileName: 'DebouncedInput',
+    Comp: DebouncedInput,
+  },
 ]
 
 const App = () => {
@@ -112,19 +118,22 @@ const ListItem = (props: any) => {
 
   return (
     <div>
-      <h2>{i.title}</h2>
-      <div>
+      <div style={{display: 'flex', justifyContent: 'space-between'}}>
+        <h2>
+          {i.title}
+        </h2>
         <a href={`https://github.com/Svehla/use-formio/blob/main/example/examples/${i.githubFileName}.tsx`}>
-          GITHUB SOURCE CODE
+          GITHUB
         </a>
       </div>
-      <div className="row">
+
+      <div>
         <i.Comp />
       </div>
 
       <div>
         <div>
-          <button onClick={() => setShow(p => !p)}>
+          <button className="btn btn-primary" onClick={() => setShow(p => !p)}>
             {show ? 'hide' : 'show'} source code
           </button>
         </div>

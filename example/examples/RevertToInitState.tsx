@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useFormio } from '../../dist';
+import { Field } from '../../dist/useFormio';
 import { DEBUG_FormWrapper } from '../components';
 
 export const RevertToInitState = () => {
@@ -37,15 +38,7 @@ type TextInputProps = {
   label: string,
   validateOnBlur?: boolean
   showRerendering?: boolean
-
-  // use-formio field interface
-  value: string;
-  errors: string[];
-  isValidating: boolean;
-  set: (userValue: string | ((prevState: string) => string)) => void;
-  validate: () => Promise<[boolean, string[]]>;
-  setErrors: (newErrors: string[] | ((prevState: string[]) => string[])) => void;
-}
+} & Field<string>
 
 export const TextInput = React.memo((props: TextInputProps)=> {
   return (
