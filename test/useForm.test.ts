@@ -1,5 +1,5 @@
+import { act, renderHook } from '@testing-library/react-hooks';
 import { useFormio } from '../src/useFormio';
-import { renderHook, act } from '@testing-library/react-hooks';
 
 describe('it', () => {
   it('set string value', async () => {
@@ -159,21 +159,20 @@ describe('it', () => {
         },
         {
           str1: {
-            validator: (v) => v === 'e' ? 'error' : []
-          }
+            validator: v => (v === 'e' ? 'error' : []),
+          },
         }
       )
     );
 
-
     await act(async () => {
-      result.current.fields.str1.set('e')
-      await result.current.validate()
+      result.current.fields.str1.set('e');
+      await result.current.validate();
     });
     expect(result.current.fields.str1.errors).toEqual(['error']);
 
     await act(async () => {
-      result.current.fields.str1.set('')
+      result.current.fields.str1.set('');
     });
 
     expect(result.current.fields.str1.errors).toEqual([]);
@@ -187,26 +186,25 @@ describe('it', () => {
         },
         {
           str1: {
-            validator: (v) => v === 'e' ? 'error' : []
-          }
+            validator: v => (v === 'e' ? 'error' : []),
+          },
         }
       )
     );
 
     await act(async () => {
-      result.current.fields.str1.set('a')
-      result.current.validate()
+      result.current.fields.str1.set('a');
+      result.current.validate();
     });
     expect(result.current.fields.str1.errors).toEqual([]);
 
     await act(async () => {
-      result.current.fields.str1.set('e')
-      result.current.fields.str1.setErrors(['xxx'])
-      await result.current.validate()
+      result.current.fields.str1.set('e');
+      result.current.fields.str1.setErrors(['xxx']);
+      await result.current.validate();
     });
     expect(result.current.fields.str1.errors).toEqual(['error']);
   });
-
 
   describe('react memo pointers optimization ', () => {
     it('constant error pointer for changing value of the field', async () => {
@@ -216,16 +214,16 @@ describe('it', () => {
         })
       );
 
-      let firstErrorPointer
-      let secondErrorPointer
-      let thirdErrorPointer
+      let firstErrorPointer;
+      let secondErrorPointer;
+      let thirdErrorPointer;
 
       await act(async () => {
-        firstErrorPointer = result.current.fields.str1.errors
-        await result.current.fields.str1.set('xxx')
-        secondErrorPointer = result.current.fields.str1.errors
-        await result.current.fields.str1.setErrors(['err'])
-        thirdErrorPointer = result.current.fields.str1.errors
+        firstErrorPointer = result.current.fields.str1.errors;
+        await result.current.fields.str1.set('xxx');
+        secondErrorPointer = result.current.fields.str1.errors;
+        await result.current.fields.str1.setErrors(['err']);
+        thirdErrorPointer = result.current.fields.str1.errors;
       });
       expect(firstErrorPointer === secondErrorPointer).toEqual(true);
       expect(firstErrorPointer === thirdErrorPointer).toEqual(false);
@@ -240,14 +238,14 @@ describe('it', () => {
         })
       );
 
-      let firstErrorPointer
-      let secondErrorPointer
+      let firstErrorPointer;
+      let secondErrorPointer;
 
       await act(async () => {
-        result.current.fields.str1.set('xxx')
-        firstErrorPointer = result.current.fields.str1.errors
-        await result.current.validate()
-        secondErrorPointer = result.current.fields.str1.errors
+        result.current.fields.str1.set('xxx');
+        firstErrorPointer = result.current.fields.str1.errors;
+        await result.current.validate();
+        secondErrorPointer = result.current.fields.str1.errors;
       });
       expect(firstErrorPointer === secondErrorPointer).toEqual(true);
       expect(secondErrorPointer).toEqual([]);
@@ -260,16 +258,16 @@ describe('it', () => {
         })
       );
 
-      let firstErrorPointer
-      let secondErrorPointer
-      let thirdErrorPointer
+      let firstErrorPointer;
+      let secondErrorPointer;
+      let thirdErrorPointer;
 
       await act(async () => {
-        firstErrorPointer = result.current.fields.str1.errors
-        await result.current.fields.str1.set('xxx')
-        secondErrorPointer = result.current.fields.str1.errors
-        await result.current.fields.str1.setErrors(['err'])
-        thirdErrorPointer = result.current.fields.str1.errors
+        firstErrorPointer = result.current.fields.str1.errors;
+        await result.current.fields.str1.set('xxx');
+        secondErrorPointer = result.current.fields.str1.errors;
+        await result.current.fields.str1.setErrors(['err']);
+        thirdErrorPointer = result.current.fields.str1.errors;
       });
       expect(firstErrorPointer === secondErrorPointer).toEqual(true);
       expect(firstErrorPointer === thirdErrorPointer).toEqual(false);
@@ -283,23 +281,22 @@ describe('it', () => {
         })
       );
 
-      let firstErrorPointer
-      let secondErrorPointer
-      let thirdErrorPointer
+      let firstErrorPointer;
+      let secondErrorPointer;
+      let thirdErrorPointer;
 
       await act(async () => {
-        await result.current.fields.str1.set('xxx')
-        firstErrorPointer = result.current.fields.str1.errors
-        await result.current.fields.str1.validate()
-        secondErrorPointer = result.current.fields.str1.errors
-        await result.current.fields.str1.validate()
-        thirdErrorPointer = result.current.fields.str1.errors
+        await result.current.fields.str1.set('xxx');
+        firstErrorPointer = result.current.fields.str1.errors;
+        await result.current.fields.str1.validate();
+        secondErrorPointer = result.current.fields.str1.errors;
+        await result.current.fields.str1.validate();
+        thirdErrorPointer = result.current.fields.str1.errors;
       });
-      
+
       expect(firstErrorPointer === secondErrorPointer).toEqual(true);
       expect(firstErrorPointer === thirdErrorPointer).toEqual(true);
       expect(firstErrorPointer).toEqual([]);
     });
-  })
-  
+  });
 });

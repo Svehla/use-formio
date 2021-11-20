@@ -1,51 +1,52 @@
 import * as React from 'react';
-import { Field, useCombineFormio, useFormio } from '../../dist';
 import { DEBUG_FormWrapper } from '../components';
+import { Field, useCombineFormio, useFormio } from '../../dist';
 
-export const isRequired = (value: string) => value.trim() === '' ? 'Field cannot be empty' : undefined;
+export const isRequired = (value: string) =>
+  value.trim() === '' ? 'Field cannot be empty' : undefined;
 
 export const UseCombineFormioExample = () => {
   const form = useCombineFormio({
     a: useFormio(
       {
-        firstName: "",
-        lastName: "",
+        firstName: '',
+        lastName: '',
       },
       {
         firstName: {
-          validator: isRequired
+          validator: isRequired,
         },
         lastName: {
-          validator: isRequired
-        }
+          validator: isRequired,
+        },
       }
     ),
     b: useFormio(
       {
-        age: "",
-        id: "",
+        age: '',
+        id: '',
       },
       {
         age: {
-          validator: isRequired
+          validator: isRequired,
         },
         id: {
-          validator: isRequired
-        }
+          validator: isRequired,
+        },
       }
-    )
-  })
+    ),
+  });
 
-  const a = form.forms.a.fields
-  const b = form.forms.b.fields
+  const a = form.forms.a.fields;
+  const b = form.forms.b.fields;
 
   return (
     <DEBUG_FormWrapper form={form.forms.a} form2={form.forms.b}>
       <form
         onSubmit={async e => {
-          e.preventDefault()
-          const [isValid] = await form.validate()
-          if (isValid) alert('form is valid')
+          e.preventDefault();
+          const [isValid] = await form.validate();
+          if (isValid) alert('form is valid');
         }}
       >
         <TextInput label="a.firstName" {...a.firstName} />
@@ -55,16 +56,16 @@ export const UseCombineFormioExample = () => {
         <button disabled={form.isValidating}>Submit</button>
       </form>
     </DEBUG_FormWrapper>
-  )
-}
+  );
+};
 
-type TextInputProps = { 
-  label: string,
-  validateOnBlur?: boolean
-  showRerendering?: boolean
-} & Field<string>
+type TextInputProps = {
+  label: string;
+  validateOnBlur?: boolean;
+  showRerendering?: boolean;
+} & Field<string>;
 
-const TextInput = React.memo((props: TextInputProps)=> {
+const TextInput = React.memo((props: TextInputProps) => {
   return (
     <div>
       <h3>{props.label}</h3>
@@ -73,8 +74,8 @@ const TextInput = React.memo((props: TextInputProps)=> {
         type="text"
         disabled={props.isValidating}
         onChange={e => props.set(e.target.value)}
-      /> 
+      />
       <div style={{ color: 'red' }}>{props.errors.join(', ')}</div>
     </div>
-  )
-})
+  );
+});

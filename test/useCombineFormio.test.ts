@@ -1,6 +1,6 @@
-import { useFormio } from '../src/useFormio';
-import { useCombineFormio } from '../src/useCombineFormio';
 import { act, renderHook } from '@testing-library/react-hooks';
+import { useCombineFormio } from '../src/useCombineFormio';
+import { useFormio } from '../src/useFormio';
 
 describe('it', () => {
   it('get combined form nested data', async () => {

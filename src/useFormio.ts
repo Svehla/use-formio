@@ -1,5 +1,5 @@
+import { mapObjectValues, notNullable, promiseAllObjectValues } from './utils';
 import { useCallback, useState } from 'react';
-import { notNullable, mapObjectValues, promiseAllObjectValues } from './utils'
 
 type MaybePromise<T> = T | Promise<T>;
 
@@ -7,15 +7,20 @@ type MaybePromise<T> = T | Promise<T>;
 export const useAsyncState = <T>(defaultState: T) => {
   const [state, _setState] = useState(defaultState);
 
-  const setState = useCallback((setStateAction: Parameters<typeof _setState>[0]) =>
-    new Promise<T>(res =>
-      _setState(prevState => {
-        const newState =
-          setStateAction instanceof Function ? setStateAction(prevState) : setStateAction;
-        res(newState);
-        return newState;
-      })
-    ), []);
+  const setState = useCallback(
+    (setStateAction: Parameters<typeof _setState>[0]) =>
+      new Promise<T>(res =>
+        _setState(prevState => {
+          const newState =
+            setStateAction instanceof Function
+              ? setStateAction(prevState)
+              : setStateAction;
+          res(newState);
+          return newState;
+        })
+      ),
+    []
+  );
 
   // if new state is equal to the old one (aka `p => p`)
   // react shallow compare does not trigger rerender of the component
@@ -24,25 +29,31 @@ export const useAsyncState = <T>(defaultState: T) => {
   return [state, setState, getState] as const;
 };
 
-
-const convertInitStateToFormState = <T extends Record<string, any>>(initState: T) => ({
+const convertInitStateToFormState = <T extends Record<string, any>>(
+  initState: T
+) => ({
   values: initState,
   errors: mapObjectValues(() => [] as string[], initState),
   isValidating: mapObjectValues(() => false, initState),
 });
 
-type UserFormError = (string | null | undefined | string)[] | undefined | string;
+type UserFormError =
+  | (string | null | undefined | string)[]
+  | undefined
+  | string;
 
 type UserFieldValue = string | boolean | number | null | undefined | any;
 
-export type Field <T> = {
+export type Field<T> = {
   value: T;
   errors: string[];
   isValidating: boolean;
   set: (userValue: T | ((prevState: T) => T)) => void;
   validate: () => Promise<[boolean, string[]]>;
-  setErrors: (newErrors: string[] | ((prevState: string[]) => string[])) => void;
-}
+  setErrors: (
+    newErrors: string[] | ((prevState: string[]) => string[])
+  ) => void;
+};
 
 // TODO: what about race-condition while doing async validation and setting new value?
 export const useFormio = <T extends Record<string, UserFieldValue>>(
@@ -55,16 +66,19 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
   }
 ) => {
   // we use this useState to memoize init componentDidMount value for the form
-  const [initState] = useState(initStateArg)
+  const [initState] = useState(initStateArg);
   const [formState, setFormState, getFormState] = useAsyncState(
     convertInitStateToFormState(initState)
   );
 
-  const getFormInputErrors = async (key: keyof T, currFormState: typeof formState) => {
+  const getFormInputErrors = async (
+    key: keyof T,
+    currFormState: typeof formState
+  ) => {
     const schemaDef = stateSchema?.[key];
-    const prevErrors = currFormState.errors[key as any]
+    const prevErrors = currFormState.errors[key as any];
     // we want to be sure that empty array pointer is not override with new empty array pointer
-    if (!schemaDef) return prevErrors
+    if (!schemaDef) return prevErrors;
 
     let errors = [] as (string | undefined | null)[];
 
@@ -79,10 +93,10 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     const newErrors = errors.filter(notNullable);
     // === same value pointer optimization ===
     // we want to be sure that empty array pointer is not override with new empty array pointer
-    if(newErrors.length === 0 && prevErrors.length === 0) {
-      return prevErrors
+    if (newErrors.length === 0 && prevErrors.length === 0) {
+      return prevErrors;
     }
-    return newErrors
+    return newErrors;
   };
 
   const fields = mapObjectValues(
@@ -94,28 +108,37 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
         setFormState(prevFormState => {
           const schemaDef = stateSchema?.[key];
           const newValue =
-            userValue instanceof Function ? userValue(prevFormState.values[key]) : userValue;
+            userValue instanceof Function
+              ? userValue(prevFormState.values[key])
+              : userValue;
 
-          if (schemaDef?.shouldChangeValue?.(newValue, prevFormState.values) === false) {
+          if (
+            schemaDef?.shouldChangeValue?.(newValue, prevFormState.values) ===
+            false
+          ) {
             return prevFormState;
           }
 
           // === same value pointer optimization ===
           // we want to be sure that empty array pointer is not override with new empty array pointer
           // thanks to that we may optimise react render memoization
-          const newErrors = prevFormState.errors[key].length === 0
-            ? prevFormState.errors
-            : { ...prevFormState.errors, [key]: [] }
+          const newErrors =
+            prevFormState.errors[key].length === 0
+              ? prevFormState.errors
+              : { ...prevFormState.errors, [key]: [] };
 
           return {
             ...prevFormState,
             values: { ...prevFormState.values, [key]: newValue },
-            errors: newErrors
+            errors: newErrors,
           };
         });
       }, []),
       validate: useCallback(async () => {
-        setFormState(p => ({ ...p, isValidating: { ...p.isValidating, [key]: true }}))
+        setFormState(p => ({
+          ...p,
+          isValidating: { ...p.isValidating, [key]: true },
+        }));
         const prevFormState = await getFormState();
         const newErrors = await getFormInputErrors(key, prevFormState);
         setFormState(p => ({
@@ -124,15 +147,20 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
           errors: { ...p.errors, [key]: newErrors },
         }));
         const isFieldValid = newErrors.length === 0;
-        return [isFieldValid, newErrors] as [boolean, typeof newErrors]
+        return [isFieldValid, newErrors] as [boolean, typeof newErrors];
       }, []),
-      setErrors: useCallback((userErrors: string[] | ((prevState: string[]) => string[])) => {
-        setFormState(p => {
-          const newErrors =
-            userErrors instanceof Function ? userErrors(p.errors[key]) : userErrors;
-          return { ...p, errors: { ...p.errors, [key]: newErrors }}
-        });
-      }, []),
+      setErrors: useCallback(
+        (userErrors: string[] | ((prevState: string[]) => string[])) => {
+          setFormState(p => {
+            const newErrors =
+              userErrors instanceof Function
+                ? userErrors(p.errors[key])
+                : userErrors;
+            return { ...p, errors: { ...p.errors, [key]: newErrors } };
+          });
+        },
+        []
+      ),
     }),
     formState.values,
     // we use stable iteration because we need to keep calling of hooks in the same order
@@ -142,12 +170,15 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     [K in keyof T]: {
       // redundant nested cycle to unwrap on hover typescript hint in the IDE
       // `[K in keyof T]: Field<T[K]>` will be effective enough but with less nice TS hints
-      [KK in keyof Field<T[K]>]: Field<T[K]>[KK]
-    }
+      [KK in keyof Field<T[K]>]: Field<T[K]>[KK];
+    };
   };
 
   const validate = useCallback(async () => {
-    setFormState(p => ({ ...p, isValidating: mapObjectValues(() => true, p.isValidating) }));
+    setFormState(p => ({
+      ...p,
+      isValidating: mapObjectValues(() => true, p.isValidating),
+    }));
 
     const prevFormState = await getFormState();
 
@@ -155,18 +186,20 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
       mapObjectValues(
         (_v, key) => getFormInputErrors(key, prevFormState),
         prevFormState.values
-      ) as { [K in keyof T]: Promise<string[]> }
+      ) as {
+        [K in keyof T]: Promise<string[]>;
+      }
     );
 
     setFormState(p => ({
       ...p,
       errors: newErrors,
-      isValidating: mapObjectValues(() => false, p.isValidating)
+      isValidating: mapObjectValues(() => false, p.isValidating),
     }));
 
     const isFormValid = Object.values(newErrors).flat().length === 0;
 
-    return [isFormValid, newErrors] as [boolean, typeof newErrors]
+    return [isFormValid, newErrors] as [boolean, typeof newErrors];
   }, []);
 
   const clearErrors = () => {
@@ -178,9 +211,12 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     }));
   };
 
-  const revertToInitState = () => setFormState(convertInitStateToFormState(initState));
+  const revertToInitState = () =>
+    setFormState(convertInitStateToFormState(initState));
 
-  const isValidating = Object.values(formState.isValidating).some(v => v === true);
+  const isValidating = Object.values(formState.isValidating).some(
+    v => v === true
+  );
   const isValid = Object.values(formState.errors).flat().length === 0;
 
   return {
