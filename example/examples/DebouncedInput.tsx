@@ -2,10 +2,7 @@ import * as React from "react";
 import { DEBUG_FormWrapper } from "../components";
 import { Field, useFormio } from "../../dist";
 
-export const debounce = <CB extends (...args: any[]) => any>(
-  callback: CB,
-  delay: number
-) => {
+export const debounce = <CB extends (...args: any[]) => any>(callback: CB, delay: number) => {
   let timeout: NodeJS.Timeout;
 
   return (...args: Parameters<CB>) => {

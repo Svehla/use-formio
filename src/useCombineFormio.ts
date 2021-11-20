@@ -11,17 +11,13 @@ export const useCombineFormio = <T extends Record<string, any>>(forms: T) => {
   };
 
   const revertToInitState = () => {
-    return (promiseAllObjectValues(
-      mapObjectValues(v => v.revertToInitState(), forms)
-    ) as any) as {
+    return (promiseAllObjectValues(mapObjectValues(v => v.revertToInitState(), forms)) as any) as {
       [K in keyof T]: ReturnType<T[K]["revertToInitState"]>;
     };
   };
 
   const validate = async () => {
-    const results = (await promiseAllObjectValues(
-      mapObjectValues(v => v.validate(), forms)
-    )) as {
+    const results = (await promiseAllObjectValues(mapObjectValues(v => v.validate(), forms))) as {
       [K in keyof T]: Await<ReturnType<T[K]["validate"]>>;
     };
 

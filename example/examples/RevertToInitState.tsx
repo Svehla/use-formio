@@ -27,9 +27,7 @@ export const RevertToInitState = () => {
       >
         <TextInput label={"f.firstName"} {...f.firstName} />
         <TextInput label={"f.lastName"} {...f.lastName} />
-        <button disabled={form.isValidating}>
-          Submit and revert to init state
-        </button>
+        <button disabled={form.isValidating}>Submit and revert to init state</button>
       </form>
     </DEBUG_FormWrapper>
   );

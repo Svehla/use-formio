@@ -90,6 +90,7 @@ const App = () => {
           name: i.githubFileName,
           data: await window
             .fetch(
+              // eslint-disable-next-line max-len
               `https://raw.githubusercontent.com/Svehla/use-formio/main/example/examples/${i.githubFileName}.tsx`
             )
             .then(res => res.text())
@@ -126,6 +127,7 @@ const ListItem = (props: any) => {
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h2>{i.title}</h2>
         <a
+          // eslint-disable-next-line max-len
           href={`https://github.com/Svehla/use-formio/blob/main/example/examples/${i.githubFileName}.tsx`}
         >
           GITHUB

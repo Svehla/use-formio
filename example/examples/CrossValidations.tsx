@@ -55,11 +55,7 @@ export const CrossValidations = () => {
           <div>
             <label>age</label>
           </div>
-          <input
-            type="text"
-            onChange={e => f.age.set(e.target.value)}
-            value={f.age.value}
-          />
+          <input type="text" onChange={e => f.age.set(e.target.value)} value={f.age.value} />
           <div style={{ color: "red" }}>{f.age.errors.join(",")}</div>
         </div>
         <button>Submit</button>

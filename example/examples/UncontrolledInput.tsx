@@ -19,9 +19,7 @@ export const UncontrolledInput = () => {
     {
       text: {
         validator: v =>
-          v.length < MIN_TEXTAREA_LENGTH
-            ? `LENGTH SHOULD BE >= ${MIN_TEXTAREA_LENGTH}`
-            : undefined
+          v.length < MIN_TEXTAREA_LENGTH ? `LENGTH SHOULD BE >= ${MIN_TEXTAREA_LENGTH}` : undefined
       }
     }
   );

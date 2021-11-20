@@ -34,7 +34,10 @@ export const StableMethodPointers = () => {
           if (isValid) alert("form is valid");
         }}
       >
-        {/* thanks to stable pointer + React.memo, the component is rerendered only if value is changed */}
+        {/*
+          thanks to stable pointer + React.memo,
+          the component is rerendered only if value is changed
+         */}
         <TextInput
           label={"f.firstName"}
           value={f.firstName.value}
@@ -67,11 +70,7 @@ const TextInput = React.memo((props: TextInputProps) => {
   return (
     <div style={{ background: getRandomRGBLightColor() }}>
       <h3>{props.label}</h3>
-      <input
-        value={props.value}
-        type="text"
-        onChange={e => props.set(e.target.value)}
-      />
+      <input value={props.value} type="text" onChange={e => props.set(e.target.value)} />
       <div style={{ color: "red" }}>{props.errors.join(", ")}</div>
     </div>
   );

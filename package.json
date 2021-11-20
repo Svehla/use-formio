@@ -27,6 +27,9 @@
       "pre-commit": "tsdx lint"
     }
   },
+  "prettier": {
+    "printWidth": 100
+  },
   "// prettier": {
     "printWidth": 100,
     "semi": true,

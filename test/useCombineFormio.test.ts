@@ -94,10 +94,7 @@ describe("it", () => {
   it("combined form validate 2", async () => {
     const { result } = renderHook(() =>
       useCombineFormio({
-        form1: useFormio(
-          { a: "x" },
-          { a: { validator: v => (v === "a" ? "ERR1" : undefined) } }
-        )
+        form1: useFormio({ a: "x" }, { a: { validator: v => (v === "a" ? "ERR1" : undefined) } })
       })
     );
     await act(async () => {
@@ -115,10 +112,7 @@ describe("it", () => {
           // eslint-disable-next-line
           { a: { validator: () => Promise.resolve(undefined) } }
         ),
-        form2: useFormio(
-          { a: "x" },
-          { a: { validator: () => Promise.resolve(undefined) } }
-        )
+        form2: useFormio({ a: "x" }, { a: { validator: () => Promise.resolve(undefined) } })
       })
     );
     await act(async () => {

@@ -25,10 +25,10 @@ export const mapObjectValues = <Key extends string, Value, NewValue>(
     });
   }
 
-  return Object.fromEntries(
-    entries.map(([key, value]) => [key, fn(value, key)], obj)
-  ) as Record<Key, NewValue>;
+  return Object.fromEntries(entries.map(([key, value]) => [key, fn(value, key)], obj)) as Record<
+    Key,
+    NewValue
+  >;
 };
 
-export const notNullable = <T>(x: T | null | undefined): x is T =>
-  x !== undefined && x !== null;
+export const notNullable = <T>(x: T | null | undefined): x is T => x !== undefined && x !== null;

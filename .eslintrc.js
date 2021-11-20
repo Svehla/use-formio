@@ -12,6 +12,7 @@ module.exports = {
     }
   },
   rules: {
+    "max-len": [1, { code: 100 }],
     "sort-imports-es6-autofix/sort-imports-es6": [
       2,
       {

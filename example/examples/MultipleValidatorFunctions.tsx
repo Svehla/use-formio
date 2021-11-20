@@ -4,8 +4,7 @@ import { Field } from "../../dist";
 import { useCallback } from "react";
 import { useFormio } from "../../dist";
 
-const isRequired = (value: string) =>
-  value.trim() === "" ? "Field cannot be empty" : undefined;
+const isRequired = (value: string) => (value.trim() === "" ? "Field cannot be empty" : undefined);
 const isInteger = (val: string) => parseInt(val).toString() === val;
 
 export const MultipleValidatorFunctions = () => {
@@ -24,8 +23,7 @@ export const MultipleValidatorFunctions = () => {
         shouldChangeValue: v => v.length <= 30
       },
       age: {
-        shouldChangeValue: v =>
-          v.length === 0 ? true : isInteger(v) && v.length <= 2
+        shouldChangeValue: v => (v.length === 0 ? true : isInteger(v) && v.length <= 2)
       }
     }
   );
@@ -65,19 +63,12 @@ const getRandomRGBLightColor = () => {
 
 const TextInput = React.memo((props: TextInputProps) => {
   const onChange = useCallback((e: any) => props.set(e.target.value), []);
-  const onBlur = React.useMemo(
-    () => (props.validateOnBlur ? () => props.validate() : undefined),
-    [props.validateOnBlur]
-  );
+  const onBlur = React.useMemo(() => (props.validateOnBlur ? () => props.validate() : undefined), [
+    props.validateOnBlur
+  ]);
 
   return (
-    <div
-      style={
-        props.showRerendering
-          ? { background: getRandomRGBLightColor() }
-          : undefined
-      }
-    >
+    <div style={props.showRerendering ? { background: getRandomRGBLightColor() } : undefined}>
       <h3>{props.label}</h3>
       <input
         value={props.value}

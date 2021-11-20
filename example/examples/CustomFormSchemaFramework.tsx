@@ -2,8 +2,7 @@ import * as React from "react";
 import { DEBUG_FormWrapper } from "../components";
 import { Field, useFormio } from "../../dist";
 
-const isRequired = (value: string) =>
-  value.trim() === "" ? "Field cannot be empty" : undefined;
+const isRequired = (value: string) => (value.trim() === "" ? "Field cannot be empty" : undefined);
 const minNum = (min: number) => (value: number) =>
   value < min ? `amount has to be larger than ${min}` : undefined;
 const hasToBeChecked = (value: boolean) =>
@@ -111,9 +110,7 @@ export const CustomFormSchemaFramework = () => {
 
 export type Await<T> = T extends Promise<infer U> ? U : T;
 
-const UISchemaFormAbstraction = <
-  T extends { fields: any; validate: any }
->(props: {
+const UISchemaFormAbstraction = <T extends { fields: any; validate: any }>(props: {
   form: T;
   fields: { label: string; key: keyof T["fields"] }[];
   onSubmit: (arg: Await<ReturnType<T["validate"]>>) => void;
@@ -125,7 +122,7 @@ const UISchemaFormAbstraction = <
         props.onSubmit(await props.form.validate());
       }}
     >
-      {props.fields.map((f, index) => {
+      {props.fields.map(f => {
         const field = props.form.fields[f.key];
         const inputType = typeof field.value;
 
@@ -157,11 +154,7 @@ const FTextInput = React.memo((props: { label: string } & Field<string>) => {
     <div>
       <label>{props.label}</label>
       <div>
-        <input
-          value={props.value}
-          type="text"
-          onChange={e => props.set(e.target.value)}
-        />
+        <input value={props.value} type="text" onChange={e => props.set(e.target.value)} />
       </div>
       <div style={{ color: "red" }}>{props.errors.join(", ")}</div>
     </div>
@@ -189,11 +182,7 @@ const FCheckbox = React.memo((props: { label: string } & Field<boolean>) => {
     <div>
       <label>{props.label}</label>
       <div>
-        <input
-          type="checkbox"
-          checked={props.value}
-          onChange={e => props.set(e.target.checked)}
-        />
+        <input type="checkbox" checked={props.value} onChange={e => props.set(e.target.checked)} />
       </div>
       <div style={{ color: "red" }}>{props.errors.join(", ")}</div>
     </div>

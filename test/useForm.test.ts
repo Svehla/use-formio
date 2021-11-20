@@ -80,8 +80,7 @@ describe("it", () => {
         },
         {
           str1: {
-            validator: (v, state) =>
-              state.str2 === "xxx" && v === "xxx" ? "ERR" : undefined
+            validator: (v, state) => (state.str2 === "xxx" && v === "xxx" ? "ERR" : undefined)
           }
         }
       )

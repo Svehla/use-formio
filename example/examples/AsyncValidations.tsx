@@ -13,8 +13,7 @@ export const AsyncValidations = () => {
         validator: () =>
           new Promise(res =>
             setTimeout(() => {
-              const error =
-                Math.random() > 0.5 ? "Random error thrower" : undefined;
+              const error = Math.random() > 0.5 ? "Random error thrower" : undefined;
               res(error);
             }, 200)
           )
@@ -23,8 +22,7 @@ export const AsyncValidations = () => {
         validator: () =>
           new Promise(res =>
             setTimeout(() => {
-              const error =
-                Math.random() > 0.5 ? "Random error thrower" : undefined;
+              const error = Math.random() > 0.5 ? "Random error thrower" : undefined;
               res(error);
             }, 1000)
           )

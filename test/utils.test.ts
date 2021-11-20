@@ -1,8 +1,4 @@
-import {
-  mapObjectValues,
-  notNullable,
-  promiseAllObjectValues
-} from "../src/utils";
+import { mapObjectValues, notNullable, promiseAllObjectValues } from "../src/utils";
 
 describe("promiseAllObjectValues", () => {
   it("1", async () => {

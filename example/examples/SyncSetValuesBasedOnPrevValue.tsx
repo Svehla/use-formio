@@ -13,12 +13,10 @@ export const SyncSetValuesBasedOnPrevValue = () => {
     },
     {
       ID: {
-        validator: value =>
-          value === "xxx" ? `ID cannot has value '${value}'` : undefined
+        validator: value => (value === "xxx" ? `ID cannot has value '${value}'` : undefined)
       },
       amount: {
-        validator: value =>
-          value === 5 ? `ID cannot has value '${value}'` : undefined
+        validator: value => (value === 5 ? `ID cannot has value '${value}'` : undefined)
       }
     }
   );
