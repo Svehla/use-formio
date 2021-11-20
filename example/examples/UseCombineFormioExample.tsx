@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DEBUG_FormWrapper } from "../components";
+import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { Field, useCombineFormio, useFormio } from "../../dist";
 
 export const isRequired = (value: string) =>
@@ -53,7 +53,9 @@ export const UseCombineFormioExample = () => {
         <TextInput label="a.lastName" {...a.lastName} />
         <TextInput label="b.age" {...b.age} />
         <TextInput label="b.id" {...b.id} />
-        <button disabled={form.isValidating}>Submit</button>
+        <button type="submit" disabled={form.isValidating}>
+          Submit
+        </button>
       </form>
     </DEBUG_FormWrapper>
   );
@@ -75,7 +77,7 @@ const TextInput = React.memo((props: TextInputProps) => {
         disabled={props.isValidating}
         onChange={e => props.set(e.target.value)}
       />
-      <div style={{ color: "red" }}>{props.errors.join(", ")}</div>
+      <div className="error-msg">{props.errors.join(", ")}</div>
     </div>
   );
 });

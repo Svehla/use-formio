@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DEBUG_FormWrapper } from "../components";
+import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { Field, useFormio } from "../../dist";
 
 const isRequired = (value: string) => (value.trim() === "" ? "Field cannot be empty" : undefined);
@@ -141,7 +141,7 @@ const UISchemaFormAbstraction = <T extends { fields: any; validate: any }>(props
           </div>
         );
       })}
-      <button>Submit</button>
+      <button type="submit">Submit</button>
     </form>
   );
 };
@@ -156,7 +156,7 @@ const FTextInput = React.memo((props: { label: string } & Field<string>) => {
       <div>
         <input value={props.value} type="text" onChange={e => props.set(e.target.value)} />
       </div>
-      <div style={{ color: "red" }}>{props.errors.join(", ")}</div>
+      <div className="error-msg">{props.errors.join(", ")}</div>
     </div>
   );
 });
@@ -172,7 +172,7 @@ const FNumberInput = React.memo((props: { label: string } & Field<number>) => {
           onChange={e => props.set(parseFloat(e.target.value))}
         />
       </div>
-      <div style={{ color: "red" }}>{props.errors.join(", ")}</div>
+      <div className="error-msg">{props.errors.join(", ")}</div>
     </div>
   );
 });
@@ -184,7 +184,7 @@ const FCheckbox = React.memo((props: { label: string } & Field<boolean>) => {
       <div>
         <input type="checkbox" checked={props.value} onChange={e => props.set(e.target.checked)} />
       </div>
-      <div style={{ color: "red" }}>{props.errors.join(", ")}</div>
+      <div className="error-msg">{props.errors.join(", ")}</div>
     </div>
   );
 });

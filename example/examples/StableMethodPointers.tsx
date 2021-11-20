@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DEBUG_FormWrapper } from "../components";
+import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { Field } from "../../dist";
 import { useFormio } from "../../dist";
 
@@ -50,7 +50,9 @@ export const StableMethodPointers = () => {
           set={f.lastName.set}
           errors={f.lastName.errors}
         />
-        <button disabled={form.isValidating}>Submit</button>
+        <button type="submit" disabled={form.isValidating}>
+          Submit
+        </button>
       </form>
     </DEBUG_FormWrapper>
   );
@@ -71,7 +73,7 @@ const TextInput = React.memo((props: TextInputProps) => {
     <div style={{ background: getRandomRGBLightColor() }}>
       <h3>{props.label}</h3>
       <input value={props.value} type="text" onChange={e => props.set(e.target.value)} />
-      <div style={{ color: "red" }}>{props.errors.join(", ")}</div>
+      <div className="error-msg">{props.errors.join(", ")}</div>
     </div>
   );
 });

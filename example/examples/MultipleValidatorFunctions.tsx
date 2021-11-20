@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DEBUG_FormWrapper } from "../components";
+import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { Field } from "../../dist";
 import { useCallback } from "react";
 import { useFormio } from "../../dist";
@@ -41,7 +41,9 @@ export const MultipleValidatorFunctions = () => {
         <TextInput label={"f.firstName"} {...f.firstName} />
         <TextInput label={"f.lastName"} {...f.lastName} />
         <TextInput label={"f.age"} {...f.age} />
-        <button disabled={form.isValidating}>Submit</button>
+        <button type="submit" disabled={form.isValidating}>
+          Submit
+        </button>
       </form>
     </DEBUG_FormWrapper>
   );
@@ -77,7 +79,7 @@ const TextInput = React.memo((props: TextInputProps) => {
         onChange={onChange}
         onBlur={onBlur}
       />
-      <div style={{ color: "red" }}>{props.errors.join(", ")}</div>
+      <div className="error-msg">{props.errors.join(", ")}</div>
     </div>
   );
 });

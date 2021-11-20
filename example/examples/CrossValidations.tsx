@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DEBUG_FormWrapper } from "../components";
+import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { useFormio } from "../../dist";
 
 const isInteger = (val: string) => parseInt(val).toString() === val;
@@ -49,16 +49,16 @@ export const CrossValidations = () => {
             onChange={e => f.parentID.set(e.target.value)}
             value={f.parentID.value}
           />
-          <div style={{ color: "red" }}>{f.parentID.errors.join(",")}</div>
+          <div className="error-msg">{f.parentID.errors.join(",")}</div>
         </div>
         <div>
           <div>
             <label>age</label>
           </div>
           <input type="text" onChange={e => f.age.set(e.target.value)} value={f.age.value} />
-          <div style={{ color: "red" }}>{f.age.errors.join(",")}</div>
+          <div className="error-msg">{f.age.errors.join(",")}</div>
         </div>
-        <button>Submit</button>
+        <button type="submit">Submit</button>
       </form>
     </DEBUG_FormWrapper>
   );

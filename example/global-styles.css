@@ -1,0 +1,29 @@
+.error-msg {
+  color: red;
+}
+
+.DEBUG_FormWrapper label {
+  font-weight: bold;
+  width: 100%;
+}
+
+.DEBUG_FormWrapper input[type="text"],
+.DEBUG_FormWrapper input[type="checkbox"],
+.DEBUG_FormWrapper input[type="number"] {
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0.3rem;
+}
+
+.DEBUG_FormWrapper input[type="text"],
+.DEBUG_FormWrapper input[type="number"] {
+  width: 100%;
+}
+
+.DEBUG_FormWrapper button[type="submit"] {
+  border-radius: 0.5rem;
+  border-color: #444;
+  color: black;
+  padding: 0.3rem;
+  width: 100%;
+}

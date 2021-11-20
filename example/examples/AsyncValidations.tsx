@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DEBUG_FormWrapper } from "../components";
+import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { useFormio } from "../../dist";
 
 export const AsyncValidations = () => {
@@ -49,7 +49,7 @@ export const AsyncValidations = () => {
             >
               validate firstName
             </button>
-            <div style={{ color: "red" }}>{f.firstName.errors.join(",")}</div>
+            <div className="error-msg">{f.firstName.errors.join(",")}</div>
           </div>
           <div>
             <button
@@ -59,7 +59,7 @@ export const AsyncValidations = () => {
             >
               validate lastName
             </button>
-            <div style={{ color: "red" }}>{f.lastName.errors.join(",")}</div>
+            <div className="error-msg">{f.lastName.errors.join(",")}</div>
           </div>
         </div>
 

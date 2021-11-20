@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DEBUG_FormWrapper } from "../components";
+import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { useFormio } from "../../dist";
 
 /**
@@ -25,6 +25,7 @@ export const SyncSetValuesBasedOnPrevValue = () => {
   return (
     <DEBUG_FormWrapper form={form}>
       <button
+        type="submit"
         onClick={async () => {
           f.ID.set("x");
           f.ID.set(p => `${p}x`);

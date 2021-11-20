@@ -1,36 +1,26 @@
 import * as React from "react";
-import { DEBUG_FormWrapper } from "../components";
+import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { useFormio } from "../../dist";
 
-const validate3 = (val: string) =>
-  val.includes("3") ? "you cannot write `3` into the input" : undefined;
-const isInteger = (val: string) =>
-  parseInt(val).toString() === val ? undefined : "only int is valid input";
-const maxLen10 = (val: string) => (val.length > 10 ? "max len is 10" : undefined);
-const minLen4 = (val: string) => (val.length < 4 ? "min len is 4" : undefined);
+const maxLen3 = (val: string) => (val.length > 3 ? "max len is 10" : undefined);
+const minLen1 = (val: string) => (val.length < 1 ? "min len is 4" : undefined);
 
 export const SyncValidations = () => {
   const form = useFormio(
     {
       firstName: "",
-      lastName: "",
-      randomInt: ""
+      age: "",
+      isVerified: false
     },
     {
       firstName: {
         validator: value => (value.trim() === "" ? `Input can't be empty` : undefined)
       },
-      lastName: {
-        validator: value => {
-          const err1 = value.includes(" ") ? "last name can not include a space" : undefined;
-
-          const err2 = value.length > 20 ? "Max size of last name is 20 characters" : undefined;
-
-          return [err1, err2];
-        }
+      age: {
+        validator: value => [maxLen3(value), minLen1(value)]
       },
-      randomInt: {
-        validator: value => [validate3, isInteger, maxLen10, minLen4].map(fn => fn(value))
+      isVerified: {
+        validator: value => (value === false ? "value has to be checked" : undefined)
       }
     }
   );
@@ -47,38 +37,36 @@ export const SyncValidations = () => {
       >
         <div>
           <div>
-            <label>first name</label>
+            <label>First name</label>
           </div>
           <input
             type="text"
             onChange={e => f.firstName.set(e.target.value)}
             value={f.firstName.value}
           />
-          <div style={{ color: "red" }}>{f.firstName.errors.join(",")}</div>
+          <div className="error-msg">{f.firstName.errors.join(",")}</div>
         </div>
+
         <div>
           <div>
-            <label>random int</label>
+            <label>Age</label>
           </div>
-          <input
-            type="number"
-            onChange={e => f.randomInt.set(e.target.value)}
-            value={f.randomInt.value}
-          />
-          <div style={{ color: "red" }}>{f.randomInt.errors.join(",")}</div>
+          <input type="number" onChange={e => f.age.set(e.target.value)} value={f.age.value} />
+          <div className="error-msg">{f.age.errors.join(",")}</div>
         </div>
+
         <div>
           <div>
-            <label>last name</label>
+            <label>Terms of conditions</label>
           </div>
           <input
-            type="text"
-            onChange={e => f.lastName.set(e.target.value)}
-            value={f.lastName.value}
+            type="checkbox"
+            checked={f.isVerified.value}
+            onChange={e => f.isVerified.set(e.target.checked)}
           />
-          <div style={{ color: "red" }}>{f.lastName.errors.join(",")}</div>
         </div>
-        <button>submit</button>
+        <div className="error-msg">{f.isVerified.errors.join(", ")}</div>
+        <button type="submit">submit</button>
       </form>
     </DEBUG_FormWrapper>
   );

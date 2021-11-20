@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DEBUG_FormWrapper } from "../components";
+import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { Field, useFormio } from "../../dist";
 
 export const debounce = <CB extends (...args: any[]) => any>(callback: CB, delay: number) => {
@@ -37,8 +37,10 @@ export const DebouncedInput = () => {
           <label>Text with 1000ms debounce</label>
         </div>
         <MyTextArea {...f.text} />
-        <div style={{ color: "red" }}>{f.text.errors.join(", ")}</div>
-        <button disabled={form.isValidating}>Submit</button>
+        <div className="error-msg">{f.text.errors.join(", ")}</div>
+        <button type="submit" disabled={form.isValidating}>
+          Submit
+        </button>
       </form>
     </DEBUG_FormWrapper>
   );

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DEBUG_FormWrapper } from "../components";
+import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { Field, useFormio } from "../../dist";
 
 export const getRandomRGBLightColor = () => {
@@ -44,7 +44,9 @@ export const UncontrolledInput = () => {
           errors={f.text.errors}
         />
 
-        <button disabled={form.isValidating}>Submit</button>
+        <button type="submit" disabled={form.isValidating}>
+          Submit
+        </button>
       </form>
     </DEBUG_FormWrapper>
   );
@@ -70,7 +72,7 @@ const UncontrolledTextarea = React.memo(
           onBlur={() => props.set(textareaRef.current.value)}
         />
 
-        <div style={{ color: "red" }}>{props.errors.join(", ")}</div>
+        <div className="error-msg">{props.errors.join(", ")}</div>
       </div>
     );
   }

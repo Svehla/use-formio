@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DEBUG_FormWrapper } from "../components";
+import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { Field } from "../../dist";
 import { useFormio } from "../../dist";
 
@@ -27,7 +27,9 @@ export const RevertToInitState = () => {
       >
         <TextInput label={"f.firstName"} {...f.firstName} />
         <TextInput label={"f.lastName"} {...f.lastName} />
-        <button disabled={form.isValidating}>Submit and revert to init state</button>
+        <button type="submit" disabled={form.isValidating}>
+          Submit and revert to init state
+        </button>
       </form>
     </DEBUG_FormWrapper>
   );
@@ -49,7 +51,7 @@ const TextInput = React.memo((props: TextInputProps) => {
         disabled={props.isValidating}
         onChange={e => props.set(e.target.value)}
       />
-      <div style={{ color: "red" }}>{props.errors.join(", ")}</div>
+      <div className="error-msg">{props.errors.join(", ")}</div>
     </div>
   );
 });
