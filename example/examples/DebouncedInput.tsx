@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useFormio, Field } from '../../dist';
 import { DEBUG_FormWrapper } from '../components';
 
-
 /**
  * helper function to optimise re-render of React components
  */ 
@@ -53,12 +52,16 @@ export const DebouncedInput = () => {
 
 // this component si rendered only once per instance because set is stable pointer
 const MyTextArea = React.memo((props: Field<string>) => {
+  const inputRef = React.useRef<any>(undefined)
   const debouncedSet = debounce(props.set, 1000)
+
   return (
     <input 
       type="text"
+      ref={inputRef}
       onChange={(e) => debouncedSet(e.target.value)}
       onFocus={() => props.setErrors([])}
+      onBlur={() => props.set(inputRef.current.value)}
     />
   )
 })

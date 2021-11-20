@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Field, useCombineFormio, useFormio } from '../../dist';
-import { isRequired } from "../validators";
 import { DEBUG_FormWrapper } from '../components';
+
+export const isRequired = (value: string) => value.trim() === '' ? 'Field cannot be empty' : undefined;
 
 export const UseCombineFormioExample = () => {
   const form = useCombineFormio({
@@ -63,7 +64,7 @@ type TextInputProps = {
   showRerendering?: boolean
 } & Field<string>
 
-export const TextInput = React.memo((props: TextInputProps)=> {
+const TextInput = React.memo((props: TextInputProps)=> {
   return (
     <div>
       <h3>{props.label}</h3>

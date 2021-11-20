@@ -2,9 +2,10 @@ import * as React from 'react';
 import { useFormio } from '../../dist';
 import { DEBUG_FormWrapper } from '../components';
 
+const isInteger = (val: string) => parseInt(val).toString() === val;
+const maxLen = (maxLenSize: number) => (value: string) => value.length <= maxLenSize;
+
 export const InputConstrains = () => {
-  const isInteger = (val: string) => parseInt(val).toString() === val;
-  const maxLen = (maxLenSize: number) => (value: string) => value.length <= maxLenSize;
 
   const form = useFormio(
     {

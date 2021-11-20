@@ -1,9 +1,11 @@
 import { useCallback } from 'react';
 import * as React from 'react';
 import { useFormio } from '../../dist';
-import { isInteger, isRequired, maxLen } from "../validators";
 import { DEBUG_FormWrapper } from '../components';
 import { Field } from '../../dist';
+
+const isRequired = (value: string) => value.trim() === '' ? 'Field cannot be empty' : undefined;
+const isInteger = (val: string) => parseInt(val).toString() === val;
 
 export const MultipleValidatorFunctions = () => {
   const form = useFormio(
@@ -18,10 +20,10 @@ export const MultipleValidatorFunctions = () => {
       },
       lastName: {
         validator: isRequired,
-        shouldChangeValue: maxLen(30)
+        shouldChangeValue: v => v.length <= 30
       },
       age: {
-        shouldChangeValue: v => v.length === 0 ? true : isInteger(v) && maxLen(2)(v)
+        shouldChangeValue: v => v.length === 0 ? true : (isInteger(v) && (v.length <= 2))
         
       }
     }
@@ -55,7 +57,7 @@ type TextInputProps = {
 } & Field<string>
 
 
-export const getRandomRGBLightColor = () => {
+const getRandomRGBLightColor = () => {
   return `rgb(${[
     150 + Math.random() * 100,
     150 + Math.random() * 100,
@@ -63,7 +65,7 @@ export const getRandomRGBLightColor = () => {
   ].join(',')})`
 }
 
-export const TextInput = React.memo((props: TextInputProps)=> {
+const TextInput = React.memo((props: TextInputProps)=> {
 
   const onChange = useCallback((e: any) => props.set(e.target.value), [])
   const onBlur = React.useMemo(() => props.validateOnBlur ? () => props.validate() : undefined, [props.validateOnBlur])

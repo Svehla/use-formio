@@ -39,7 +39,7 @@ type TextInputProps = {
   showRerendering?: boolean
 } & Field<string>
 
-export const TextInput = React.memo((props: TextInputProps)=> {
+const TextInput = React.memo((props: TextInputProps)=> {
   return (
     <div>
       <h3>{props.label}</h3>

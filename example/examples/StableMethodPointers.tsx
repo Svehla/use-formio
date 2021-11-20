@@ -2,7 +2,14 @@ import * as React from 'react';
 import { useFormio } from '../../dist';
 import { Field } from '../../dist';
 import { DEBUG_FormWrapper } from '../components';
-import { getRandomRGBLightColor } from './MultipleValidatorFunctions';
+
+const getRandomRGBLightColor = () => {
+  return `rgb(${[
+    150 + Math.random() * 100,
+    150 + Math.random() * 100,
+    150 + Math.random() * 100 
+  ].join(',')})`
+}
 
 export const StableMethodPointers = () => {
   const form = useFormio(
@@ -56,7 +63,7 @@ type TextInputProps = {
   errors: TextField['errors']
 }
 
-export const TextInput = React.memo((props: TextInputProps)=> {
+const TextInput = React.memo((props: TextInputProps)=> {
   return (
     <div style={{ background: getRandomRGBLightColor() }}>
       <h3>{props.label}</h3>

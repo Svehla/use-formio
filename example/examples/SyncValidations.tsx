@@ -2,13 +2,15 @@ import * as React from 'react';
 import { useFormio } from '../../dist';
 import { DEBUG_FormWrapper } from '../components';
 
+
+const validate3 = (val: string) => val.includes('3')
+  ? 'you cannot write `3` into the input'
+  : undefined
+const isInteger = (val: string) => parseInt(val).toString() === val ? undefined : 'only int is valid input';
+const maxLen10 = (val: string) => val.length > 10 ? 'max len is 10' : undefined
+const minLen4 = (val: string) => val.length < 4 ? 'min len is 4' : undefined
+
 export const SyncValidations = () => {
-  const validate3 = (val: string) => val.includes('3')
-    ? 'you cannot write `3` into the input'
-    : undefined
-  const isInteger = (val: string) => parseInt(val).toString() === val ? undefined : 'only int is valid input';
-  const maxLen10 = (val: string) => val.length > 10 ? 'max len is 10' : undefined
-  const minLen4 = (val: string) => val.length < 4 ? 'min len is 4' : undefined
 
   const form = useFormio(
     {

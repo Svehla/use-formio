@@ -2,13 +2,13 @@ import * as React from 'react';
 import { useFormio } from '../../dist';
 import { DEBUG_FormWrapper } from '../components';
 
+const isInteger = (val: string) => parseInt(val).toString() === val;
 /**
  * demonstrate how to do that 1 input validations depends on value of another input
  * 
  * for dependencies between inputs we use second argument of validator callback which is `state`
  */
  export const CrossValidations = () => {
-  const isInteger = (val: string) => parseInt(val).toString() === val;
   const form = useFormio(
     {
       parentID: "",
