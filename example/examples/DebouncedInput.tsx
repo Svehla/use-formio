@@ -2,9 +2,6 @@ import * as React from 'react';
 import { useFormio, Field } from '../../dist';
 import { DEBUG_FormWrapper } from '../components';
 
-/**
- * helper function to optimise re-render of React components
- */ 
 export const debounce = <CB extends (...args: any[]) => any>(callback: CB, delay: number) => {
   let timeout: NodeJS.Timeout;
 

@@ -49,7 +49,6 @@ const TextInput = React.memo((props: TextInputProps)=> {
         disabled={props.isValidating}
         onChange={e => props.set(e.target.value)}
       /> 
-      {/* TODO: add global css classes */}
       <div style={{ color: 'red' }}>{props.errors.join(', ')}</div>
     </div>
   )
