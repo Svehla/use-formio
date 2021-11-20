@@ -14,6 +14,7 @@ import { StableMethodPointers } from './examples/StableMethodPointers'
 import { DebouncedInput } from './examples/DebouncedInput'
 import Highlight from 'react-highlight'
 import 'highlight.js/styles/atom-one-dark.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 const components = [

@@ -44,6 +44,7 @@ export type Field <T> = {
   setErrors: (newErrors: string[] | ((prevState: string[]) => string[])) => void;
 }
 
+// TODO: what about race-condition while doing async validation and setting new value?
 export const useFormio = <T extends Record<string, UserFieldValue>>(
   initStateArg: T,
   stateSchema?: {
@@ -91,10 +92,16 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
             return prevFormState;
           }
 
+          // we want to be sure that empty array pointer is not override with new empty array pointer
+          // thanks to that we may optimise react render memoization
+          const newErrors = prevFormState.errors[key].length === 0
+            ? prevFormState.errors
+            : { ...prevFormState.errors, [key]: prevFormState.errors[key] }
+
           return {
             ...prevFormState,
             values: { ...prevFormState.values, [key]: newValue },
-            errors: { ...prevFormState.errors, [key]: [] },
+            errors: newErrors
           };
         });
       }, []),

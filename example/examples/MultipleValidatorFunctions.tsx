@@ -64,7 +64,6 @@ export const getRandomRGBLightColor = () => {
 }
 
 export const TextInput = React.memo((props: TextInputProps)=> {
-  console.log(`rerender label input ${props.label}`)
 
   const onChange = useCallback((e: any) => props.set(e.target.value), [])
   const onBlur = React.useMemo(() => props.validateOnBlur ? () => props.validate() : undefined, [props.validateOnBlur])

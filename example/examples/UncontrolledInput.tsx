@@ -1,10 +1,18 @@
 import * as React from 'react';
-import {  useFormio } from '../../dist';
+import {  Field, useFormio } from '../../dist';
 import { DEBUG_FormWrapper } from '../components';
+
+export const getRandomRGBLightColor = () => {
+  return `rgb(${[
+    150 + Math.random() * 100,
+    150 + Math.random() * 100,
+    150 + Math.random() * 100 
+  ].join(',')})`
+}
 
 const MIN_TEXTAREA_LENGTH = 50
 export const UncontrolledInput = () => {
-  const textareaRef = React.useRef<any>(undefined)
+
   const form = useFormio(
     {
       text: "",
@@ -21,7 +29,6 @@ export const UncontrolledInput = () => {
     <DEBUG_FormWrapper form={form}>
       <form
         onSubmit={async e => {
-          const textareaValue = textareaRef.current
           e.preventDefault()
           const [isValid] = await form.validate()
           // if form is not valid, reset data
@@ -32,15 +39,38 @@ export const UncontrolledInput = () => {
           <label>Text</label>
         </div>
 
-        <textarea 
-          ref={textareaRef}
-          onFocus={() => f.text.setErrors([])}
-          onBlur={() => f.text.set(textareaRef.current.value)}
+        <UncontrolledTextarea
+          set={f.text.set}
+          setErrors={f.text.setErrors}
+          errors={f.text.errors}
         />
 
-        <div style={{color: 'red'}}>{f.text.errors.join(', ')}</div>
         <button disabled={form.isValidating}>Submit</button>
       </form>
     </DEBUG_FormWrapper>
   )
 }
+
+type StringField = Field<string>
+
+const UncontrolledTextarea = React.memo((props: {
+  errors: StringField['errors'],
+  set: StringField['set'],
+  setErrors: StringField['setErrors'],
+}) => {
+  const textareaRef = React.useRef<any>(undefined)
+
+  return (
+    <div style={{ background: getRandomRGBLightColor() }}>
+      <textarea 
+        ref={textareaRef}
+        onFocus={() => {
+          if (props.errors.length !== 0) props.setErrors([])
+        }}
+        onBlur={() => props.set(textareaRef.current.value)}
+      />
+
+      <div style={{color: 'red'}}>{props.errors.join(', ')}</div>
+    </div>
+  )
+})

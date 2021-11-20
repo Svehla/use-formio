@@ -150,4 +150,27 @@ describe('it', () => {
     });
     expect(result.current.isValid).toEqual(false);
   });
+
+  it('constant error pointer for changing value of the field', async () => {
+    const { result } = renderHook(() =>
+      useFormio({
+        str1: 'str1',
+      })
+    );
+
+    let firstErrorPointer
+    let secondErrorPointer
+    let thirdErrorPointer
+
+    await act(async () => {
+      firstErrorPointer = result.current.fields.str1.errors
+      await result.current.fields.str1.set('xxx')
+      secondErrorPointer = result.current.fields.str1.errors
+      await result.current.fields.str1.setErrors(['err'])
+      thirdErrorPointer = result.current.fields.str1.errors
+    });
+    expect(firstErrorPointer === secondErrorPointer).toEqual(true);
+    expect(firstErrorPointer === thirdErrorPointer).toEqual(false);
+    expect(thirdErrorPointer).toEqual(['err']);
+  });
 });
