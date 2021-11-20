@@ -34,6 +34,17 @@ const convertInitStateToFormState = <T extends Record<string, any>>(initState: T
 type UserFormError = (string | null | undefined | string)[] | undefined | string;
 
 type UserFieldValue = string | boolean | number | null | undefined | any;
+
+export type Field <T> = {
+  value: T;
+  errors: string[];
+  isValidating: boolean;
+  set: (userValue: T | ((prevState: T) => T)) => void;
+  validate: () => Promise<[boolean, string[]]>;
+  setErrors: (newErrors: string[] | ((prevState: string[]) => string[])) => void;
+}
+
+// TODO: what about race-condition while doing async validation and setting new value?
 export const useFormio = <T extends Record<string, UserFieldValue>>(
   initStateArg: T,
   stateSchema?: {
@@ -81,10 +92,16 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
             return prevFormState;
           }
 
+          // we want to be sure that empty array pointer is not override with new empty array pointer
+          // thanks to that we may optimise react render memoization
+          const newErrors = prevFormState.errors[key].length === 0
+            ? prevFormState.errors
+            : { ...prevFormState.errors, [key]: prevFormState.errors[key] }
+
           return {
             ...prevFormState,
             values: { ...prevFormState.values, [key]: newValue },
-            errors: { ...prevFormState.errors, [key]: [] },
+            errors: newErrors
           };
         });
       }, []),
@@ -114,13 +131,10 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     { stableKeyOrder: true }
   ) as {
     [K in keyof T]: {
-      value: T[K];
-      errors: string[];
-      isValidating: boolean;
-      set: (userValue: T[K] | ((prevState: T[K]) => T[K])) => void;
-      validate: () => Promise<[boolean, string[]]>;
-      setErrors: (newErrors: string[] | ((prevState: string[]) => string[])) => void;
-    };
+      // redundant nested cycle to unwrap on hover typescript hint in the IDE
+      // `[K in keyof T]: Field<T[K]>` will be effective enough but with less nice TS hints
+      [KK in keyof Field<T[K]>]: Field<T[K]>[KK]
+    }
   };
 
   const validate = useCallback(async () => {

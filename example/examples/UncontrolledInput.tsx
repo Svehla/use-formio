@@ -1,16 +1,25 @@
 import * as React from 'react';
-import {  useFormio } from '../../dist';
+import {  Field, useFormio } from '../../dist';
 import { DEBUG_FormWrapper } from '../components';
-import { debounce } from '../utils';
 
+export const getRandomRGBLightColor = () => {
+  return `rgb(${[
+    150 + Math.random() * 100,
+    150 + Math.random() * 100,
+    150 + Math.random() * 100 
+  ].join(',')})`
+}
+
+const MIN_TEXTAREA_LENGTH = 50
 export const UncontrolledInput = () => {
+
   const form = useFormio(
     {
       text: "",
     },
     {
       text: {
-        validator: v => v.length < 200 ? 'LENGTH SHOULD BE >= 200' : undefined
+        validator: v => v.length < MIN_TEXTAREA_LENGTH ? `LENGTH SHOULD BE >= ${MIN_TEXTAREA_LENGTH}` : undefined
       }
     }
   )
@@ -27,25 +36,41 @@ export const UncontrolledInput = () => {
         }}
       >
         <div>
-          <label>Text with 400ms debounce</label>
+          <label>Text</label>
         </div>
-        <MyTextArea
+
+        <UncontrolledTextarea
           set={f.text.set}
+          setErrors={f.text.setErrors}
+          errors={f.text.errors}
         />
-        <div style={{color: 'red'}}>{f.text.errors.join(', ')}</div>
+
         <button disabled={form.isValidating}>Submit</button>
       </form>
     </DEBUG_FormWrapper>
   )
 }
 
-// this component si rendered only once per instance because set is stable pointer
-const MyTextArea = React.memo((props: {
-  set: (userValue: string | ((prevState: string) => string)) => void 
+type StringField = Field<string>
+
+const UncontrolledTextarea = React.memo((props: {
+  errors: StringField['errors'],
+  set: StringField['set'],
+  setErrors: StringField['setErrors'],
 }) => {
+  const textareaRef = React.useRef<any>(undefined)
+
   return (
-    <textarea 
-      onChange={(e) => debounce(props.set, 400)(e.target.value)}
-    />
+    <div style={{ background: getRandomRGBLightColor() }}>
+      <textarea 
+        ref={textareaRef}
+        onFocus={() => {
+          if (props.errors.length !== 0) props.setErrors([])
+        }}
+        onBlur={() => props.set(textareaRef.current.value)}
+      />
+
+      <div style={{color: 'red'}}>{props.errors.join(', ')}</div>
+    </div>
   )
 })

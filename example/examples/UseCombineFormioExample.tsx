@@ -39,23 +39,21 @@ export const UseCombineFormioExample = () => {
   const b = form.forms.b.fields
 
   return (
-    <DEBUG_FormWrapper form={form.forms.b}>
-      <DEBUG_FormWrapper form={form.forms.a}>
-        <form
-          onSubmit={async e => {
-            e.preventDefault()
-            const [isValid] = await form.validate()
-            // if form is not valid, reset data
-            if (isValid) alert('form is valid')
-          }}
-        >
-          <TextInput label="a.firstName" {...a.firstName} />
-          <TextInput label="a.lastName" {...a.lastName} />
-          <TextInput label="b.age" {...b.age} />
-          <TextInput label="b.id" {...b.id} />
-          <button disabled={form.isValidating}>Submit</button>
-        </form>
-      </DEBUG_FormWrapper>
+    <DEBUG_FormWrapper form={form.forms.a} form2={form.forms.b}>
+      <form
+        onSubmit={async e => {
+          e.preventDefault()
+          const [isValid] = await form.validate()
+          // if form is not valid, reset data
+          if (isValid) alert('form is valid')
+        }}
+      >
+        <TextInput label="a.firstName" {...a.firstName} />
+        <TextInput label="a.lastName" {...a.lastName} />
+        <TextInput label="b.age" {...b.age} />
+        <TextInput label="b.id" {...b.id} />
+        <button disabled={form.isValidating}>Submit</button>
+      </form>
     </DEBUG_FormWrapper>
   )
 }
