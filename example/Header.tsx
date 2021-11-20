@@ -87,7 +87,7 @@ export const Header = (props: {
             </NavLink>
           </NavbarText>
           <NavbarText>
-            <NavLink target="_blank" href="https://github.com/reactstrap/reactstrap">
+            <NavLink target="_blank" href="https://github.com/Svehla/use-formio">
               <GithubIcon />
             </NavLink>
           </NavbarText>

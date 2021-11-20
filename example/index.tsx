@@ -112,9 +112,9 @@ const App = () => {
       <h1>useFormio</h1>
 
       <div style={{ marginBottom: "4rem" }}>
-        <div>
+        <p>
           <b>use-formio</b> has 0 dependencies and less than 200 lines of code!
-        </div>
+        </p>
         <p>
           This minimalist approach brings you proper level of abstraction to abstract heavy lifting
           form boilerplate React code.
