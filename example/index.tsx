@@ -11,7 +11,7 @@ import { MultipleValidatorFunctions } from './examples/MultipleValidatorFunction
 import { UseCombineFormioExample } from './examples/UseCombineFormioExample'
 import { UncontrolledInput } from './examples/UncontrolledInput'
 import { StableMethodPointers } from './examples/StableMethodPointers'
-import { FormSchemaFramework } from './examples/FormSchemaFramework'
+import { CustomFormSchemaFramework } from './examples/CustomFormSchemaFramework'
 import { DebouncedInput } from './examples/DebouncedInput'
 import Highlight from 'react-highlight'
 import 'highlight.js/styles/atom-one-dark.css'
@@ -76,9 +76,9 @@ const components = [
   },
   {
     
-    title: 'FormSchemaFramework',
-    githubFileName: 'FormSchemaFramework',
-    Comp: FormSchemaFramework,
+    title: 'CustomFormSchemaFramework',
+    githubFileName: 'CustomFormSchemaFramework',
+    Comp: CustomFormSchemaFramework,
   }
 ]
 

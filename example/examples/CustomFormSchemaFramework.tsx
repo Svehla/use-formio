@@ -6,7 +6,7 @@ const isRequired = (value: string) => value.trim() === '' ? 'Field cannot be emp
 const minNum = (min: number) => (value: number) => value < min ? `amount has to be larger than ${min}` : undefined
 const hasToBeChecked = (value: boolean) => value === false ? 'value has to be checked' : undefined
 
-export const FormSchemaFramework = () => {
+export const CustomFormSchemaFramework = () => {
   const form = useFormio(
     {
       firstName: "",
@@ -96,7 +96,7 @@ export const FormSchemaFramework = () => {
             key: 'isOlder18',
           },
         ]}
-        onSubmit={async ([isValid]) => {
+        onSubmit={async ([isValid, _errors]) => {
           if (isValid) alert('form is valid')
         }}
       />
@@ -104,13 +104,20 @@ export const FormSchemaFramework = () => {
   )
 }
 
-const UISchemaFormAbstraction = (props: any) => {
+// ------------ your custom UI framework library --------------
+
+export type Await<T> = T extends Promise<infer U> ? U : T;
+
+const UISchemaFormAbstraction = <T extends { fields: any, validate: any }>(props: {
+  form: T,
+  fields: { label: string, key: keyof T['fields']}[]
+  onSubmit: (arg: Await<ReturnType<T['validate']>>) => void
+}) => {
   return (
     <form
       onSubmit={async e => {
         e.preventDefault()
-        const [isValid, errors] = await props.form.validate()
-        props.onSubmit([isValid, errors])
+        props.onSubmit(await props.form.validate())
       }}
     >
       {props.fields.map((f, index) =>  {
@@ -118,7 +125,7 @@ const UISchemaFormAbstraction = (props: any) => {
         const inputType = typeof field.value
 
         return (
-          <div key={f.key}>
+          <div key={f.key as any}>
             {inputType === 'string'
               ? <FTextInput label={f.label} {...field} />
             : inputType === 'number'
@@ -127,6 +134,7 @@ const UISchemaFormAbstraction = (props: any) => {
               ? <FCheckbox label={f.label} {...field} />
               : undefined
             }
+            <hr />
           </div>
         )
       })}
