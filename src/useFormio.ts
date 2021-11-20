@@ -62,8 +62,9 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
 
   const getFormInputErrors = async (key: keyof T, currFormState: typeof formState) => {
     const schemaDef = stateSchema?.[key];
+    const prevErrors = currFormState.errors[key as any]
     // we want to be sure that empty array pointer is not override with new empty array pointer
-    if (!schemaDef) return currFormState.errors[key as any]
+    if (!schemaDef) return prevErrors
 
     let errors = [] as (string | undefined | null)[];
 
@@ -76,8 +77,12 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     }
 
     const newErrors = errors.filter(notNullable);
+    // === same value pointer optimization ===
     // we want to be sure that empty array pointer is not override with new empty array pointer
-    return newErrors.length === 0 ? currFormState.errors[key as any] : newErrors
+    if(newErrors.length === 0 && prevErrors.length === 0) {
+      return prevErrors
+    }
+    return newErrors
   };
 
   const fields = mapObjectValues(
@@ -95,11 +100,12 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
             return prevFormState;
           }
 
+          // === same value pointer optimization ===
           // we want to be sure that empty array pointer is not override with new empty array pointer
           // thanks to that we may optimise react render memoization
           const newErrors = prevFormState.errors[key].length === 0
             ? prevFormState.errors
-            : { ...prevFormState.errors, [key]: prevFormState.errors[key] }
+            : { ...prevFormState.errors, [key]: [] }
 
           return {
             ...prevFormState,
