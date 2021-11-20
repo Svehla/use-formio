@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useCombineFormio, useFormio } from '../../dist';
+import { Field, useCombineFormio, useFormio } from '../../dist';
 import { isRequired } from "../validators";
 import { DEBUG_FormWrapper } from '../components';
 
@@ -44,7 +44,6 @@ export const UseCombineFormioExample = () => {
         onSubmit={async e => {
           e.preventDefault()
           const [isValid] = await form.validate()
-          // if form is not valid, reset data
           if (isValid) alert('form is valid')
         }}
       >
@@ -62,15 +61,7 @@ type TextInputProps = {
   label: string,
   validateOnBlur?: boolean
   showRerendering?: boolean
-
-  // use-formio field interface
-  value: string;
-  errors: string[];
-  isValidating: boolean;
-  set: (userValue: string | ((prevState: string) => string)) => void;
-  validate: () => Promise<[boolean, string[]]>;
-  setErrors: (newErrors: string[] | ((prevState: string[]) => string[])) => void;
-}
+} & Field<string>
 
 export const TextInput = React.memo((props: TextInputProps)=> {
   return (

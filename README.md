@@ -371,10 +371,7 @@ export const RevertToInitState = () => {
       onSubmit={async e => {
         e.preventDefault()
         const [isValid] = await form.validate()
-        // if form is not valid, reset data
-        if (!isValid) { 
-          form.revertToInitState()
-        }
+        if (!isValid) form.revertToInitState()
       }}
     >
       <input
