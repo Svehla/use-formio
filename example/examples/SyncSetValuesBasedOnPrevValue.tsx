@@ -43,7 +43,9 @@ import { DEBUG_FormWrapper } from '../components';
             alert('there is problem with ID amount')
           }
         }}
-      >Submit</button>
+      >
+        Submit
+      </button>
     </DEBUG_FormWrapper>
   )
 }

@@ -47,7 +47,9 @@ import { DEBUG_FormWrapper } from '../components';
             onChange={e => f.parentID.set(e.target.value)}
             value={f.parentID.value}
           />
-          {f.parentID.errors.join(',')}
+          <div style={{ color: 'red' }}>
+            {f.parentID.errors.join(',')}
+          </div>
         </div>
         <div>
           <div>
@@ -58,7 +60,9 @@ import { DEBUG_FormWrapper } from '../components';
             onChange={e => f.age.set(e.target.value)}
             value={f.age.value}
           />
-          {f.age.errors.join(',')}
+          <div style={{ color: 'red' }}>
+            {f.age.errors.join(',')}
+          </div>
         </div>
         <button>Submit</button>
       </form>

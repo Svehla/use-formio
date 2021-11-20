@@ -47,7 +47,9 @@ import { DEBUG_FormWrapper } from '../components';
             >
               validate firstName
             </button>
-            <div>{f.firstName.errors.join(',')}</div>
+            <div style={{ color: 'red' }}>
+              {f.firstName.errors.join(',')}
+            </div>
           </div>
           <div>
             <button
@@ -57,7 +59,9 @@ import { DEBUG_FormWrapper } from '../components';
             >
               validate lastName
             </button>
-            <div>{f.lastName.errors.join(',')}</div>
+            <div style={{ color: 'red' }}>
+              {f.lastName.errors.join(',')}
+            </div>
           </div>
         </div>
 

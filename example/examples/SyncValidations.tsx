@@ -21,7 +21,6 @@ export const SyncValidations = () => {
         validator: value => value.trim() === '' ? `Input can't be empty` : undefined
       },
       lastName: {
-        // validator can return an array of errors
         validator: value => {
 
           const err1 = value.includes(' ')
@@ -65,7 +64,9 @@ export const SyncValidations = () => {
             onChange={e => f.firstName.set(e.target.value)}
             value={f.firstName.value}
           />
-          {f.firstName.errors.join(',')}
+          <div style={{ color: 'red' }}>
+            {f.firstName.errors.join(',')}
+          </div>
         </div>
         <div>
           <div>
@@ -76,7 +77,9 @@ export const SyncValidations = () => {
             onChange={e => f.randomInt.set(e.target.value)}
             value={f.randomInt.value}
           />
-          {f.randomInt.errors.join(',')}
+          <div style={{ color: 'red' }}>
+            {f.randomInt.errors.join(',')}
+          </div>
         </div>
         <div>
           <div>
@@ -87,7 +90,9 @@ export const SyncValidations = () => {
             onChange={e => f.lastName.set(e.target.value)}
             value={f.lastName.value}
           />
-          {f.lastName.errors.join(',')}
+          <div style={{ color: 'red' }}>
+            {f.lastName.errors.join(',')}
+          </div>
         </div>
         <button>submit</button>
       </form>

@@ -140,7 +140,7 @@ const ListItem = (props: any) => {
         </div>
 
         <div style={show ? undefined : { display: 'none' }}>
-          <Highlight className='xd.tsx' >
+          <Highlight className='filename.tsx' >
             {props.sourceCode} 
           </Highlight>
         </div>

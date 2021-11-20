@@ -40,7 +40,9 @@ export const InputConstrains = () => {
             onChange={e => f.ID.set(e.target.value)}
             value={f.ID.value}
           />
-          {f.ID.errors.join(',')}
+          <div style={{ color: 'red' }}>
+            {f.ID.errors.join(',')}
+          </div>
         </div>
         <div>
           <div>
@@ -51,7 +53,9 @@ export const InputConstrains = () => {
             onChange={e => f.age.set(e.target.value)}
             value={f.age.value}
           />
-          {f.age.errors.join(',')}
+          <div style={{ color: 'red' }}>
+            {f.age.errors.join(',')}
+          </div>
         </div>
         <button>Submit</button>
       </form>

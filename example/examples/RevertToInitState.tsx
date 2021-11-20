@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useFormio } from '../../dist';
-import { Field } from '../../dist/useFormio';
+import { Field } from '../../dist';
 import { DEBUG_FormWrapper } from '../components';
 
 export const RevertToInitState = () => {
@@ -22,13 +22,12 @@ export const RevertToInitState = () => {
       <form
         onSubmit={async e => {
           e.preventDefault()
-          await form.revertToInitState()
-          
+          form.revertToInitState()
         }}
       >
         <TextInput label={'f.firstName'} {...f.firstName} />
         <TextInput label={'f.lastName'} {...f.lastName} />
-        <button disabled={form.isValidating}>Submit</button>
+        <button disabled={form.isValidating}>Submit and revert to init state</button>
       </form>
     </DEBUG_FormWrapper>
   )

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useFormio } from '../../dist';
-import { Field } from '../../dist/useFormio';
+import { Field } from '../../dist';
 import { DEBUG_FormWrapper } from '../components';
 import { getRandomRGBLightColor } from './MultipleValidatorFunctions';
 

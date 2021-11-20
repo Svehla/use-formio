@@ -42,7 +42,9 @@ export const DebouncedInput = () => {
           <label>Text with 1000ms debounce</label>
         </div>
         <MyTextArea {...f.text} />
-        <div style={{color: 'red'}}>{f.text.errors.join(', ')}</div>
+        <div style={{color: 'red'}}>
+          {f.text.errors.join(', ')}
+        </div>
         <button disabled={form.isValidating}>Submit</button>
       </form>
     </DEBUG_FormWrapper>

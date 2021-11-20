@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useFormio } from '../../dist';
 import { isInteger, isRequired, maxLen } from "../validators";
 import { DEBUG_FormWrapper } from '../components';
-import { Field } from '../../dist/useFormio';
+import { Field } from '../../dist';
 
 export const MultipleValidatorFunctions = () => {
   const form = useFormio(
