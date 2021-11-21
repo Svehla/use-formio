@@ -13,10 +13,10 @@ export const SyncSetValuesBasedOnPrevValue = () => {
     },
     {
       ID: {
-        validator: value => (value === "xxx" ? `ID cannot has value '${value}'` : undefined)
+        validator: value => (value === "xxx" ? "ID cannot has value " + value : undefined)
       },
       amount: {
-        validator: value => (value === 5 ? `ID cannot has value '${value}'` : undefined)
+        validator: value => (value === 5 ? "ID cannot has value " + value : undefined)
       }
     }
   );
@@ -28,9 +28,9 @@ export const SyncSetValuesBasedOnPrevValue = () => {
         type="submit"
         onClick={async () => {
           f.ID.set("x");
-          f.ID.set(p => `${p}x`);
-          f.ID.set(p => `${p}x`);
-          // f.ID has value: 'xxx`
+          f.ID.set(p => p + "x");
+          f.ID.set(p => p + "x");
+          // f.ID has value: 'xxx'
           f.amount.set(0);
           f.amount.set(p => p + 1);
           f.amount.set(p => p + 4);

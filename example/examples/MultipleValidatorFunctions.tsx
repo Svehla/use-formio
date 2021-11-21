@@ -56,11 +56,11 @@ type TextInputProps = {
 } & Field<string>;
 
 const getRandomRGBLightColor = () => {
-  return `rgb(${[
-    150 + Math.random() * 100,
-    150 + Math.random() * 100,
-    150 + Math.random() * 100
-  ].join(",")})`;
+  return (
+    "rgb(" +
+    [150 + Math.random() * 100, 150 + Math.random() * 100, 150 + Math.random() * 100].join(",") +
+    ")"
+  );
 };
 
 const TextInput = React.memo((props: TextInputProps) => {

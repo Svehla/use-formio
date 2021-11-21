@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
   Collapse,
+  Container,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
@@ -59,7 +60,7 @@ export const Header = (props: {
   }[];
 }) => {
   return (
-    <div>
+    <Container>
       <Navbar color="light" expand="md" light>
         <NavbarBrand href="/">use-formio</NavbarBrand>
         <NavbarToggler onClick={function noRefCheck() {}} />
@@ -93,6 +94,6 @@ export const Header = (props: {
           </NavbarText>
         </Collapse>
       </Navbar>
-    </div>
+    </Container>
   );
 };

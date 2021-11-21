@@ -2,6 +2,8 @@ import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { useFormio } from "../../dist";
 
+const delay = (time: number) => new Promise(res => setTimeout(res, time));
+
 export const AsyncValidations = () => {
   const form = useFormio(
     {
@@ -10,22 +12,16 @@ export const AsyncValidations = () => {
     },
     {
       firstName: {
-        validator: () =>
-          new Promise(res =>
-            setTimeout(() => {
-              const error = Math.random() > 0.5 ? "Random error thrower" : undefined;
-              res(error);
-            }, 200)
-          )
+        validator: async () => {
+          await delay(200);
+          return Math.random() > 0.5 ? "Random error thrower" : undefined;
+        }
       },
       lastName: {
-        validator: () =>
-          new Promise(res =>
-            setTimeout(() => {
-              const error = Math.random() > 0.5 ? "Random error thrower" : undefined;
-              res(error);
-            }, 1000)
-          )
+        validator: async () => {
+          await delay(1000);
+          return Math.random() > 0.5 ? "Random error thrower" : undefined;
+        }
       }
     }
   );
@@ -42,23 +38,25 @@ export const AsyncValidations = () => {
       >
         <div>
           <div>
-            <button
-              type="button"
-              onClick={() => f.firstName.validate()}
+            <label>First name</label>
+            <input
+              type="text"
+              onChange={e => f.firstName.set(e.target.value)}
+              value={f.firstName.value}
+              onBlur={() => f.firstName.validate()}
               disabled={f.firstName.isValidating}
-            >
-              validate firstName
-            </button>
+            />
             <div className="error-msg">{f.firstName.errors.join(",")}</div>
           </div>
           <div>
-            <button
-              type="button"
-              onClick={() => f.lastName.validate()}
+            <label>Last name</label>
+            <input
+              type="text"
+              onChange={e => f.lastName.set(e.target.value)}
+              value={f.lastName.value}
+              onBlur={() => f.lastName.validate()}
               disabled={f.lastName.isValidating}
-            >
-              validate lastName
-            </button>
+            />
             <div className="error-msg">{f.lastName.errors.join(",")}</div>
           </div>
         </div>

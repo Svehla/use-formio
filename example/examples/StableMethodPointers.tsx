@@ -3,12 +3,15 @@ import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { Field } from "../../dist";
 import { useFormio } from "../../dist";
 
+export const isRequired = (value: string) =>
+  value.trim() === "" ? "Field cannot be empty" : undefined;
+
 const getRandomRGBLightColor = () => {
-  return `rgb(${[
-    150 + Math.random() * 100,
-    150 + Math.random() * 100,
-    150 + Math.random() * 100
-  ].join(",")})`;
+  return (
+    "rgb(" +
+    [150 + Math.random() * 100, 150 + Math.random() * 100, 150 + Math.random() * 100].join(",") +
+    ")"
+  );
 };
 
 export const StableMethodPointers = () => {
@@ -19,7 +22,10 @@ export const StableMethodPointers = () => {
     },
     {
       firstName: {
-        validator: v => (v === "XXX" ? "input cannot be XXX" : undefined)
+        validator: isRequired
+      },
+      lastName: {
+        validator: isRequired
       }
     }
   );
@@ -70,9 +76,11 @@ type TextInputProps = {
 
 const TextInput = React.memo((props: TextInputProps) => {
   return (
-    <div style={{ background: getRandomRGBLightColor() }}>
+    <div>
       <h3>{props.label}</h3>
-      <input value={props.value} type="text" onChange={e => props.set(e.target.value)} />
+      <div style={{ background: getRandomRGBLightColor(), padding: "1rem" }}>
+        <input value={props.value} type="text" onChange={e => props.set(e.target.value)} />
+      </div>
       <div className="error-msg">{props.errors.join(", ")}</div>
     </div>
   );

@@ -14,7 +14,7 @@ export const SyncValidations = () => {
     },
     {
       firstName: {
-        validator: value => (value.trim() === "" ? `Input can't be empty` : undefined)
+        validator: value => (value.trim() === "" ? "Input can't be empty" : undefined)
       },
       age: {
         validator: value => [maxLen3(value), minLen1(value)]

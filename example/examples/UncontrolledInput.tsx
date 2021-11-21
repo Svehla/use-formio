@@ -2,12 +2,12 @@ import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { Field, useFormio } from "../../dist";
 
-export const getRandomRGBLightColor = () => {
-  return `rgb(${[
-    150 + Math.random() * 100,
-    150 + Math.random() * 100,
-    150 + Math.random() * 100
-  ].join(",")})`;
+const getRandomRGBLightColor = () => {
+  return (
+    "rgb(" +
+    [150 + Math.random() * 100, 150 + Math.random() * 100, 150 + Math.random() * 100].join(",") +
+    ")"
+  );
 };
 
 const MIN_TEXTAREA_LENGTH = 50;
@@ -19,7 +19,7 @@ export const UncontrolledInput = () => {
     {
       text: {
         validator: v =>
-          v.length < MIN_TEXTAREA_LENGTH ? `LENGTH SHOULD BE >= ${MIN_TEXTAREA_LENGTH}` : undefined
+          v.length < MIN_TEXTAREA_LENGTH ? "LENGTH SHOULD BE >= " + MIN_TEXTAREA_LENGTH : undefined
       }
     }
   );
@@ -63,15 +63,16 @@ const UncontrolledTextarea = React.memo(
     const textareaRef = React.useRef<any>(undefined);
 
     return (
-      <div style={{ background: getRandomRGBLightColor() }}>
-        <textarea
-          ref={textareaRef}
-          onFocus={() => {
-            if (props.errors.length !== 0) props.setErrors([]);
-          }}
-          onBlur={() => props.set(textareaRef.current.value)}
-        />
-
+      <div>
+        <div style={{ background: getRandomRGBLightColor() }}>
+          <textarea
+            ref={textareaRef}
+            onFocus={() => {
+              if (props.errors.length !== 0) props.setErrors([]);
+            }}
+            onBlur={() => props.set(textareaRef.current.value)}
+          />
+        </div>
         <div className="error-msg">{props.errors.join(", ")}</div>
       </div>
     );

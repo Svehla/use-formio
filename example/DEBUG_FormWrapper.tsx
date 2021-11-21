@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Col } from "reactstrap";
 import Highlight from "react-highlight";
 
 const styles = {
@@ -21,19 +22,26 @@ export const DEBUG_FormWrapper = (props: any) => {
   delete copy2?.__dangerous;
 
   return (
-    <div className="DEBUG_FormWrapper row" style={styles.formWrapper}>
-      <div className="col-md-5" style={styles.formWrapperForm}>
-        {props.children}
-      </div>
+    <>
+      <Col style={{ background: "rgb(41 44 52)" }}>
+        <Highlight className="file-name.json">
+          {`
 
-      <div className="col-md-6">
-        <Highlight className="file-name.json">{JSON.stringify(copy1, null, 2)}</Highlight>
-      </div>
+${JSON.stringify(copy1, null, 2)}
+
+          `}
+        </Highlight>
+      </Col>
+
+      <Col key={1} style={styles.formWrapperForm}>
+        {props.children}
+      </Col>
+
       {/* <div className="col-md-5">
         {copy2 && (
           <Highlight className="file-name.json">{JSON.stringify(copy2, null, 2)}</Highlight>
         )}
       </div> */}
-    </div>
+    </>
   );
 };

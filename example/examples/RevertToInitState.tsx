@@ -4,17 +4,11 @@ import { Field } from "../../dist";
 import { useFormio } from "../../dist";
 
 export const RevertToInitState = () => {
-  const form = useFormio(
-    {
-      firstName: "",
-      lastName: ""
-    },
-    {
-      firstName: {
-        validator: v => (v === "XXX" ? "input cannot be XXX" : undefined)
-      }
-    }
-  );
+  const form = useFormio({
+    firstName: "",
+    lastName: ""
+  });
+
   const f = form.fields;
 
   return (

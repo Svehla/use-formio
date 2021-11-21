@@ -4,7 +4,7 @@ import { Field, useFormio } from "../../dist";
 
 const isRequired = (value: string) => (value.trim() === "" ? "Field cannot be empty" : undefined);
 const minNum = (min: number) => (value: number) =>
-  value < min ? `amount has to be larger than ${min}` : undefined;
+  value < min ? "amount has to be larger than " + min : undefined;
 const hasToBeChecked = (value: boolean) =>
   value === false ? "value has to be checked" : undefined;
 
