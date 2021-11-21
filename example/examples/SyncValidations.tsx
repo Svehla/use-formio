@@ -45,11 +45,9 @@ export const SyncValidations = () => {
           value={f.firstName.value}
         />
         <div className="input-error">{f.firstName.errors.join(",")}</div>
-
         <label>Age</label>
         <input type="number" onChange={e => f.age.set(e.target.value)} value={f.age.value} />
         <div className="input-error">{f.age.errors.join(",")}</div>
-
         <label>Terms of conditions</label>
         <input
           type="checkbox"

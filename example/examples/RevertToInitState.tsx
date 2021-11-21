@@ -7,7 +7,6 @@ export const RevertToInitState = () => {
     firstName: "Jakub",
     lastName: "Švehla"
   });
-
   const f = form.fields;
 
   return (
@@ -24,14 +23,12 @@ export const RevertToInitState = () => {
           value={f.firstName.value}
           onChange={e => f.firstName.set(e.target.value)}
         />
-
         <label>Second name</label>
         <input
           type="text"
           value={f.lastName.value}
           onChange={e => f.lastName.set(e.target.value)}
         />
-
         <button type="submit" disabled={form.isValidating}>
           Submit and revert to init state
         </button>

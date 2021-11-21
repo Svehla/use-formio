@@ -45,7 +45,6 @@ export const AsyncValidations = () => {
           disabled={f.firstName.isValidating}
         />
         <div className="input-error">{f.firstName.errors.join(",")}</div>
-
         <label>Last name</label>
         <input
           type="text"
@@ -55,7 +54,6 @@ export const AsyncValidations = () => {
           disabled={f.lastName.isValidating}
         />
         <div className="input-error">{f.lastName.errors.join(",")}</div>
-
         <button type="submit" disabled={form.isValidating}>
           Submit
         </button>

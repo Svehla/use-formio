@@ -2,9 +2,7 @@ import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { useFormio } from "../../dist";
 
-/**
- * demonstrate how to do that 1 input validations depends on value of another input
- */
+/** demonstrate how to do that 1 input validations depends on value of another input */
 export const CrossValidations = () => {
   const form = useFormio(
     {
@@ -13,7 +11,7 @@ export const CrossValidations = () => {
     },
     {
       parentID: {
-        // for dependencies between inputs we use the second argument of validator fn
+        /** for dependencies between inputs we use the second argument of validator fn */
         validator: (value, state) => {
           const isOlder18 = parseInt(state.age) < 18;
           if (!isOlder18) return undefined;
@@ -42,7 +40,6 @@ export const CrossValidations = () => {
           value={f.parentID.value}
         />
         <div className="input-error">{f.parentID.errors.join(",")}</div>
-
         <label>age</label>
         <input type="number" onChange={e => f.age.set(e.target.value)} value={f.age.value} />
         <div className="input-error">{f.age.errors.join(",")}</div>

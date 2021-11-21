@@ -14,12 +14,12 @@ export const debounce = <CB extends (...args: any[]) => any>(callback: CB, delay
 export const DebouncedInput = () => {
   const form = useFormio(
     {
-      text: ""
+      text1: "",
+      text2: ""
     },
     {
-      text: {
-        validator: v => (v.length < 200 ? "LENGTH SHOULD BE >= 200" : undefined)
-      }
+      text1: { validator: v => (v.length < 200 ? "LENGTH SHOULD BE >= 200" : undefined) },
+      text2: { validator: v => (v.length < 200 ? "LENGTH SHOULD BE >= 200" : undefined) }
     }
   );
   const f = form.fields;
@@ -34,9 +34,10 @@ export const DebouncedInput = () => {
         }}
       >
         <label>Text with 1000ms debounce</label>
-        <MyTextArea {...f.text} />
-        <div className="input-error">{f.text.errors.join(", ")}</div>
-
+        <MyTextArea {...f.text1} />
+        <div className="input-error">{f.text1.errors.join(", ")}</div>
+        <MyTextArea {...f.text2} />
+        <div className="input-error">{f.text2.errors.join(", ")}</div>
         <button type="submit" disabled={form.isValidating}>
           Submit
         </button>
@@ -45,7 +46,7 @@ export const DebouncedInput = () => {
   );
 };
 
-// this component si rendered only once per instance because set is stable pointer
+// this component si rendered only once per instance because all props values has constant pointer
 const MyTextArea = React.memo((props: Field<string>) => {
   const inputRef = React.useRef<any>(undefined);
   const debouncedSet = debounce(props.set, 1000);
