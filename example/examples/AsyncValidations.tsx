@@ -36,30 +36,25 @@ export const AsyncValidations = () => {
           if (isValid) alert("form is valid");
         }}
       >
-        <div>
-          <div>
-            <label>First name</label>
-            <input
-              type="text"
-              onChange={e => f.firstName.set(e.target.value)}
-              value={f.firstName.value}
-              onBlur={() => f.firstName.validate()}
-              disabled={f.firstName.isValidating}
-            />
-            <div className="error-msg">{f.firstName.errors.join(",")}</div>
-          </div>
-          <div>
-            <label>Last name</label>
-            <input
-              type="text"
-              onChange={e => f.lastName.set(e.target.value)}
-              value={f.lastName.value}
-              onBlur={() => f.lastName.validate()}
-              disabled={f.lastName.isValidating}
-            />
-            <div className="error-msg">{f.lastName.errors.join(",")}</div>
-          </div>
-        </div>
+        <label>First name</label>
+        <input
+          type="text"
+          onChange={e => f.firstName.set(e.target.value)}
+          value={f.firstName.value}
+          onBlur={() => f.firstName.validate()}
+          disabled={f.firstName.isValidating}
+        />
+        <div className="input-error">{f.firstName.errors.join(",")}</div>
+
+        <label>Last name</label>
+        <input
+          type="text"
+          onChange={e => f.lastName.set(e.target.value)}
+          value={f.lastName.value}
+          onBlur={() => f.lastName.validate()}
+          disabled={f.lastName.isValidating}
+        />
+        <div className="input-error">{f.lastName.errors.join(",")}</div>
 
         <button type="submit" disabled={form.isValidating}>
           Submit

@@ -3,7 +3,7 @@ import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { Field, useCombineFormio, useFormio } from "../../dist";
 
 export const isRequired = (value: string) =>
-  value.trim() === "" ? "Field cannot be empty" : undefined;
+  value.trim() === "" ? "Field is required" : undefined;
 
 export const UseCombineFormioExample = () => {
   const form = useCombineFormio({
@@ -13,12 +13,8 @@ export const UseCombineFormioExample = () => {
         lastName: ""
       },
       {
-        firstName: {
-          validator: isRequired
-        },
-        lastName: {
-          validator: isRequired
-        }
+        firstName: { validator: isRequired },
+        lastName: { validator: isRequired }
       }
     ),
     b: useFormio(
@@ -27,12 +23,8 @@ export const UseCombineFormioExample = () => {
         id: ""
       },
       {
-        age: {
-          validator: isRequired
-        },
-        id: {
-          validator: isRequired
-        }
+        age: { validator: isRequired },
+        id: { validator: isRequired }
       }
     )
   });
@@ -41,7 +33,7 @@ export const UseCombineFormioExample = () => {
   const b = form.forms.b.fields;
 
   return (
-    <DEBUG_FormWrapper form={form.forms.a} form2={form.forms.b}>
+    <DEBUG_FormWrapper form={form}>
       <form
         onSubmit={async e => {
           e.preventDefault();
@@ -49,10 +41,11 @@ export const UseCombineFormioExample = () => {
           if (isValid) alert("form is valid");
         }}
       >
-        <TextInput label="a.firstName" {...a.firstName} />
-        <TextInput label="a.lastName" {...a.lastName} />
-        <TextInput label="b.age" {...b.age} />
-        <TextInput label="b.id" {...b.id} />
+        <TextInput label="a - First name" {...a.firstName} />
+        <TextInput label="a - LastName" {...a.lastName} />
+        <TextInput label="b - Age" {...b.age} />
+        <TextInput label="b - Id" {...b.id} />
+
         <button type="submit" disabled={form.isValidating}>
           Submit
         </button>
@@ -63,21 +56,19 @@ export const UseCombineFormioExample = () => {
 
 type TextInputProps = {
   label: string;
-  validateOnBlur?: boolean;
-  showRerendering?: boolean;
 } & Field<string>;
 
 const TextInput = React.memo((props: TextInputProps) => {
   return (
     <div>
-      <h3>{props.label}</h3>
+      <label>{props.label}</label>
       <input
         value={props.value}
         type="text"
         disabled={props.isValidating}
         onChange={e => props.set(e.target.value)}
       />
-      <div className="error-msg">{props.errors.join(", ")}</div>
+      <div className="input-error">{props.errors.join(", ")}</div>
     </div>
   );
 });

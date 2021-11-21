@@ -33,11 +33,10 @@ export const DebouncedInput = () => {
           if (isValid) alert("form is valid");
         }}
       >
-        <div>
-          <label>Text with 1000ms debounce</label>
-        </div>
+        <label>Text with 1000ms debounce</label>
         <MyTextArea {...f.text} />
-        <div className="error-msg">{f.text.errors.join(", ")}</div>
+        <div className="input-error">{f.text.errors.join(", ")}</div>
+
         <button type="submit" disabled={form.isValidating}>
           Submit
         </button>

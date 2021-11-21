@@ -31,20 +31,14 @@ export const InputConstrains = () => {
           if (isValid) alert("form is valid");
         }}
       >
-        <div>
-          <div>
-            <label>ID</label>
-          </div>
-          <input type="text" onChange={e => f.ID.set(e.target.value)} value={f.ID.value} />
-          <div className="error-msg">{f.ID.errors.join(",")}</div>
-        </div>
-        <div>
-          <div>
-            <label>age</label>
-          </div>
-          <input type="text" onChange={e => f.age.set(e.target.value)} value={f.age.value} />
-          <div className="error-msg">{f.age.errors.join(",")}</div>
-        </div>
+        <label>ID</label>
+        <input type="text" onChange={e => f.ID.set(e.target.value)} value={f.ID.value} />
+        <div className="input-error">{f.ID.errors.join(",")}</div>
+
+        <label>age</label>
+        <input type="text" onChange={e => f.age.set(e.target.value)} value={f.age.value} />
+        <div className="input-error">{f.age.errors.join(",")}</div>
+
         <button type="submit">Submit</button>
       </form>
     </DEBUG_FormWrapper>

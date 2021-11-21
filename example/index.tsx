@@ -11,7 +11,6 @@ import { CustomFormSchemaFramework } from "./examples/CustomFormSchemaFramework"
 import { DebouncedInput } from "./examples/DebouncedInput";
 import { GithubIcon, Header } from "./Header";
 import { InputConstrains } from "./examples/InputConstrains";
-import { MultipleValidatorFunctions } from "./examples/MultipleValidatorFunctions";
 import { RevertToInitState } from "./examples/RevertToInitState";
 import { StableMethodPointers } from "./examples/StableMethodPointers";
 import { SyncSetValuesBasedOnPrevValue } from "./examples/SyncSetValuesBasedOnPrevValue";
@@ -27,7 +26,6 @@ import { raw_CustomFormSchemaFramework } from "./__generated_examples__/CustomFo
 import { raw_DebouncedInput } from "./__generated_examples__/DebouncedInput";
 import { raw_InputConstrains } from "./__generated_examples__/InputConstrains";
 // eslint-disable-next-line max-len
-import { raw_MultipleValidatorFunctions } from "./__generated_examples__/MultipleValidatorFunctions";
 import { raw_RevertToInitState } from "./__generated_examples__/RevertToInitState";
 import { raw_StableMethodPointers } from "./__generated_examples__/StableMethodPointers";
 // eslint-disable-next-line max-len
@@ -76,12 +74,6 @@ const examples = [
     code: raw_RevertToInitState
   },
   {
-    title: "Multiple validator functions",
-    githubFileName: "MultipleValidatorFunctions",
-    Comp: MultipleValidatorFunctions,
-    code: raw_MultipleValidatorFunctions
-  },
-  {
     title: "Use combine formio example",
     githubFileName: "UseCombineFormioExample",
     Comp: UseCombineFormioExample,
@@ -120,26 +112,6 @@ const styles = {
 };
 
 const App = () => {
-  // const [data, setData] = React.useState({});
-
-  // React.useEffect(() => {
-  //   (async () => {
-  //     const res = await Promise.all(
-  //       examples.map(async i => ({
-  //         name: i.githubFileName,
-  //         data: await window
-  //           .fetch(
-  //             // eslint-disable-next-line max-len
-  //             `https://raw.githubusercontent.com/Svehla/use-formio/main/example/examples/${i.githubFileName}.tsx`
-  //           )
-  //           .then(res => res.text())
-  //       }))
-  //     );
-
-  //     setData(Object.fromEntries(res.map(i => [i.name, i.data])));
-  //   })();
-  // }, []);
-
   return (
     <div>
       <div style={styles.block}>
@@ -228,12 +200,6 @@ const ListItem = (props: {
               </a>
             </div>
 
-            <div style={styles.block}>
-              What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,
-              when
-            </div>
-
             <Row className="DEBUG_FormWrapper" style={{ alignItems: "stretch" }}>
               <i.Comp />
             </Row>
@@ -242,11 +208,12 @@ const ListItem = (props: {
 
         <Col md={5} style={{ background: "rgb(41 44 52)" }}>
           <hr style={{ borderTop: "5px solid black" }} />
-          <div style={{ paddingTop: "4rem", paddingBottom: "4rem" }}>
+          <div style={{ paddingBottom: "8rem" }}>
             <Highlight className="filename.tsx">{i.code}</Highlight>
           </div>
         </Col>
       </Row>
+
       {/* 
       <Container style={styles.block}>
         <div>

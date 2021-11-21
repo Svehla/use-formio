@@ -2,11 +2,8 @@ import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { useFormio } from "../../dist";
 
-const isInteger = (val: string) => parseInt(val).toString() === val;
 /**
  * demonstrate how to do that 1 input validations depends on value of another input
- *
- * for dependencies between inputs we use second argument of validator callback which is 'state'
  */
 export const CrossValidations = () => {
   const form = useFormio(
@@ -16,16 +13,14 @@ export const CrossValidations = () => {
     },
     {
       parentID: {
+        // for dependencies between inputs we use the second argument of validator fn
         validator: (value, state) => {
           const isOlder18 = parseInt(state.age) < 18;
-          if (isOlder18) return undefined;
+          if (!isOlder18) return undefined;
           return value.trim() === ""
             ? "parent ID is required for people younger 18 years"
             : undefined;
         }
-      },
-      age: {
-        shouldChangeValue: isInteger
       }
     }
   );
@@ -40,24 +35,17 @@ export const CrossValidations = () => {
           if (isValid) alert("form is valid");
         }}
       >
-        <div>
-          <div>
-            <label>parentID</label>
-          </div>
-          <input
-            type="text"
-            onChange={e => f.parentID.set(e.target.value)}
-            value={f.parentID.value}
-          />
-          <div className="error-msg">{f.parentID.errors.join(",")}</div>
-        </div>
-        <div>
-          <div>
-            <label>age</label>
-          </div>
-          <input type="text" onChange={e => f.age.set(e.target.value)} value={f.age.value} />
-          <div className="error-msg">{f.age.errors.join(",")}</div>
-        </div>
+        <label>parentID</label>
+        <input
+          type="text"
+          onChange={e => f.parentID.set(e.target.value)}
+          value={f.parentID.value}
+        />
+        <div className="input-error">{f.parentID.errors.join(",")}</div>
+
+        <label>age</label>
+        <input type="number" onChange={e => f.age.set(e.target.value)} value={f.age.value} />
+        <div className="input-error">{f.age.errors.join(",")}</div>
         <button type="submit">Submit</button>
       </form>
     </DEBUG_FormWrapper>

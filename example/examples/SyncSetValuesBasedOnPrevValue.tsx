@@ -2,9 +2,6 @@ import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { useFormio } from "../../dist";
 
-/**
- * set values synchronously from your JS function via prevState callbacks
- */
 export const SyncSetValuesBasedOnPrevValue = () => {
   const form = useFormio(
     {
@@ -24,9 +21,9 @@ export const SyncSetValuesBasedOnPrevValue = () => {
 
   return (
     <DEBUG_FormWrapper form={form}>
-      <button
-        type="submit"
-        onClick={async () => {
+      <form
+        onSubmit={async e => {
+          e.preventDefault();
           f.ID.set("x");
           f.ID.set(p => p + "x");
           f.ID.set(p => p + "x");
@@ -45,8 +42,8 @@ export const SyncSetValuesBasedOnPrevValue = () => {
           }
         }}
       >
-        Submit
-      </button>
+        <button type="submit">Submit</button>
+      </form>
     </DEBUG_FormWrapper>
   );
 };

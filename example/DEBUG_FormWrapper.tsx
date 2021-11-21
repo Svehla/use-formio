@@ -15,19 +15,31 @@ const styles = {
   }
 };
 
-export const DEBUG_FormWrapper = (props: any) => {
-  const copy1 = props.form;
-  delete copy1.__dangerous;
-  const copy2 = props.form2 ?? undefined;
-  delete copy2?.__dangerous;
+const clearFormStateJSON = (json: any) => {
+  const nJson = { ...json };
+  delete nJson.__dangerous;
 
+  // clear combineFormio
+  if (nJson.forms) {
+    nJson.forms = { ...nJson.forms };
+
+    Object.entries(nJson.forms).forEach(([k, v]) => {
+      // @ts-expect-error
+      delete v.__dangerous;
+    });
+  }
+
+  return nJson;
+};
+
+export const DEBUG_FormWrapper = (props: any) => {
   return (
     <>
       <Col style={{ background: "rgb(41 44 52)" }}>
         <Highlight className="file-name.json">
           {`
 
-${JSON.stringify(copy1, null, 2)}
+${JSON.stringify(clearFormStateJSON(props.form), null, 2)}
 
           `}
         </Highlight>
@@ -36,12 +48,6 @@ ${JSON.stringify(copy1, null, 2)}
       <Col key={1} style={styles.formWrapperForm}>
         {props.children}
       </Col>
-
-      {/* <div className="col-md-5">
-        {copy2 && (
-          <Highlight className="file-name.json">{JSON.stringify(copy2, null, 2)}</Highlight>
-        )}
-      </div> */}
     </>
   );
 };

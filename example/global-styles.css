@@ -1,10 +1,7 @@
-html {
-  /* font-size: large; */
-}
-
-.error-msg {
+.input-error {
   color: red;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  height: 1rem;
 }
 
 .DEBUG_FormWrapper label {
@@ -26,14 +23,14 @@ html {
 
 .DEBUG_FormWrapper button[type="submit"] {
   border-radius: 0.5rem;
-  border-color: #444;
-  color: black;
+  margin-top: 1rem;
   padding: 0.3rem;
   width: 100%;
 }
 
 .DEBUG_FormWrapper form {
-  border: solid 2px #000;
+  border: solid 2px #aaa;
+  border-radius: 5px;
   padding: 4rem;
   height: 100%;
 }

@@ -4,15 +4,10 @@ import { Field } from "../../dist";
 import { useFormio } from "../../dist";
 
 export const isRequired = (value: string) =>
-  value.trim() === "" ? "Field cannot be empty" : undefined;
+  value.trim() === "" ? "Field is required" : undefined;
 
-const getRandomRGBLightColor = () => {
-  return (
-    "rgb(" +
-    [150 + Math.random() * 100, 150 + Math.random() * 100, 150 + Math.random() * 100].join(",") +
-    ")"
-  );
-};
+const getRandomRGBLightColor = () =>
+  "rgb(" + [Math.random(), Math.random(), Math.random()].map(i => i * 150 + 100).join(",") + ")";
 
 export const StableMethodPointers = () => {
   const form = useFormio(
@@ -67,7 +62,6 @@ export const StableMethodPointers = () => {
 type TextField = Field<string>;
 type TextInputProps = {
   label: string;
-  validateOnBlur?: boolean;
 
   value: TextField["value"];
   set: TextField["set"];
@@ -77,11 +71,11 @@ type TextInputProps = {
 const TextInput = React.memo((props: TextInputProps) => {
   return (
     <div>
-      <h3>{props.label}</h3>
+      <label>{props.label}</label>
       <div style={{ background: getRandomRGBLightColor(), padding: "1rem" }}>
         <input value={props.value} type="text" onChange={e => props.set(e.target.value)} />
       </div>
-      <div className="error-msg">{props.errors.join(", ")}</div>
+      <div className="input-error">{props.errors.join(", ")}</div>
     </div>
   );
 });
