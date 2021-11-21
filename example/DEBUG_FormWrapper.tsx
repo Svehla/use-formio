@@ -1,25 +1,13 @@
 import * as React from "react";
+import { BG_CODE_COLOR } from "./constants";
 import { Col } from "reactstrap";
 import Highlight from "react-highlight";
-
-const styles = {
-  formWrapper: {
-    display: "flex",
-    alignItems: "flex-start"
-  },
-  redColor: {
-    color: "red"
-  },
-  formWrapperForm: {
-    marginRight: "3rem"
-  }
-};
 
 const clearFormStateJSON = (json: any) => {
   const nJson = { ...json };
   delete nJson.__dangerous;
 
-  // clear combineFormio
+  // clear combineFormio nested fields
   if (nJson.forms) {
     nJson.forms = { ...nJson.forms };
 
@@ -32,22 +20,23 @@ const clearFormStateJSON = (json: any) => {
   return nJson;
 };
 
+const styles = {
+  col: {
+    paddingTop: "2rem",
+    paddingBottom: "2rem",
+    background: BG_CODE_COLOR
+  }
+};
 export const DEBUG_FormWrapper = (props: any) => {
   return (
     <>
-      <Col style={{ background: "rgb(41 44 52)" }}>
+      <Col md={6} style={styles.col}>
         <Highlight className="file-name.json">
-          {`
-
-${JSON.stringify(clearFormStateJSON(props.form), null, 2)}
-
-          `}
+          {JSON.stringify(clearFormStateJSON(props.form), null, 2)}
         </Highlight>
       </Col>
 
-      <Col key={1} style={styles.formWrapperForm}>
-        {props.children}
-      </Col>
+      <Col md={6}>{props.children}</Col>
     </>
   );
 };

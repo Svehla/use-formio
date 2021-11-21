@@ -18,15 +18,15 @@ export const UncontrolledInput = () => {
   );
   const f = form.fields;
 
+  const onSubmit = React.useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const [isValid] = await form.validate();
+    if (isValid) alert("form is valid");
+  }, []);
+
   return (
     <DEBUG_FormWrapper form={form}>
-      <form
-        onSubmit={async e => {
-          e.preventDefault();
-          const [isValid] = await form.validate();
-          if (isValid) alert("form is valid");
-        }}
-      >
+      <form onSubmit={onSubmit}>
         <label>Text</label>
         <UncontrolledTextarea
           set={f.text.set}

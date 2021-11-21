@@ -28,10 +28,6 @@ export const UseCombineFormioExample = () => {
       }
     )
   });
-
-  const a = form.forms.a.fields;
-  const b = form.forms.b.fields;
-
   return (
     <DEBUG_FormWrapper form={form}>
       <form
@@ -41,11 +37,10 @@ export const UseCombineFormioExample = () => {
           if (isValid) alert("form is valid");
         }}
       >
-        <TextInput label="a - First name" {...a.firstName} />
-        <TextInput label="a - LastName" {...a.lastName} />
-        <TextInput label="b - Age" {...b.age} />
-        <TextInput label="b - Id" {...b.id} />
-
+        <TextInput label="a - First name" {...form.forms.a.fields.firstName} />
+        <TextInput label="a - LastName" {...form.forms.a.fields.lastName} />
+        <TextInput label="b - Age" {...form.forms.b.fields.age} />
+        <TextInput label="b - Id" {...form.forms.b.fields.id} />
         <button type="submit" disabled={form.isValidating}>
           Submit
         </button>
@@ -54,21 +49,15 @@ export const UseCombineFormioExample = () => {
   );
 };
 
-type TextInputProps = {
-  label: string;
-} & Field<string>;
-
-const TextInput = React.memo((props: TextInputProps) => {
-  return (
-    <div>
-      <label>{props.label}</label>
-      <input
-        value={props.value}
-        type="text"
-        disabled={props.isValidating}
-        onChange={e => props.set(e.target.value)}
-      />
-      <div className="input-error">{props.errors.join(", ")}</div>
-    </div>
-  );
-});
+const TextInput = React.memo((props: { label: string } & Field<string>) => (
+  <div>
+    <label>{props.label}</label>
+    <input
+      value={props.value}
+      type="text"
+      disabled={props.isValidating}
+      onChange={e => props.set(e.target.value)}
+    />
+    <div className="input-error">{props.errors.join(", ")}</div>
+  </div>
+));

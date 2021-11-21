@@ -1,4 +1,5 @@
 import * as React from "react";
+import { BG_CODE_COLOR } from ".";
 import {
   Collapse,
   Container,
@@ -61,7 +62,7 @@ export const Header = (props: {
 }) => {
   return (
     <Container>
-      <Navbar color="light" expand="md" light>
+      <Navbar color="light" expand="md" style={{ background: BG_CODE_COLOR }}>
         <NavbarBrand href="/">use-formio</NavbarBrand>
         <NavbarToggler onClick={function noRefCheck() {}} />
         <Collapse navbar>

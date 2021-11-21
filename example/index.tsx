@@ -1,5 +1,6 @@
 import "./global-styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+// import "highlight.js/styles/hybrid.css";
 import "highlight.js/styles/atom-one-dark.css";
 import "react-app-polyfill/ie11";
 import * as React from "react";
@@ -34,6 +35,7 @@ import { raw_SyncValidations } from "./__generated_examples__/SyncValidations";
 import { raw_UncontrolledInput } from "./__generated_examples__/UncontrolledInput";
 import { raw_UseCombineFormioExample } from "./__generated_examples__/UseCombineFormioExample";
 
+import { BG_CODE_COLOR } from "./constants";
 import Highlight from "react-highlight";
 
 const examples = [
@@ -158,32 +160,58 @@ const App = () => {
 
       <Container style={styles.block}>
         <h2>Examples</h2>
+
+        <div>
+          {examples.map(e => (
+            <div key={e.githubFileName}>
+              <a href={`#${e.githubFileName}`}>{e.title}</a>
+            </div>
+          ))}
+        </div>
       </Container>
 
       {examples.map((i, index) => (
         <div key={index}>
-          <ListItem
-            item={i}
-            // sourceCode={data[i.githubFileName]}
-          />
+          <ListItem {...i} />
         </div>
       ))}
     </div>
   );
 };
 
-const ListItem = (props: {
-  // sourceCode: string;
-  item: typeof examples[number];
-}) => {
+const getWindowDimensions = () => ({
+  width: window.innerWidth,
+  height: window.innerHeight
+});
+
+const useWindowDimensions = () => {
+  const [windowDimensions, setWindowDimensions] = React.useState(getWindowDimensions());
+
+  React.useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return windowDimensions;
+};
+
+const ListItem = (props: typeof examples[number]) => {
   const [show, setShow] = React.useState(false);
-  const i = props.item;
+  const i = props;
+
+  const dim = useWindowDimensions();
+
+  const showCodeRight = dim.width > 1200;
 
   return (
     <div>
       <Row>
         <Col>
-          <Container style={{ marginRight: 0 }}>
+          <Container style={showCodeRight ? { marginRight: 0 } : {}}>
             <div style={{ display: "flex", alignItems: "center", marginBottom: "2rem" }}>
               <a
                 style={{ marginRight: "0.5rem" }}
@@ -206,27 +234,30 @@ const ListItem = (props: {
           </Container>
         </Col>
 
-        <Col md={5} style={{ background: "rgb(41 44 52)" }}>
-          <hr style={{ borderTop: "5px solid black" }} />
-          <div style={{ paddingBottom: "8rem" }}>
-            <Highlight className="filename.tsx">{i.code}</Highlight>
-          </div>
-        </Col>
+        {showCodeRight && (
+          <Col xl={5} md={5} style={{ background: BG_CODE_COLOR }}>
+            {/* <hr style={{ borderTop: "5px solid black" }} /> */}
+            <div style={{ paddingBottom: "12rem" }}>
+              <Highlight className="code-snippet filename.tsx">{i.code}</Highlight>
+            </div>
+          </Col>
+        )}
       </Row>
 
-      {/* 
-      <Container style={styles.block}>
-        <div>
-          <button className="btn btn-primary" onClick={() => setShow(p => !p)}>
-            {show ? "hide" : "show"} example source code
-          </button>
-        </div>
+      {showCodeRight === false && (
+        <Container style={styles.block}>
+          <div>
+            <button className="btn btn-primary" onClick={() => setShow(p => !p)}>
+              {show ? "hide" : "show"} example source code
+            </button>
+          </div>
 
-        <div style={show ? undefined : { display: "none" }}>
-          <Highlight className="filename.tsx">{props.sourceCode}</Highlight>
-        </div>
-        <hr />
-      </Container> */}
+          <div style={show ? undefined : { display: "none" }}>
+            <Highlight className="filename.tsx">{i.code}</Highlight>
+          </div>
+          <hr />
+        </Container>
+      )}
     </div>
   );
 };
