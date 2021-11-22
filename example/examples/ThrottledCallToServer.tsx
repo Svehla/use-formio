@@ -4,10 +4,10 @@ import { useFormio } from "../../dist";
 
 const delay = (time: number) => new Promise(res => setTimeout(res, time));
 
-const throttle = <CB extends (...args: any[]) => any>(func: CB, limit: any) => {
+const throttle = (func: Function, limit: number) => {
   let lastFunc;
   let lastRan;
-  return function(...args: Parameters<CB>) {
+  return function(...args: any) {
     const context = this;
     if (!lastRan) {
       func.apply(context, args);
@@ -29,7 +29,6 @@ const fakeCallToServer = async (search: string) => {
   return [search, [...search.split("")].reverse().join(""), search.length.toString()];
 };
 
-/** for simplicity, this example does not show how to solve async race conditions */
 export const ThrottledCallToServer = () => {
   const [results, setResults] = React.useState([] as string[]);
   const [loading, setLoading] = React.useState(false);
