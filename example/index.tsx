@@ -79,7 +79,7 @@ const examples = [
   },
   {
     title: "Use combine formio example",
-    githubFileName: "useCombineFormioExample",
+    githubFileName: "UseCombineFormioExample",
     Comp: UseCombineFormioExample,
     code: raw_UseCombineFormioExample
   },
