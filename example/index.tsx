@@ -16,6 +16,7 @@ import { RevertToInitState } from "./examples/RevertToInitState";
 import { StableMethodPointers } from "./examples/StableMethodPointers";
 import { SyncSetValuesBasedOnPrevValue } from "./examples/SyncSetValuesBasedOnPrevValue";
 import { SyncValidations } from "./examples/SyncValidations";
+import { ThrottledCallToServer } from "./examples/ThrottledCallToServer";
 import { UncontrolledInput } from "./examples/UncontrolledInput";
 import { UseCombineFormioExample } from "./examples/UseCombineFormioExample";
 
@@ -29,6 +30,7 @@ import { raw_InputConstrains } from "./__generated_examples__/InputConstrains";
 // eslint-disable-next-line max-len
 import { raw_RevertToInitState } from "./__generated_examples__/RevertToInitState";
 import { raw_StableMethodPointers } from "./__generated_examples__/StableMethodPointers";
+import { raw_ThrottledCallToServer } from "./__generated_examples__/ThrottledCallToServer";
 // eslint-disable-next-line max-len
 import { raw_SyncSetValuesBasedOnPrevValue } from "./__generated_examples__/SyncSetValuesBasedOnPrevValue";
 import { raw_SyncValidations } from "./__generated_examples__/SyncValidations";
@@ -98,6 +100,12 @@ const examples = [
     githubFileName: "DebouncedInput",
     Comp: DebouncedInput,
     code: raw_DebouncedInput
+  },
+  {
+    title: "Throttled call to server",
+    githubFileName: "ThrottledCallToServer",
+    Comp: ThrottledCallToServer,
+    code: raw_ThrottledCallToServer
   },
   {
     title: "Custom form schema framework",
