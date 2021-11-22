@@ -16,12 +16,9 @@ export const StableMethodPointers = () => {
       lastName: ""
     },
     {
-      firstName: {
-        validator: isRequired
-      },
-      lastName: {
-        validator: isRequired
-      }
+      firstName: { validator: isRequired },
+      // validator functions has to be stable pointer to the pointer stable
+      lastName: { validator: isRequired }
     }
   );
   const f = form.fields;
@@ -44,12 +41,14 @@ export const StableMethodPointers = () => {
           value={f.firstName.value}
           set={f.firstName.set}
           errors={f.firstName.errors}
+          validate={f.firstName.validate}
         />
         <TextInput
           label={"f.lastName"}
           value={f.lastName.value}
           set={f.lastName.set}
           errors={f.lastName.errors}
+          validate={f.lastName.validate}
         />
         <button type="submit" disabled={form.isValidating}>
           Submit
@@ -66,6 +65,7 @@ type TextInputProps = {
   value: TextField["value"];
   set: TextField["set"];
   errors: TextField["errors"];
+  validate: TextField["validate"];
 };
 
 const TextInput = React.memo((props: TextInputProps) => {
@@ -73,7 +73,12 @@ const TextInput = React.memo((props: TextInputProps) => {
     <div>
       <label>{props.label}</label>
       <div style={{ background: getRandomRGBLightColor(), padding: "1rem" }}>
-        <input value={props.value} type="text" onChange={e => props.set(e.target.value)} />
+        <input
+          type="text"
+          value={props.value}
+          onChange={e => props.set(e.target.value)}
+          onBlur={props.validate}
+        />
       </div>
       <div className="input-error">{props.errors.join(", ")}</div>
     </div>

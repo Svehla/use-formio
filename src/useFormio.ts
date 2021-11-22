@@ -92,32 +92,36 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
       value,
       errors: formState.errors[key],
       isValidating: formState.isValidating[key],
-      set: useCallback((userValue: any | ((prevState: any) => any)) => {
-        setFormState(prevFormState => {
-          const schemaDef = stateSchema?.[key];
-          const newValue =
-            userValue instanceof Function ? userValue(prevFormState.values[key]) : userValue;
+      set: useCallback(
+        (userValue: any | ((prevState: any) => any)) => {
+          setFormState(prevFormState => {
+            const schemaDef = stateSchema?.[key];
+            const newValue =
+              userValue instanceof Function ? userValue(prevFormState.values[key]) : userValue;
 
-          if (schemaDef?.shouldChangeValue?.(newValue, prevFormState.values) === false) {
-            return prevFormState;
-          }
+            if (schemaDef?.shouldChangeValue?.(newValue, prevFormState.values) === false) {
+              return prevFormState;
+            }
 
-          // === same value pointer optimization ===
-          // we wanna be sure that empty array pointer is not override with new empty array pointer
-          // thanks to that we may optimise react render memoization
-          const newErrors =
-            prevFormState.errors[key].length === 0
-              ? prevFormState.errors
-              : { ...prevFormState.errors, [key]: [] };
+            // === same value pointer optimization ===
+            // need to be sure that empty array pointer is not override with new empty array pointer
+            // thanks to that we may optimise react render memoization
+            const newErrors =
+              prevFormState.errors[key].length === 0
+                ? prevFormState.errors
+                : { ...prevFormState.errors, [key]: [] };
 
-          return {
-            ...prevFormState,
-            values: { ...prevFormState.values, [key]: newValue },
-            errors: newErrors
-          };
-        });
-      }, []),
+            return {
+              ...prevFormState,
+              values: { ...prevFormState.values, [key]: newValue },
+              errors: newErrors
+            };
+          });
+        },
+        [stateSchema?.[key]?.shouldChangeValue]
+      ),
       validate: useCallback(async () => {
+        console.log("validate calling");
         setFormState(p => ({
           ...p,
           isValidating: { ...p.isValidating, [key]: true }
@@ -131,7 +135,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
         }));
         const isFieldValid = newErrors.length === 0;
         return [isFieldValid, newErrors] as [boolean, typeof newErrors];
-      }, []),
+      }, [stateSchema?.[key]?.validator]),
       setErrors: useCallback((userErrors: string[] | ((prevState: string[]) => string[])) => {
         setFormState(p => {
           const newErrors = userErrors instanceof Function ? userErrors(p.errors[key]) : userErrors;
@@ -151,7 +155,8 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     };
   };
 
-  const validate = useCallback(async () => {
+  // use callback cannot be there coz it changed when validate pointer of fields is changed
+  const validate = async () => {
     setFormState(p => ({
       ...p,
       isValidating: mapObjectValues(() => true, p.isValidating)
@@ -177,7 +182,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     const isFormValid = Object.values(newErrors).flat().length === 0;
 
     return [isFormValid, newErrors] as [boolean, typeof newErrors];
-  }, []);
+  };
 
   const clearErrors = () => {
     return setFormState(prevFormState => ({
