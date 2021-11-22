@@ -10,6 +10,7 @@ import { Col, Container, Row } from "reactstrap";
 import { CrossValidations } from "./examples/CrossValidations";
 import { CustomFormSchemaFramework } from "./examples/CustomFormSchemaFramework";
 import { DebouncedInput } from "./examples/DebouncedInput";
+import { DynamicForms } from "./examples/DynamicForms";
 import { GithubIcon, Header } from "./Header";
 import { InputConstrains } from "./examples/InputConstrains";
 import { RevertToInitState } from "./examples/RevertToInitState";
@@ -17,7 +18,7 @@ import { StableMethodPointers } from "./examples/StableMethodPointers";
 import { SyncSetValuesBasedOnPrevValue } from "./examples/SyncSetValuesBasedOnPrevValue";
 import { SyncValidations } from "./examples/SyncValidations";
 import { UncontrolledInput } from "./examples/UncontrolledInput";
-import { UseCombineFormioExample } from "./examples/UseCombineFormioExample";
+import { UseCombineFormioExample } from "./examples/useCombineFormioExample";
 
 // TODO: add some plugin to parcel v1 to read .tsx files as txt somehow?
 // generated files
@@ -27,13 +28,14 @@ import { raw_CustomFormSchemaFramework } from "./__generated_examples__/CustomFo
 import { raw_DebouncedInput } from "./__generated_examples__/DebouncedInput";
 import { raw_InputConstrains } from "./__generated_examples__/InputConstrains";
 // eslint-disable-next-line max-len
+import { raw_DynamicForms } from "./__generated_examples__/DynamicForms";
 import { raw_RevertToInitState } from "./__generated_examples__/RevertToInitState";
 import { raw_StableMethodPointers } from "./__generated_examples__/StableMethodPointers";
 // eslint-disable-next-line max-len
 import { raw_SyncSetValuesBasedOnPrevValue } from "./__generated_examples__/SyncSetValuesBasedOnPrevValue";
 import { raw_SyncValidations } from "./__generated_examples__/SyncValidations";
 import { raw_UncontrolledInput } from "./__generated_examples__/UncontrolledInput";
-import { raw_UseCombineFormioExample } from "./__generated_examples__/UseCombineFormioExample";
+import { raw_UseCombineFormioExample } from "./__generated_examples__/useCombineFormioExample";
 
 import { BG_CODE_COLOR } from "./constants";
 import Highlight from "react-highlight";
@@ -77,7 +79,7 @@ const examples = [
   },
   {
     title: "Use combine formio example",
-    githubFileName: "UseCombineFormioExample",
+    githubFileName: "useCombineFormioExample",
     Comp: UseCombineFormioExample,
     code: raw_UseCombineFormioExample
   },
@@ -104,6 +106,12 @@ const examples = [
     githubFileName: "CustomFormSchemaFramework",
     Comp: CustomFormSchemaFramework,
     code: raw_CustomFormSchemaFramework
+  },
+  {
+    title: "Dynamic forms",
+    githubFileName: "DynamicForms",
+    Comp: DynamicForms,
+    code: raw_DynamicForms
   }
 ];
 
