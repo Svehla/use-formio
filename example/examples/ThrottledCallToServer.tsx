@@ -7,15 +7,15 @@ const delay = (time: number) => new Promise(res => setTimeout(res, time));
 const throttle = (func: Function, limit: number) => {
   let lastFunc;
   let lastRan;
-  return (...args: any[]) => {
+  return function(...args: any) {
     if (!lastRan) {
-      func(args);
+      func(...args);
       lastRan = Date.now();
     } else {
       clearTimeout(lastFunc);
-      lastFunc = setTimeout(() => {
+      lastFunc = setTimeout(function() {
         if (Date.now() - lastRan >= limit) {
-          func(args);
+          func(...args);
           lastRan = Date.now();
         }
       }, limit - (Date.now() - lastRan));
@@ -36,8 +36,8 @@ export const ThrottledCallToServer = () => {
 
   const fetchData = React.useCallback(async (search: string) => {
     setLoading(true);
-    setCallsToServer(p => p + 1);
     setResults(await fakeHTTPCallService(search));
+    setCallsToServer(p => p + 1);
     setLoading(false);
   }, []);
 
@@ -46,7 +46,10 @@ export const ThrottledCallToServer = () => {
   return (
     <DEBUG_FormWrapper form={form}>
       <form onSubmit={async e => e.preventDefault()}>
-        <label>Search</label>
+        <label>
+          Search
+          {loading && <span>(loading)</span>}
+        </label>
         <input
           type="text"
           onChange={e => {
@@ -56,7 +59,6 @@ export const ThrottledCallToServer = () => {
           }}
           value={form.fields.search.value}
         />
-        {loading && <div>loading</div>}
         {results.length > 0 && <div>we found:</div>}
         <ul>
           {results.map((result, index) => (

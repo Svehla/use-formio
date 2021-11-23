@@ -17,7 +17,7 @@ export const StableMethodPointers = () => {
     },
     {
       firstName: { validator: isRequired },
-      // validator functions has to be stable pointer to the pointer stable
+      // validator functions has to be stable pointer to optimise React runtime
       lastName: { validator: isRequired }
     }
   );
@@ -32,10 +32,6 @@ export const StableMethodPointers = () => {
           if (isValid) alert("form is valid");
         }}
       >
-        {/*
-          thanks to stable pointer + React.memo,
-          the component is rerendered only if value is changed
-         */}
         <TextInput
           label={"f.firstName"}
           value={f.firstName.value}
@@ -68,6 +64,10 @@ type TextInputProps = {
   validate: TextField["validate"];
 };
 
+/**
+ * thanks to the stable pointer of methods + React.memo,
+ * the component is rerendered only if value is changed
+ */
 const TextInput = React.memo((props: TextInputProps) => {
   return (
     <div>
