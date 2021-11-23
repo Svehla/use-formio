@@ -142,7 +142,9 @@ const useFormioAsciiArtIntro = `
   | \\_/ |, ''.'.| \\__.,          | |  | \\__. | | |     | | | | | |  | || \\__. | 
   '.__.'_/[\\__) )'.__.'         [___]  '.__.' [___]   [___||__||__][___]'.__.'  
                                                                                 
-
+`;
+/*
+`
   	
                                               ---                                  
                                           ----/  /--                               
@@ -167,6 +169,7 @@ const useFormioAsciiArtIntro = `
                  /  \ -/                                                           
                      \      
 `;
+*/
 
 const useFormioInstallationsAsciiArt = ``;
 

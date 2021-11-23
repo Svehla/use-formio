@@ -1,21 +1,23 @@
 import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
-import { Field, useFormio } from "../../dist";
+import { Field, getUseFormio } from "../../dist";
 
 const getRandomRGBLightColor = () =>
   "rgb(" + [Math.random(), Math.random(), Math.random()].map(i => i * 150 + 100).join(",") + ")";
 
-export const UncontrolledInput = () => {
-  const form = useFormio(
-    {
-      text: ""
-    },
-    {
-      text: {
-        validator: v => (v.length < 50 ? "LENGTH SHOULD BE >= 50" : undefined)
-      }
+const useForm = getUseFormio(
+  {
+    text: ""
+  },
+  {
+    text: {
+      validator: v => (v.length < 50 ? "LENGTH SHOULD BE >= 50" : undefined)
     }
-  );
+  }
+);
+
+export const UncontrolledInput = () => {
+  const form = useForm();
   const f = form.fields;
 
   return (
