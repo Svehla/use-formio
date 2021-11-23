@@ -32,96 +32,101 @@ import { raw_CustomFormSchemaFramework } from "./__generated_examples__/CustomFo
 import { raw_DebouncedInput } from "./__generated_examples__/DebouncedInput";
 import { raw_InputConstrains } from "./__generated_examples__/InputConstrains";
 // eslint-disable-next-line max-len
+import { raw_OptimizedObjectRecreating } from "./__generated_examples__/OptimizedObjectRecreating";
 import { raw_RevertToInitState } from "./__generated_examples__/RevertToInitState";
 import { raw_StableMethodPointers } from "./__generated_examples__/StableMethodPointers";
 import { raw_ThrottledCallToServer } from "./__generated_examples__/ThrottledCallToServer";
 // eslint-disable-next-line max-len
-import { raw_OptimizedObjectRecreating } from "./__generated_examples__/OptimizedObjectRecreating";
 import { raw_SyncSetValuesBasedOnPrevValue } from "./__generated_examples__/SyncSetValuesBasedOnPrevValue";
 import { raw_SyncValidations } from "./__generated_examples__/SyncValidations";
 import { raw_UncontrolledInput } from "./__generated_examples__/UncontrolledInput";
 import { raw_UseCombineFormioExample } from "./__generated_examples__/UseCombineFormioExample";
+import { useWindowDimensions } from "./hooks";
 
-const examples = [
-  {
-    title: "Synchronous validations",
-    githubFileName: "SyncValidations",
-    Comp: SyncValidations,
-    code: raw_SyncValidations
-  },
-  {
-    title: "Input constrains",
-    githubFileName: "InputConstrains",
-    Comp: InputConstrains,
-    code: raw_InputConstrains
-  },
-  {
-    title: "Cross validations",
-    githubFileName: "CrossValidations",
-    Comp: CrossValidations,
-    code: raw_CrossValidations
-  },
-  {
-    title: "Sync set valuesBased on prev value",
-    githubFileName: "SyncSetValuesBasedOnPrevValue",
-    Comp: SyncSetValuesBasedOnPrevValue,
-    code: raw_SyncSetValuesBasedOnPrevValue
-  },
-  {
-    title: "Async validations",
-    githubFileName: "AsyncValidations",
-    Comp: AsyncValidations,
-    code: raw_AsyncValidations
-  },
-  {
-    title: "Revert to init state",
-    githubFileName: "RevertToInitState",
-    Comp: RevertToInitState,
-    code: raw_RevertToInitState
-  },
-  {
-    title: "Use combine formio example",
-    githubFileName: "UseCombineFormioExample",
-    Comp: UseCombineFormioExample,
-    code: raw_UseCombineFormioExample
-  },
-  {
-    title: "Uncontrolled input",
-    githubFileName: "UncontrolledInput",
-    Comp: UncontrolledInput,
-    code: raw_UncontrolledInput
-  },
-  {
-    title: "Stable method pointers",
-    githubFileName: "StableMethodPointers",
-    Comp: StableMethodPointers,
-    code: raw_StableMethodPointers
-  },
-  {
-    title: "Debounced input",
-    githubFileName: "DebouncedInput",
-    Comp: DebouncedInput,
-    code: raw_DebouncedInput
-  },
-  {
-    title: "Throttled call to server",
-    githubFileName: "ThrottledCallToServer",
-    Comp: ThrottledCallToServer,
-    code: raw_ThrottledCallToServer
-  },
-  {
-    title: "Optimized object recreating",
-    githubFileName: "OptimizedObjectRecreating",
-    Comp: OptimizedObjectRecreating,
-    code: raw_OptimizedObjectRecreating
-  },
-  {
-    title: "Custom form schema framework",
-    githubFileName: "CustomFormSchemaFramework",
-    Comp: CustomFormSchemaFramework,
-    code: raw_CustomFormSchemaFramework
-  }
-];
+const examples = {
+  basic: [
+    {
+      title: "Synchronous validations",
+      githubFileName: "SyncValidations",
+      Comp: SyncValidations,
+      code: raw_SyncValidations
+    },
+    {
+      title: "Async validations",
+      githubFileName: "AsyncValidations",
+      Comp: AsyncValidations,
+      code: raw_AsyncValidations
+    },
+    {
+      title: "Input constrains",
+      githubFileName: "InputConstrains",
+      Comp: InputConstrains,
+      code: raw_InputConstrains
+    },
+    {
+      title: "Cross validations",
+      githubFileName: "CrossValidations",
+      Comp: CrossValidations,
+      code: raw_CrossValidations
+    },
+    {
+      title: "Revert to init state",
+      githubFileName: "RevertToInitState",
+      Comp: RevertToInitState,
+      code: raw_RevertToInitState
+    },
+    {
+      title: "Use combine formio example",
+      githubFileName: "UseCombineFormioExample",
+      Comp: UseCombineFormioExample,
+      code: raw_UseCombineFormioExample
+    },
+    {
+      title: "Sync set valuesBased on prev value",
+      githubFileName: "SyncSetValuesBasedOnPrevValue",
+      Comp: SyncSetValuesBasedOnPrevValue,
+      code: raw_SyncSetValuesBasedOnPrevValue
+    },
+    {
+      title: "Uncontrolled input",
+      githubFileName: "UncontrolledInput",
+      Comp: UncontrolledInput,
+      code: raw_UncontrolledInput
+    }
+  ],
+  advanced: [
+    {
+      title: "Stable method pointers",
+      githubFileName: "StableMethodPointers",
+      Comp: StableMethodPointers,
+      code: raw_StableMethodPointers
+    },
+    {
+      title: "Debounced input",
+      githubFileName: "DebouncedInput",
+      Comp: DebouncedInput,
+      code: raw_DebouncedInput
+    },
+    {
+      title: "Throttled call to server",
+      githubFileName: "ThrottledCallToServer",
+      Comp: ThrottledCallToServer,
+      code: raw_ThrottledCallToServer
+    },
+    {
+      title: "Optimized object recreating",
+      githubFileName: "OptimizedObjectRecreating",
+      Comp: OptimizedObjectRecreating,
+      code: raw_OptimizedObjectRecreating
+    },
+    {
+      title: "Custom form schema framework",
+      githubFileName: "CustomFormSchemaFramework",
+      Comp: CustomFormSchemaFramework,
+      code: raw_CustomFormSchemaFramework
+    }
+  ]
+};
 
 const styles = {
   block: {
@@ -197,23 +202,23 @@ const App = () => {
 
   return (
     <div>
-      <div>
-        <Header examples={examples} />
-      </div>
       <Row>
         <Col>
           <Container style={showCodeRight ? { marginRight: 0 } : {}}>
+            <div>
+              <Header basicExamples={examples.basic} advancedExamples={examples.advanced} />
+            </div>
             <div style={{ marginBottom: "4rem" }}>
-              <h1>use-formio</h1>
+              <UseFormioLogoHorizontalIcon style={{ margin: "4rem 0" }} />
 
-              <UseFormioLogoHorizontalIcon />
+              <h1>use-formio</h1>
 
               <p>
                 <b>use-formio</b> is React form library which help you to build forms with just a
                 few lines of code and without extra layer of abstraction.
               </p>
               <p>
-                <b>use-formio</b> has 0 dependencies and less than 200 lines of code!
+                <b>use-formio</b> is micro library with 0 dependencies.
               </p>
               <p>
                 This minimalist approach brings you proper level of abstraction to abstract heavy
@@ -277,7 +282,16 @@ const App = () => {
               <h2>Examples</h2>
 
               <div>
-                {examples.map(e => (
+                {examples.basic.map(e => (
+                  <div key={e.githubFileName}>
+                    <a href={`#${e.githubFileName}`}>{e.title}</a>
+                  </div>
+                ))}
+              </div>
+
+              <div>--- advanced ---</div>
+              <div>
+                {examples.advanced.map(e => (
                   <div key={e.githubFileName}>
                     <a href={`#${e.githubFileName}`}>{e.title}</a>
                   </div>
@@ -293,36 +307,21 @@ const App = () => {
         )}
       </Row>
 
-      {examples.map((i, index) => (
+      {examples.basic.map((i, index) => (
         <div key={index}>
           <ListItem {...i} />
+        </div>
+      ))}
+      {examples.advanced.map((i, index) => (
+        <div key={index}>
+          <ListItem {...i} title={i.title + " (advanced)"} />
         </div>
       ))}
     </div>
   );
 };
 
-const getWindowDimensions = () => ({
-  width: window.innerWidth,
-  height: window.innerHeight
-});
-
-const useWindowDimensions = () => {
-  const [windowDimensions, setWindowDimensions] = React.useState(getWindowDimensions());
-
-  React.useEffect(() => {
-    function handleResize() {
-      setWindowDimensions(getWindowDimensions());
-    }
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  return windowDimensions;
-};
-
-const ListItem = (props: typeof examples[number]) => {
+const ListItem = (props: typeof examples["basic"][number]) => {
   const [show, setShow] = React.useState(false);
   const i = props;
 

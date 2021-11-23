@@ -7,7 +7,7 @@
 `use-formio` is React form library which help you to build forms with just a
 few lines of code and without extra layer of abstraction.
 
-`use-formio` has 0 dependencies and less than 200 lines of code!
+`use-formio` is micro library with 0 dependencies.
 
 Each of your application deserves custom UI solution so it does not make sense to use separate library to handle form UIs.
 

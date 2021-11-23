@@ -121,7 +121,6 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
         [stateSchema?.[key]?.shouldChangeValue]
       ),
       validate: useCallback(async () => {
-        console.log("validate calling");
         setFormState(p => ({
           ...p,
           isValidating: { ...p.isValidating, [key]: true }
@@ -213,9 +212,8 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
 };
 
 /**
- *
+ * TODO: add documentation
  * don't recreate redundant object every render cycle
- * TODO: bad typings
  */
 export const getUseFormio = <T extends Record<string, UserFieldValue>>(
   initStateArg: T,

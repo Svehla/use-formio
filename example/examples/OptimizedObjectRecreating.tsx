@@ -8,7 +8,7 @@ export const isRequired = (value: string) =>
 const getRandomRGBLightColor = () =>
   "rgb(" + [Math.random(), Math.random(), Math.random()].map(i => i * 150 + 100).join(",") + ")";
 
-const useGetForm = getUseFormio(
+const useForm = getUseFormio(
   {
     firstName: "",
     lastName: ""
@@ -17,13 +17,18 @@ const useGetForm = getUseFormio(
     firstName: {
       // stable validator pointer out of the box
       validator: (v, s) =>
-        s.lastName === v ? "last name cannot be the same as the first name" : undefined
+        s.lastName === v ? "last name cannot be the same as the first name" : undefined,
+      shouldChangeValue: v => v.length <= 20
+    },
+    lastName: {
+      validator: v => (v.trim().length === 0 ? "field is required" : undefined),
+      shouldChangeValue: v => v.length <= 20
     }
   }
 );
 
 export const OptimizedObjectRecreating = () => {
-  const form = useGetForm();
+  const form = useForm();
   const f = form.fields;
 
   return (
