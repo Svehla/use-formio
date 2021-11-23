@@ -14,7 +14,7 @@ import { DebouncedInput } from "./examples/DebouncedInput";
 import { GithubIcon, UseFormioLogoHorizontalIcon } from "./icons";
 import { Header } from "./Header";
 import { InputConstrains } from "./examples/InputConstrains";
-// import { OptimizedObjectRecreating } from "./examples/OptimizedObjectRecreating";
+import { OptimizedObjectRecreating } from "./examples/OptimizedObjectRecreating";
 import { RevertToInitState } from "./examples/RevertToInitState";
 import { StableMethodPointers } from "./examples/StableMethodPointers";
 import { SyncSetValuesBasedOnPrevValue } from "./examples/SyncSetValuesBasedOnPrevValue";
@@ -35,8 +35,8 @@ import { raw_InputConstrains } from "./__generated_examples__/InputConstrains";
 import { raw_RevertToInitState } from "./__generated_examples__/RevertToInitState";
 import { raw_StableMethodPointers } from "./__generated_examples__/StableMethodPointers";
 import { raw_ThrottledCallToServer } from "./__generated_examples__/ThrottledCallToServer";
-// import { raw_OptimizedObjectRecreating } from "./__generated_examples__/OptimizedObjectRecreating";
 // eslint-disable-next-line max-len
+import { raw_OptimizedObjectRecreating } from "./__generated_examples__/OptimizedObjectRecreating";
 import { raw_SyncSetValuesBasedOnPrevValue } from "./__generated_examples__/SyncSetValuesBasedOnPrevValue";
 import { raw_SyncValidations } from "./__generated_examples__/SyncValidations";
 import { raw_UncontrolledInput } from "./__generated_examples__/UncontrolledInput";
@@ -109,12 +109,12 @@ const examples = [
     Comp: ThrottledCallToServer,
     code: raw_ThrottledCallToServer
   },
-  // {
-  //   title: "Optimized object recreating",
-  //   githubFileName: "OptimizedObjectRecreating",
-  //   Comp: OptimizedObjectRecreating,
-  //   code: raw_OptimizedObjectRecreating
-  // },
+  {
+    title: "Optimized object recreating",
+    githubFileName: "OptimizedObjectRecreating",
+    Comp: OptimizedObjectRecreating,
+    code: raw_OptimizedObjectRecreating
+  },
   {
     title: "Custom form schema framework",
     githubFileName: "CustomFormSchemaFramework",

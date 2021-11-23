@@ -211,3 +211,18 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     }
   };
 };
+
+/**
+ *
+ * don't recreate redundant object every render cycle
+ * TODO: bad typings
+ */
+export const getUseFormio = <T extends Record<string, UserFieldValue>>(
+  initStateArg: T,
+  stateSchema?: {
+    [K in keyof T]?: {
+      shouldChangeValue?: (newValue: T[K], prevState: T) => boolean;
+      validator?: (value: T[K], state: T) => MaybePromise<UserFormError>;
+    };
+  }
+) => () => useFormio(initStateArg, stateSchema);
