@@ -10,7 +10,7 @@ import { Col, Container, Row } from "reactstrap";
 import { CrossValidations } from "./examples/CrossValidations";
 import { CustomFormSchemaFramework } from "./examples/CustomFormSchemaFramework";
 import { DebouncedInput } from "./examples/DebouncedInput";
-import { GithubIcon, Header } from "./Header";
+import { GithubIcon, Header, UseFormioLogoOnlySqIcon, UseFormioLogoSqIcon } from "./Header";
 import { InputConstrains } from "./examples/InputConstrains";
 import { RevertToInitState } from "./examples/RevertToInitState";
 import { StableMethodPointers } from "./examples/StableMethodPointers";
@@ -121,62 +121,168 @@ const styles = {
   }
 };
 
+const useFormioAsciiArtIntro = `
+                                   ___                               _          
+                                 .' ..]                             (_)         
+  __   _   .--.  .---.  ______  _| |_   .--.   _ .--.  _ .--..--.   __   .--.   
+ [  | | | ( ('\\]/ /__\\\\|______|'-| |-'/ .'f\\ \\[ '/''\\][ '.-. .-. | [  |/ .''\\ \\ 
+  | \\_/ |, ''.'.| \\__.,          | |  | \\__. | | |     | | | | | |  | || \\__. | 
+  '.__.'_/[\\__) )'.__.'         [___]  '.__.' [___]   [___||__||__][___]'.__.'  
+                                                                                
+
+  	
+                                              ---                                  
+                                          ----/  /--                               
+                                      ---/ -//----/  /--                           
+                                  ---/   -/--  -//----/                            
+                             ----/     -/    ----  -/                              
+                         ---/         /    -/    -/                                
+                     ---/           -/    /    -/                                  
+                ----/             -/    -/    /                                    
+            ---/                -/    -/    -/                                     
+        ---/                   /    -/    -/                                       
+    ---/                     -/    /    -/                                         
+---/                       -/    -/    /                                           
+ \-                      -/    -/    -/                                            
+   \                   -/    -/    -/                                              
+    \-                /    -/    -/                                                
+      \             -/    /    -/                                                  
+       \-         -/    -/    /                                                    
+         \      -/    -/    -/                                                     
+          \-  -/    -/    -/                                                       
+            \/ \- --    -/                                                         
+                 /  \ -/                                                           
+                     \      
+`;
+
+const useFormioInstallationsAsciiArt = ``;
+
+// _   _
+// _______________          |*\\_/*|________
+// |  ___________  |        ||_/-\\_|______  |
+// | |           | |        | |           | |
+// | |   0   0   | |        | |   0   0   | |
+// | |     -     | |        | |     -     | |
+// | |   \\___/   | |        | |   \\___/   | |
+// | |___     ___| |        | |___________| |
+// |_____|\\_/|_____|        |_______________|
+//  _|__|/ \\|_|_.............._|________|_
+// / ********** \\            / ********** \\
+// /  ************  \\        /  ************  \\
+// --------------------      -------------------
+
+const useFormioExamplesAsciiArt = `
+                                                  __                   
+                                                 [  |                  
+ .---.   _   __   ,--.    _ .--..--.    _ .--.    | |   .---.   .--.   
+/ /__\\\\ [ \\ [  ] ''_\\ :  [ '.-. .-. |  [ '/''\\ \\  | |  / /__\\\\ ( ('\\]  
+| \\__.,  > '  <  // | |,  | | | | | |   | \\__/ |  | |  | \\__.,  ''.'.  
+ '.__.' [__]'\\_] \\'-;__/ [___||__||__]  | ;.__/  [___]  '.__.' [\\__) ) 
+                                        [__|                            
+
+`;
+
 const App = () => {
+  const dim = useWindowDimensions();
+
+  const showCodeRight = dim.width > 1200;
+
   return (
     <div>
-      <div style={styles.block}>
+      <div>
         <Header examples={examples} />
       </div>
+      <Row>
+        <Col>
+          <Container style={showCodeRight ? { marginRight: 0 } : {}}>
+            <div style={{ marginBottom: "4rem" }}>
+              <h1>useFormio</h1>
+              <UseFormioLogoOnlySqIcon />
 
-      <Container style={{ marginBottom: "4rem" }}>
-        <h1>useFormio</h1>
-
-        <p>
-          <b>use-formio</b> has 0 dependencies and less than 200 lines of code!
-        </p>
-        <p>
-          This minimalist approach brings you proper level of abstraction to abstract heavy lifting
-          form boilerplate React code.
-        </p>
-        <p>
-          Each of your application deserves custom UI solution so it does not make sense to use
-          separate library to handle form UIs.
-        </p>
-        <p>
-          If your application needs to have tons of forms is really easy for programmers to make
-          custom form configurable UI.
-        </p>
-        <p>
-          In useFormio you just define custom business model and don{`'`}t waste a time with
-          boilerplate around.
-        </p>
-        <p>
-          At the top of this, useFormio package is different from the others with the uniq support
-          of Typescript type inferring.
-        </p>
-        <p>
-          You can write a huge form without writing any line of Typescript static types. Thanks to
-          smart API we{`'`}re able to infer static types and keep code clean and safe without
-          runtime-errors.
-        </p>
-      </Container>
-
-      <Container style={styles.block}>
-        <h2>Installation</h2>
-        <code>npm install use-formio</code>
-      </Container>
-
-      <Container style={styles.block}>
-        <h2>Examples</h2>
-
-        <div>
-          {examples.map(e => (
-            <div key={e.githubFileName}>
-              <a href={`#${e.githubFileName}`}>{e.title}</a>
+              <p>
+                <b>use-formio</b> is React form library which help you to build forms with just a
+                few lines of code and without extra layer of abstraction.
+              </p>
+              <p>
+                <b>use-formio</b> has 0 dependencies and less than 200 lines of code!
+              </p>
+              <p>
+                This minimalist approach brings you proper level of abstraction to abstract heavy
+                lifting form boilerplate React code.
+              </p>
+              <p>
+                Each of your application deserves custom UI solution so it does not make sense to
+                use separate library to handle form UIs.
+              </p>
+              <p>
+                If your application needs to have tons of forms is really easy for programmers to
+                make custom form configurable UI.
+              </p>
+              <p>
+                In useFormio you just define custom business model and don{`'`}t waste a time with
+                boilerplate around.
+              </p>
+              <p>
+                At the top of this, useFormio package is different from the others with the uniq
+                support of Typescript type inferring.
+              </p>
+              <p>
+                You can write a huge form without writing any line of Typescript static types.
+                Thanks to smart API we{`'`}re able to infer static types and keep code clean and
+                safe without runtime-errors.
+              </p>
             </div>
-          ))}
-        </div>
-      </Container>
+          </Container>
+        </Col>
+
+        {showCodeRight && (
+          <Col md={5} style={{ background: BG_CODE_COLOR }}>
+            <pre style={{ color: "white" }}>{useFormioAsciiArtIntro}</pre>
+          </Col>
+        )}
+      </Row>
+
+      <Row>
+        <Col>
+          <Container
+            style={{
+              ...styles.block,
+              ...(showCodeRight ? { marginRight: 0 } : {})
+            }}
+          >
+            <h2>Installation</h2>
+            <code>npm install use-formio</code>
+          </Container>
+        </Col>
+        {showCodeRight && (
+          <Col md={5} style={{ background: BG_CODE_COLOR }}>
+            <pre style={{ color: "white" }}>{useFormioInstallationsAsciiArt}</pre>
+          </Col>
+        )}
+      </Row>
+
+      <Row>
+        <Col>
+          <Container style={showCodeRight ? { marginRight: 0 } : {}}>
+            <div style={styles.block}>
+              <h2>Examples</h2>
+
+              <div>
+                {examples.map(e => (
+                  <div key={e.githubFileName}>
+                    <a href={`#${e.githubFileName}`}>{e.title}</a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Container>
+        </Col>
+        {showCodeRight && (
+          <Col md={5} style={{ background: BG_CODE_COLOR }}>
+            <pre style={{ color: "white" }}>{useFormioExamplesAsciiArt}</pre>
+          </Col>
+        )}
+      </Row>
 
       {examples.map((i, index) => (
         <div key={index}>
