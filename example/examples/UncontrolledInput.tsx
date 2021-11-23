@@ -18,22 +18,17 @@ export const UncontrolledInput = () => {
   );
   const f = form.fields;
 
-  const onSubmit = React.useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const [isValid] = await form.validate();
-    if (isValid) alert("form is valid");
-  }, []);
-
   return (
     <DEBUG_FormWrapper form={form}>
-      <form onSubmit={onSubmit}>
+      <form
+        onSubmit={async e => {
+          e.preventDefault();
+          const [isValid] = await form.validate();
+          if (isValid) alert("form is valid");
+        }}
+      >
         <label>Text</label>
-        <UncontrolledTextarea
-          set={f.text.set}
-          setErrors={f.text.setErrors}
-          errors={f.text.errors}
-        />
-
+        <UncontrolledTextarea {...f.text} />
         <button type="submit" disabled={form.isValidating}>
           Submit
         </button>
@@ -42,29 +37,20 @@ export const UncontrolledInput = () => {
   );
 };
 
-type StringField = Field<string>;
-
-const UncontrolledTextarea = React.memo(
-  (props: {
-    errors: StringField["errors"];
-    set: StringField["set"];
-    setErrors: StringField["setErrors"];
-  }) => {
-    const textareaRef = React.useRef<any>(undefined);
-
-    return (
-      <div>
-        <div style={{ background: getRandomRGBLightColor() }}>
-          <textarea
-            ref={textareaRef}
-            onFocus={() => {
-              if (props.errors.length !== 0) props.setErrors([]);
-            }}
-            onBlur={() => props.set(textareaRef.current.value)}
-          />
-        </div>
-        <div className="input-error">{props.errors.join(", ")}</div>
+const UncontrolledTextarea = React.memo((props: Field<string>) => {
+  const textareaRef = React.useRef<any>(undefined);
+  return (
+    <div>
+      <div style={{ background: getRandomRGBLightColor() }}>
+        <textarea
+          ref={textareaRef}
+          onFocus={() => {
+            if (props.errors.length !== 0) props.setErrors([]);
+          }}
+          onBlur={() => props.set(textareaRef.current.value)}
+        />
       </div>
-    );
-  }
-);
+      <div className="input-error">{props.errors.join(", ")}</div>
+    </div>
+  );
+});

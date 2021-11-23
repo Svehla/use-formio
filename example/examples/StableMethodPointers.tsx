@@ -43,8 +43,8 @@ export const StableMethodPointers = () => {
 };
 
 /**
- * thanks to the stable pointer of methods + React.memo,
- * the component is rerendered only if value is changed
+ * component si rerendered even if input is valid
+ * because isValidating is changed from false to true and back to false
  */
 const TextInput = React.memo((props: Field<string> & { label: string }) => {
   return (
