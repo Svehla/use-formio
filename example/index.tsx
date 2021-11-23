@@ -6,12 +6,15 @@ import "react-app-polyfill/ie11";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { AsyncValidations } from "./examples/AsyncValidations";
+import { BG_CODE_COLOR } from "./constants";
 import { Col, Container, Row } from "reactstrap";
 import { CrossValidations } from "./examples/CrossValidations";
 import { CustomFormSchemaFramework } from "./examples/CustomFormSchemaFramework";
 import { DebouncedInput } from "./examples/DebouncedInput";
-import { GithubIcon, Header, UseFormioLogoOnlySqIcon, UseFormioLogoSqIcon } from "./Header";
+import { GithubIcon, UseFormioLogoHorizontalIcon } from "./icons";
+import { Header } from "./Header";
 import { InputConstrains } from "./examples/InputConstrains";
+// import { OptimizedObjectRecreating } from "./examples/OptimizedObjectRecreating";
 import { RevertToInitState } from "./examples/RevertToInitState";
 import { StableMethodPointers } from "./examples/StableMethodPointers";
 import { SyncSetValuesBasedOnPrevValue } from "./examples/SyncSetValuesBasedOnPrevValue";
@@ -19,6 +22,7 @@ import { SyncValidations } from "./examples/SyncValidations";
 import { ThrottledCallToServer } from "./examples/ThrottledCallToServer";
 import { UncontrolledInput } from "./examples/UncontrolledInput";
 import { UseCombineFormioExample } from "./examples/UseCombineFormioExample";
+import Highlight from "react-highlight";
 
 // TODO: add some plugin to parcel v1 to read .tsx files as txt somehow?
 // generated files
@@ -31,14 +35,12 @@ import { raw_InputConstrains } from "./__generated_examples__/InputConstrains";
 import { raw_RevertToInitState } from "./__generated_examples__/RevertToInitState";
 import { raw_StableMethodPointers } from "./__generated_examples__/StableMethodPointers";
 import { raw_ThrottledCallToServer } from "./__generated_examples__/ThrottledCallToServer";
+// import { raw_OptimizedObjectRecreating } from "./__generated_examples__/OptimizedObjectRecreating";
 // eslint-disable-next-line max-len
 import { raw_SyncSetValuesBasedOnPrevValue } from "./__generated_examples__/SyncSetValuesBasedOnPrevValue";
 import { raw_SyncValidations } from "./__generated_examples__/SyncValidations";
 import { raw_UncontrolledInput } from "./__generated_examples__/UncontrolledInput";
 import { raw_UseCombineFormioExample } from "./__generated_examples__/UseCombineFormioExample";
-
-import { BG_CODE_COLOR } from "./constants";
-import Highlight from "react-highlight";
 
 const examples = [
   {
@@ -107,6 +109,12 @@ const examples = [
     Comp: ThrottledCallToServer,
     code: raw_ThrottledCallToServer
   },
+  // {
+  //   title: "Optimized object recreating",
+  //   githubFileName: "OptimizedObjectRecreating",
+  //   Comp: OptimizedObjectRecreating,
+  //   code: raw_OptimizedObjectRecreating
+  // },
   {
     title: "Custom form schema framework",
     githubFileName: "CustomFormSchemaFramework",
@@ -196,8 +204,9 @@ const App = () => {
         <Col>
           <Container style={showCodeRight ? { marginRight: 0 } : {}}>
             <div style={{ marginBottom: "4rem" }}>
-              <h1>useFormio</h1>
-              <UseFormioLogoOnlySqIcon />
+              <h1>use-formio</h1>
+
+              <UseFormioLogoHorizontalIcon />
 
               <p>
                 <b>use-formio</b> is React form library which help you to build forms with just a
