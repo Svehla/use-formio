@@ -1,11 +1,12 @@
 import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
-import { Field, useFormio } from "../../dist";
+import { Field, getUseFormio, useFormio } from "../../dist";
 
 const isRequired = (value: string) => (value.trim() === "" ? "Field is required" : undefined);
-const minNum100 = (value: number) => (value < 100 ? "amount has to be larger than 100" : undefined);
-const hasToBeChecked = (value: boolean) =>
-  value === false ? "value has to be checked" : undefined;
+const minNum = (min: number) => (value: number) =>
+  value < min ? "amount has to be larger than " + min : undefined;
+const hasToBe = (finalValue: any) => (value: boolean) =>
+  value !== finalValue ? "value has to be " + finalValue : undefined;
 
 const fields = [
   {
@@ -66,33 +67,36 @@ const fields = [
   }
 ];
 
+const useForm = getUseFormio(
+  {
+    firstName: "",
+    secondName: "",
+    lastName: "",
+    description1: "",
+    description2: "",
+    description3: "",
+    description4: "",
+    description5: "",
+    description6: "",
+    description7: "",
+    description8: "",
+    amount: 0,
+    verified: false,
+    isOlder18: true,
+    isHappy: false
+  },
+  {
+    firstName: { validator: isRequired },
+    lastName: { validator: isRequired },
+    description1: { validator: isRequired },
+    amount: { validator: minNum(100) },
+    verified: { validator: hasToBe(true) },
+    isOlder18: { validator: hasToBe(false) }
+  }
+);
+
 export const CustomFormSchemaFramework = () => {
-  const form = useFormio(
-    {
-      firstName: "",
-      secondName: "",
-      lastName: "",
-      description1: "",
-      description2: "",
-      description3: "",
-      description4: "",
-      description5: "",
-      description6: "",
-      description7: "",
-      description8: "",
-      amount: 0,
-      verified: false,
-      isOlder18: false,
-      isHappy: false
-    },
-    {
-      firstName: { validator: isRequired },
-      lastName: { validator: isRequired },
-      description1: { validator: isRequired },
-      amount: { validator: minNum100 },
-      verified: { validator: hasToBeChecked }
-    }
-  );
+  const form = useForm();
 
   return (
     <DEBUG_FormWrapper form={form}>
