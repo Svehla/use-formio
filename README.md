@@ -1,6 +1,6 @@
 # [use-formio](http://use-formio.svehlik.eu)
 
-![Use formio logo](assets/example/useformio-logo-only.svg)
+![Use formio logo](./example/useformio-logo-only.svg)
 
 [Online interactive documentation is availabe on http://use-formio.svehlik.eu](http://use-formio.svehlik.eu)
 
