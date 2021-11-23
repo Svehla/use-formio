@@ -3,6 +3,7 @@ import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { Field } from "../../dist";
 import { useFormio } from "../../dist";
 
+// validator functions has to be stable pointer to optimise React runtime
 export const isRequired = (value: string) =>
   value.trim() === "" ? "Field is required" : undefined;
 
@@ -17,7 +18,6 @@ export const StableMethodPointers = () => {
     },
     {
       firstName: { validator: isRequired },
-      // validator functions has to be stable pointer to optimise React runtime
       lastName: { validator: isRequired }
     }
   );
@@ -32,20 +32,8 @@ export const StableMethodPointers = () => {
           if (isValid) alert("form is valid");
         }}
       >
-        <TextInput
-          label={"f.firstName"}
-          value={f.firstName.value}
-          set={f.firstName.set}
-          errors={f.firstName.errors}
-          validate={f.firstName.validate}
-        />
-        <TextInput
-          label={"f.lastName"}
-          value={f.lastName.value}
-          set={f.lastName.set}
-          errors={f.lastName.errors}
-          validate={f.lastName.validate}
-        />
+        <TextInput label={"f.firstName"} {...f.firstName} />
+        <TextInput label={"f.lastName"} {...f.lastName} />
         <button type="submit" disabled={form.isValidating}>
           Submit
         </button>
@@ -54,21 +42,11 @@ export const StableMethodPointers = () => {
   );
 };
 
-type TextField = Field<string>;
-type TextInputProps = {
-  label: string;
-
-  value: TextField["value"];
-  set: TextField["set"];
-  errors: TextField["errors"];
-  validate: TextField["validate"];
-};
-
 /**
  * thanks to the stable pointer of methods + React.memo,
  * the component is rerendered only if value is changed
  */
-const TextInput = React.memo((props: TextInputProps) => {
+const TextInput = React.memo((props: Field<string> & { label: string }) => {
   return (
     <div>
       <label>{props.label}</label>
@@ -77,6 +55,7 @@ const TextInput = React.memo((props: TextInputProps) => {
           type="text"
           value={props.value}
           onChange={e => props.set(e.target.value)}
+          disabled={props.isValidating}
           onBlur={props.validate}
         />
       </div>
