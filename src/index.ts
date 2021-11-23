@@ -1,2 +1,2 @@
-export { useFormio, Field } from "./useFormio";
+export { useFormio, Field, getUseFormio } from "./useFormio";
 export { useCombineFormio } from "./useCombineFormio";

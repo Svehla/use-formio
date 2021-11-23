@@ -1,7 +1,6 @@
 import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
-import { Field } from "../../dist";
-import { useFormio } from "../../dist";
+import { Field, getUseFormio } from "../../dist";
 
 export const isRequired = (value: string) =>
   value.trim() === "" ? "Field is required" : undefined;
@@ -9,18 +8,27 @@ export const isRequired = (value: string) =>
 const getRandomRGBLightColor = () =>
   "rgb(" + [Math.random(), Math.random(), Math.random()].map(i => i * 150 + 100).join(",") + ")";
 
-export const StableMethodPointers = () => {
-  const form = useFormio(
-    {
-      firstName: "",
-      lastName: ""
+const useForm = getUseFormio(
+  {
+    firstName: "",
+    lastName: ""
+  },
+  {
+    firstName: {
+      // stable validator pointer out of the box
+      validator: (v, s) =>
+        s.lastName === v ? "last name cannot be the same as the first name" : undefined,
+      shouldChangeValue: v => v.length <= 20
     },
-    {
-      firstName: { validator: isRequired },
-      // validator functions has to be stable pointer to optimise React runtime
-      lastName: { validator: isRequired }
+    lastName: {
+      validator: v => (v.trim().length === 0 ? "field is required" : undefined),
+      shouldChangeValue: v => v.length <= 20
     }
-  );
+  }
+);
+
+export const OptimizedObjectRecreating = () => {
+  const form = useForm();
   const f = form.fields;
 
   return (
@@ -32,43 +40,19 @@ export const StableMethodPointers = () => {
           if (isValid) alert("form is valid");
         }}
       >
-        <TextInput
-          label={"f.firstName"}
-          value={f.firstName.value}
-          set={f.firstName.set}
-          errors={f.firstName.errors}
-          validate={f.firstName.validate}
-        />
-        <TextInput
-          label={"f.lastName"}
-          value={f.lastName.value}
-          set={f.lastName.set}
-          errors={f.lastName.errors}
-          validate={f.lastName.validate}
-        />
-        <button type="submit" disabled={form.isValidating}>
-          Submit
-        </button>
+        <TextInput label={"First name"} {...f.firstName} />
+        <TextInput label={"Last name"} {...f.lastName} />
+        <button type="submit">Submit</button>
       </form>
     </DEBUG_FormWrapper>
   );
-};
-
-type TextField = Field<string>;
-type TextInputProps = {
-  label: string;
-
-  value: TextField["value"];
-  set: TextField["set"];
-  errors: TextField["errors"];
-  validate: TextField["validate"];
 };
 
 /**
  * thanks to the stable pointer of methods + React.memo,
  * the component is rerendered only if value is changed
  */
-const TextInput = React.memo((props: TextInputProps) => {
+const TextInput = React.memo((props: { label: string } & Field<string>) => {
   return (
     <div>
       <label>{props.label}</label>

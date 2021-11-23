@@ -1,7 +1,7 @@
 import { act, renderHook } from "@testing-library/react-hooks";
 import { useFormio } from "../src/useFormio";
 
-describe("it", () => {
+describe("useFormio", () => {
   it("set string value", async () => {
     const { result } = renderHook(() =>
       useFormio({

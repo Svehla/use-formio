@@ -121,7 +121,6 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
         [stateSchema?.[key]?.shouldChangeValue]
       ),
       validate: useCallback(async () => {
-        console.log("validate calling");
         setFormState(p => ({
           ...p,
           isValidating: { ...p.isValidating, [key]: true }
@@ -211,3 +210,17 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     }
   };
 };
+
+/**
+ * TODO: add documentation
+ * don't recreate redundant object every render cycle
+ */
+export const getUseFormio = <T extends Record<string, UserFieldValue>>(
+  initStateArg: T,
+  stateSchema?: {
+    [K in keyof T]?: {
+      shouldChangeValue?: (newValue: T[K], prevState: T) => boolean;
+      validator?: (value: T[K], state: T) => MaybePromise<UserFormError>;
+    };
+  }
+) => () => useFormio(initStateArg, stateSchema);

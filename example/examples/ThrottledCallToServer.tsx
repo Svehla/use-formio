@@ -8,15 +8,14 @@ const throttle = (func: Function, limit: number) => {
   let lastFunc;
   let lastRan;
   return function(...args: any) {
-    const context = this;
     if (!lastRan) {
-      func.apply(context, args);
+      func(...args);
       lastRan = Date.now();
     } else {
       clearTimeout(lastFunc);
       lastFunc = setTimeout(function() {
         if (Date.now() - lastRan >= limit) {
-          func.apply(context, args);
+          func(...args);
           lastRan = Date.now();
         }
       }, limit - (Date.now() - lastRan));
@@ -24,8 +23,8 @@ const throttle = (func: Function, limit: number) => {
   };
 };
 
-const fakeCallToServer = async (search: string) => {
-  await delay(1000);
+const fakeHTTPCallService = async (search: string) => {
+  await delay(500);
   return [search, [...search.split("")].reverse().join(""), search.length.toString()];
 };
 
@@ -33,32 +32,33 @@ export const ThrottledCallToServer = () => {
   const [results, setResults] = React.useState([] as string[]);
   const [loading, setLoading] = React.useState(false);
   const [callsToServer, setCallsToServer] = React.useState(0);
-
   const form = useFormio({ search: "" });
 
-  const fetchServerData = React.useCallback(async (search: string) => {
+  const fetchData = React.useCallback(async (search: string) => {
     setLoading(true);
+    setResults(await fakeHTTPCallService(search));
     setCallsToServer(p => p + 1);
-    setResults(await fakeCallToServer(search));
     setLoading(false);
   }, []);
 
-  const debouncedFetchData = React.useCallback(throttle(fetchServerData, 1000), []);
+  const throttledFetchData = React.useCallback(throttle(fetchData, 1000), []);
 
   return (
     <DEBUG_FormWrapper form={form}>
       <form onSubmit={async e => e.preventDefault()}>
-        <label>Search</label>
+        <label>
+          Search
+          {loading && <span>(loading)</span>}
+        </label>
         <input
           type="text"
           onChange={e => {
             const newValue = e.target.value;
             form.fields.search.set(newValue);
-            debouncedFetchData(newValue);
+            throttledFetchData(newValue);
           }}
           value={form.fields.search.value}
         />
-        {loading && <div>loading</div>}
         {results.length > 0 && <div>we found:</div>}
         <ul>
           {results.map((result, index) => (
