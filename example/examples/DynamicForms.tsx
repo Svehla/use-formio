@@ -2,11 +2,11 @@ import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { useCombineFormio, useFormio } from "../../dist";
 
+// HACK: useCombineFormio is not hook!!!! (at the moment) xd
+const combineFormio = useCombineFormio;
+
 export const isRequired = (value: string) =>
   value.trim() === "" ? "Field is required" : undefined;
-
-// useCombineFormio is not hook!!!! (at the moment) xd
-const combineFormio = useCombineFormio;
 
 export const DynamicForms = () => {
   const [formsKeys, setFormsKeys] = React.useState(["1", "2"]);
@@ -26,13 +26,13 @@ export const DynamicForms = () => {
       >
         {formsKeys.map(fKey => (
           <div key={fKey} className="row">
-            <Dyn1
+            <DynamicUserForm
               id={fKey}
-              getFormPointer={fPointer => (formsRefs.current[fKey] = fPointer)}
-              removeFormPointer={() => delete formsRefs.current[fKey]}
-              deleteForm={() => setFormsKeys(p => p.filter(i => i !== fKey))}
-              changeOrderUp={() => setFormsKeys(p => [fKey, ...p.filter(i => i !== fKey)])}
-              changeOrderDown={() => setFormsKeys(p => [...p.filter(i => i !== fKey), fKey])}
+              allocForm={fPointer => (formsRefs.current[fKey] = fPointer)}
+              freeForm={() => delete formsRefs.current[fKey]}
+              delete={() => setFormsKeys(p => p.filter(i => i !== fKey))}
+              moveUp={() => setFormsKeys(p => [fKey, ...p.filter(i => i !== fKey)])}
+              moveDown={() => setFormsKeys(p => [...p.filter(i => i !== fKey), fKey])}
             />
             <hr />
           </div>
@@ -47,12 +47,12 @@ export const DynamicForms = () => {
   );
 };
 
-const Dyn1 = (props: {
-  deleteForm: any;
-  removeFormPointer: () => void;
-  getFormPointer: (p: any) => void;
-  changeOrderUp: () => void;
-  changeOrderDown: () => void;
+const DynamicUserForm = (props: {
+  freeForm: () => void;
+  allocForm: (pointer: any) => void;
+  moveUp: () => void;
+  moveDown: () => void;
+  delete: () => void;
   id: string;
 }) => {
   const form = useFormio(
@@ -70,8 +70,8 @@ const Dyn1 = (props: {
   stableFormPointer.current = form;
 
   React.useEffect(() => {
-    props.getFormPointer(stableFormPointer);
-    return () => props.removeFormPointer();
+    props.allocForm(stableFormPointer);
+    return () => props.freeForm();
   }, []);
 
   const f = form.fields;
@@ -96,13 +96,13 @@ const Dyn1 = (props: {
         disabled={f.lastName.isValidating}
       />
       <div className="input-error">{f.lastName.errors.join(",")}</div>
-      <button type="button" onClick={props.changeOrderUp}>
+      <button type="button" onClick={props.moveUp}>
         Move form to the start
       </button>
-      <button type="button" onClick={props.changeOrderDown}>
+      <button type="button" onClick={props.moveDown}>
         Move form to the end
       </button>
-      <button type="button" onClick={props.deleteForm}>
+      <button type="button" onClick={props.delete}>
         delete this form
       </button>
     </DEBUG_FormWrapper>
