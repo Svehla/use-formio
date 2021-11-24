@@ -11,6 +11,7 @@ import { Col, Container, Row } from "reactstrap";
 import { CrossValidations } from "./examples/CrossValidations";
 import { CustomFormSchemaFramework } from "./examples/CustomFormSchemaFramework";
 import { DebouncedInput } from "./examples/DebouncedInput";
+import { DynamicForms } from "./examples/DynamicForms";
 import { GithubIcon, UseFormioLogoHorizontalIcon } from "./icons";
 import { Header } from "./Header";
 import { InputConstrains } from "./examples/InputConstrains";
@@ -21,8 +22,7 @@ import { SyncSetValuesBasedOnPrevValue } from "./examples/SyncSetValuesBasedOnPr
 import { SyncValidations } from "./examples/SyncValidations";
 import { ThrottledCallToServer } from "./examples/ThrottledCallToServer";
 import { UncontrolledInput } from "./examples/UncontrolledInput";
-import { UseCombineFormioExample } from "./examples/UseCombineFormioExample";
-import Highlight from "react-highlight";
+import { UseCombineFormioExample } from "./examples/useCombineFormioExample";
 
 // TODO: add some plugin to parcel v1 to read .tsx files as txt somehow?
 // generated files
@@ -32,6 +32,7 @@ import { raw_CustomFormSchemaFramework } from "./__generated_examples__/CustomFo
 import { raw_DebouncedInput } from "./__generated_examples__/DebouncedInput";
 import { raw_InputConstrains } from "./__generated_examples__/InputConstrains";
 // eslint-disable-next-line max-len
+import { raw_DynamicForms } from "./__generated_examples__/DynamicForms";
 import { raw_OptimizedObjectRecreating } from "./__generated_examples__/OptimizedObjectRecreating";
 import { raw_RevertToInitState } from "./__generated_examples__/RevertToInitState";
 import { raw_StableMethodPointers } from "./__generated_examples__/StableMethodPointers";
@@ -40,8 +41,9 @@ import { raw_ThrottledCallToServer } from "./__generated_examples__/ThrottledCal
 import { raw_SyncSetValuesBasedOnPrevValue } from "./__generated_examples__/SyncSetValuesBasedOnPrevValue";
 import { raw_SyncValidations } from "./__generated_examples__/SyncValidations";
 import { raw_UncontrolledInput } from "./__generated_examples__/UncontrolledInput";
-import { raw_UseCombineFormioExample } from "./__generated_examples__/UseCombineFormioExample";
+import { raw_UseCombineFormioExample } from "./__generated_examples__/useCombineFormioExample";
 import { useWindowDimensions } from "./hooks";
+import Highlight from "react-highlight";
 
 const examples = {
   basic: [
@@ -124,6 +126,12 @@ const examples = {
       githubFileName: "CustomFormSchemaFramework",
       Comp: CustomFormSchemaFramework,
       code: raw_CustomFormSchemaFramework
+    },
+    {
+      title: "Dynamic forms",
+      githubFileName: "DynamicForms",
+      Comp: DynamicForms,
+      code: raw_DynamicForms
     }
   ]
 };
@@ -212,7 +220,7 @@ const App = () => {
               <Header basicExamples={examples.basic} advancedExamples={examples.advanced} />
             </div>
             <div style={{ marginBottom: "4rem" }}>
-              <UseFormioLogoHorizontalIcon style={{ margin: "4rem 0" }} />
+              <UseFormioLogoHorizontalIcon style={{ margin: "4rem 0", maxWidth: "100%" }} />
 
               <h1>use-formio</h1>
 
