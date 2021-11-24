@@ -30,6 +30,7 @@ export const useAsyncState = <T>(defaultState: T) => {
 const convertInitStateToFormState = <T extends Record<string, any>>(initState: T) => ({
   values: initState,
   errors: mapObjectValues(() => [] as string[], initState),
+  wasValidated: mapObjectValues(() => false, initState),
   isValidating: mapObjectValues(() => false, initState)
 });
 
@@ -41,6 +42,7 @@ export type Field<T> = {
   value: T;
   errors: string[];
   isValidating: boolean;
+  wasValidated: boolean;
   set: (userValue: T | ((prevState: T) => T)) => void;
   validate: () => Promise<[boolean, string[]]>;
   setErrors: (newErrors: string[] | ((prevState: string[]) => string[])) => void;
@@ -92,6 +94,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
       value,
       errors: formState.errors[key],
       isValidating: formState.isValidating[key],
+      wasValidated: formState.wasValidated[key],
       set: useCallback(
         (userValue: any | ((prevState: any) => any)) => {
           setFormState(prevFormState => {
@@ -130,7 +133,8 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
         setFormState(p => ({
           ...p,
           isValidating: { ...p.isValidating, [key]: false },
-          errors: { ...p.errors, [key]: newErrors }
+          errors: { ...p.errors, [key]: newErrors },
+          wasValidated: { ...p.wasValidated, [key]: true }
         }));
         const isFieldValid = newErrors.length === 0;
         return [isFieldValid, newErrors] as [boolean, typeof newErrors];
@@ -175,7 +179,8 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     setFormState(p => ({
       ...p,
       errors: newErrors,
-      isValidating: mapObjectValues(() => false, p.isValidating)
+      isValidating: mapObjectValues(() => false, p.isValidating),
+      wasValidated: mapObjectValues(() => true, initState)
     }));
 
     const isFormValid = Object.values(newErrors).flat().length === 0;

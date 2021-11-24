@@ -6,6 +6,5 @@
 - type inferring example
 - splash screen (with logo, inferring + light example + description)
 - screenshot/gif with type inferring
-- add tests for:
-  -
-  -
+- ## add tests for:
+  - validate on onTouch (after first inital validation has come)
