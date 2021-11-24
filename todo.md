@@ -3,8 +3,9 @@
 - rename to use-form-engine?
 - dynamic inputs
 - highlight that this library is for react only
-
-- splash screen
-- screenshot/gif with type inferring
-
 - type inferring example
+- splash screen (with logo, inferring + light example + description)
+- screenshot/gif with type inferring
+- add tests for:
+  -
+  -

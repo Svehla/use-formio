@@ -217,7 +217,7 @@ const App = () => {
               <Header basicExamples={examples.basic} advancedExamples={examples.advanced} />
             </div>
             <div style={{ marginBottom: "4rem" }}>
-              <UseFormioLogoHorizontalIcon style={{ margin: "4rem 0" }} />
+              <UseFormioLogoHorizontalIcon style={{ margin: "4rem 0", maxWidth: "100%" }} />
 
               <h1>use-formio</h1>
 
