@@ -2,6 +2,15 @@ import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { Field, useFormio } from "../../dist";
 
+const useWasFieldValidated = <T,>(field: { isValidating: boolean }) => {
+  const [wasValidated, setWasValidated] = React.useState(false);
+  React.useEffect(() => {
+    if (field.isValidating === true) setWasValidated(true);
+  }, [field.isValidating]);
+
+  return wasValidated;
+};
+
 const minLength10 = (value: string) =>
   value.length < 10 ? "value has to have length >= 10" : undefined;
 
@@ -33,18 +42,6 @@ export const OnTouchValidation = () => {
       </form>
     </DEBUG_FormWrapper>
   );
-};
-
-// TODO:
-// - should I move this hook into the core use-formio library?
-// - add tests
-const useWasFieldValidated = <T,>(field: { isValidating: boolean }) => {
-  const [wasValidated, setWasValidated] = React.useState(false);
-  React.useEffect(() => {
-    if (field.isValidating === true) setWasValidated(true);
-  }, [field.isValidating]);
-
-  return wasValidated;
 };
 
 const TextInput = React.memo((props: { label: string } & Field<string>) => {
