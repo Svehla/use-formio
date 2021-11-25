@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
-import { Field, useFormio } from "../../dist";
+import { Field, getUseFormio, useFormio } from "../../dist";
 
 export const debounce = (callback: Function, delay: number) => {
   let timeout: NodeJS.Timeout;
@@ -11,17 +11,19 @@ export const debounce = (callback: Function, delay: number) => {
   };
 };
 
+const useForm = getUseFormio(
+  {
+    text1: "",
+    text2: ""
+  },
+  {
+    text1: { validator: v => (v.length < 20 ? "LENGTH SHOULD BE >= 20" : undefined) },
+    text2: { validator: v => (v.length < 20 ? "LENGTH SHOULD BE >= 20" : undefined) }
+  }
+);
+
 export const DebouncedInput = () => {
-  const form = useFormio(
-    {
-      text1: "",
-      text2: ""
-    },
-    {
-      text1: { validator: v => (v.length < 200 ? "LENGTH SHOULD BE >= 200" : undefined) },
-      text2: { validator: v => (v.length < 200 ? "LENGTH SHOULD BE >= 200" : undefined) }
-    }
-  );
+  const form = useForm();
   const f = form.fields;
 
   return (
@@ -33,11 +35,10 @@ export const DebouncedInput = () => {
           if (isValid) alert("form is valid");
         }}
       >
-        <label>Text with 1000ms debounce</label>
+        <label>Text with 500ms debounce</label>
         <MyTextArea {...f.text1} />
-        <div className="input-error">{f.text1.errors.join(", ")}</div>
         <MyTextArea {...f.text2} />
-        <div className="input-error">{f.text2.errors.join(", ")}</div>
+
         <button type="submit" disabled={form.isValidating}>
           Submit
         </button>
@@ -46,18 +47,40 @@ export const DebouncedInput = () => {
   );
 };
 
-// this component si rendered only once per instance because all props values has constant pointer
+const getRandomRGBLightColor = () =>
+  "rgb(" + [Math.random(), Math.random(), Math.random()].map(i => i * 100 + 155).join(",") + ")";
+
+// You can't use this component with shouldUpdateValue
 const MyTextArea = React.memo((props: Field<string>) => {
   const inputRef = React.useRef<any>(undefined);
-  const debouncedSet = debounce(props.set, 1000);
+  const debouncedSet = React.useCallback(
+    debounce((set: typeof props["set"]) => set(inputRef.current.value), 500),
+    []
+  );
+
+  React.useEffect(() => {
+    if (!inputRef.current) return;
+    inputRef.current.value = props.value;
+  }, [props.value]);
 
   return (
-    <input
-      type="text"
-      ref={inputRef}
-      onChange={e => debouncedSet(e.target.value)}
-      onFocus={() => props.setErrors([])}
-      onBlur={() => props.set(inputRef.current.value)}
-    />
+    <div>
+      <input
+        maxLength={30}
+        style={{ background: getRandomRGBLightColor(), padding: "1rem" }}
+        type="text"
+        ref={inputRef}
+        onChange={e => {
+          if (props.errors.length > 0) props.setErrors([]);
+          debouncedSet(props.set);
+        }}
+        onBlur={() => props.set(inputRef.current.value)}
+      />
+      <button type="button" onClick={() => props.set("hello")}>
+        set text1 to {'"'}HELLO{'"'}
+      </button>
+
+      <div className="input-error">{props.errors.join(", ")}</div>
+    </div>
   );
 });
