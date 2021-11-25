@@ -42,7 +42,6 @@ export type Field<T> = {
   value: T;
   errors: string[];
   isValidating: boolean;
-  wasValidated: boolean;
   set: (userValue: T | ((prevState: T) => T)) => void;
   validate: () => Promise<[boolean, string[]]>;
   setErrors: (newErrors: string[] | ((prevState: string[]) => string[])) => void;
@@ -94,7 +93,6 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
       value,
       errors: formState.errors[key],
       isValidating: formState.isValidating[key],
-      wasValidated: formState.wasValidated[key],
       set: useCallback(
         (userValue: any | ((prevState: any) => any)) => {
           setFormState(prevFormState => {
@@ -184,8 +182,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     setFormState(p => ({
       ...p,
       errors: newErrors,
-      isValidating: mapObjectValues(() => false, p.isValidating),
-      wasValidated: mapObjectValues(() => true, initState)
+      isValidating: mapObjectValues(() => false, p.isValidating)
     }));
 
     const isFormValid = Object.values(newErrors).flat().length === 0;
