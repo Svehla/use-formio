@@ -30,7 +30,6 @@ export const useAsyncState = <T>(defaultState: T) => {
 const convertInitStateToFormState = <T extends Record<string, any>>(initState: T) => ({
   values: initState,
   errors: mapObjectValues(() => [] as string[], initState),
-  wasValidated: mapObjectValues(() => false, initState),
   isValidating: mapObjectValues(() => false, initState)
 });
 
@@ -131,8 +130,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
         setFormState(p => ({
           ...p,
           isValidating: { ...p.isValidating, [key]: false },
-          errors: { ...p.errors, [key]: newErrors },
-          wasValidated: { ...p.wasValidated, [key]: true }
+          errors: { ...p.errors, [key]: newErrors }
         }));
         const isFieldValid = newErrors.length === 0;
         return [isFieldValid, newErrors] as [boolean, typeof newErrors];
