@@ -35,7 +35,20 @@ export const OnTouchValidation = () => {
   );
 };
 
+// TODO:
+// - should I move this hook into the core use-formio library?
+// - add tests
+const useWasFieldValidated = <T,>(field: { isValidating: boolean }) => {
+  const [wasValidated, setWasValidated] = React.useState(false);
+  React.useEffect(() => {
+    if (field.isValidating === true) setWasValidated(true);
+  }, [field.isValidating]);
+
+  return wasValidated;
+};
+
 const TextInput = React.memo((props: { label: string } & Field<string>) => {
+  const wasFieldValidated = useWasFieldValidated(props);
   return (
     <div>
       <label>{props.label}</label>
@@ -44,7 +57,7 @@ const TextInput = React.memo((props: { label: string } & Field<string>) => {
         value={props.value}
         onChange={e => {
           props.set(e.target.value);
-          if (props.wasValidated) props.validate();
+          if (wasFieldValidated) props.validate();
         }}
       />
       <div className="input-error">{props.errors.join(", ")}</div>
