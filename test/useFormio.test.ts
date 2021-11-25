@@ -297,5 +297,71 @@ describe("useFormio", () => {
       expect(firstErrorPointer === thirdErrorPointer).toEqual(true);
       expect(firstErrorPointer).toEqual([]);
     });
+
+    it("constant field object pointer if field is not changed", async () => {
+      const stableMinLen2 = (v: string) => (v.length < 2 ? "error" : undefined);
+
+      const { result } = renderHook(() =>
+        useFormio(
+          {
+            str1: "str1",
+            str2: "str1"
+          },
+          {
+            str1: { validator: stableMinLen2 },
+            str2: { validator: stableMinLen2 }
+          }
+        )
+      );
+
+      let firstErrorPointer;
+      let secondErrorPointer;
+      let thirdErrorPointer;
+
+      await act(async () => {
+        await result.current.fields.str1.set("xxx");
+        firstErrorPointer = result.current.fields.str2;
+        await result.current.fields.str1.validate();
+        secondErrorPointer = result.current.fields.str2;
+        await result.current.fields.str1.validate();
+        thirdErrorPointer = result.current.fields.str2;
+      });
+
+      expect(firstErrorPointer === secondErrorPointer).toEqual(true);
+      expect(firstErrorPointer === thirdErrorPointer).toEqual(true);
+    });
+  });
+
+  it("non-constant field object pointer if field is not changed", async () => {
+    const stableMinLen2 = (v: string) => (v.length < 2 ? "error" : undefined);
+
+    const { result } = renderHook(() =>
+      useFormio(
+        {
+          str1: "str1",
+          str2: "str1"
+        },
+        {
+          str1: { validator: stableMinLen2 },
+          str2: { validator: stableMinLen2 }
+        }
+      )
+    );
+
+    let firstErrorPointer;
+    let secondErrorPointer;
+    let thirdErrorPointer;
+
+    await act(async () => {
+      await result.current.fields.str2.set("xxx");
+      firstErrorPointer = result.current.fields.str2;
+      await result.current.fields.str2.validate();
+      secondErrorPointer = result.current.fields.str2;
+      await result.current.fields.str2.validate();
+      thirdErrorPointer = result.current.fields.str2;
+    });
+
+    expect(firstErrorPointer === secondErrorPointer).toEqual(false);
+    expect(firstErrorPointer === thirdErrorPointer).toEqual(false);
   });
 });
