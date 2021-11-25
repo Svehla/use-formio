@@ -15,6 +15,7 @@ import { DynamicForms } from "./examples/DynamicForms";
 import { GithubIcon, UseFormioLogoHorizontalIcon } from "./icons";
 import { Header } from "./Header";
 import { InputConstrains } from "./examples/InputConstrains";
+import { OnTouchValidation } from "./examples/OnTouchValidation";
 import { OptimizedObjectRecreating } from "./examples/OptimizedObjectRecreating";
 import { RevertToInitState } from "./examples/RevertToInitState";
 import { StableMethodPointers } from "./examples/StableMethodPointers";
@@ -33,6 +34,7 @@ import { raw_DebouncedInput } from "./__generated_examples__/DebouncedInput";
 import { raw_InputConstrains } from "./__generated_examples__/InputConstrains";
 // eslint-disable-next-line max-len
 import { raw_DynamicForms } from "./__generated_examples__/DynamicForms";
+import { raw_OnTouchValidation } from "./__generated_examples__/OnTouchValidation";
 import { raw_OptimizedObjectRecreating } from "./__generated_examples__/OptimizedObjectRecreating";
 import { raw_RevertToInitState } from "./__generated_examples__/RevertToInitState";
 import { raw_StableMethodPointers } from "./__generated_examples__/StableMethodPointers";
@@ -88,6 +90,12 @@ const examples = {
       githubFileName: "SyncSetValuesBasedOnPrevValue",
       Comp: SyncSetValuesBasedOnPrevValue,
       code: raw_SyncSetValuesBasedOnPrevValue
+    },
+    {
+      title: "On touch validation",
+      githubFileName: "OnTouchValidation",
+      Comp: OnTouchValidation,
+      code: raw_OnTouchValidation
     },
     {
       title: "Uncontrolled input",
@@ -150,7 +158,9 @@ const useFormioAsciiArtIntro = `
   | \\_/ |, ''.'.| \\__.,          | |  | \\__. | | |     | | | | | |  | || \\__. | 
   '.__.'_/[\\__) )'.__.'         [___]  '.__.' [___]   [___||__||__][___]'.__.'  
                                                                                 
-
+`;
+/*
+`
   	
                                               ---                                  
                                           ----/  /--                               
@@ -175,6 +185,7 @@ const useFormioAsciiArtIntro = `
                  /  \ -/                                                           
                      \      
 `;
+*/
 
 const useFormioInstallationsAsciiArt = ``;
 
