@@ -198,14 +198,14 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
         prevFormState.values
       );
 
-      mapObjectValues(([isSync], key) => {
-        if (!isSync) {
+      mapObjectValues(([isValidatorSync], key) => {
+        if (!isValidatorSync) {
           setFormState(p => ({ ...p, isValidating: { ...p.isValidating, [key]: true } }));
         }
       }, fieldsValidators);
 
       const newErrors = await promiseAllObjectValues(
-        mapObjectValues(([_isSync, getErrors]) => getErrors(), fieldsValidators) as {
+        mapObjectValues(([_isValidatorSync, getErrors]) => getErrors(), fieldsValidators) as {
           [K in keyof T]: Promise<string[]>;
         }
       );

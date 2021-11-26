@@ -7,7 +7,6 @@ const useWasFieldInvalid = (field: { errors: string[] }) => {
   React.useEffect(() => {
     if (field.errors.length > 0) setWasInvalid(true);
   }, [field.errors]);
-
   return wasInvalid;
 };
 
