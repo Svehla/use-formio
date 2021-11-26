@@ -1,4 +1,9 @@
-import { mapObjectValues, notNullable, promiseAllObjectValues } from "./utils";
+import {
+  getStableObjectValues,
+  mapObjectValues,
+  notNullable,
+  promiseAllObjectValues
+} from "./utils";
 import { useCallback, useMemo, useState } from "react";
 
 type MaybePromise<T> = T | Promise<T>;
@@ -178,33 +183,36 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
   // check if all validators are sync/async (check if they are returning Promise)
   // if field validator is not returning promise then do sync validation and do not change
   // isValidating to make React.memo works correctly
-  const validate = async () => {
-    setFormState(p => ({
-      ...p,
-      isValidating: mapObjectValues(() => true, p.isValidating)
-    }));
+  const validate = useCallback(
+    async () => {
+      setFormState(p => ({
+        ...p,
+        isValidating: mapObjectValues(() => true, p.isValidating)
+      }));
 
-    const prevFormState = await getFormState();
+      const prevFormState = await getFormState();
 
-    const newErrors = await promiseAllObjectValues(
-      mapObjectValues(
-        (_v, key) => getFormInputErrors(key, prevFormState),
-        prevFormState.values
-      ) as {
-        [K in keyof T]: Promise<string[]>;
-      }
-    );
+      const newErrors = await promiseAllObjectValues(
+        mapObjectValues(
+          (_v, key) => getFormInputErrors(key, prevFormState),
+          prevFormState.values
+        ) as {
+          [K in keyof T]: Promise<string[]>;
+        }
+      );
 
-    setFormState(p => ({
-      ...p,
-      errors: newErrors,
-      isValidating: mapObjectValues(() => false, p.isValidating)
-    }));
+      setFormState(p => ({
+        ...p,
+        errors: newErrors,
+        isValidating: mapObjectValues(() => false, p.isValidating)
+      }));
 
-    const isFormValid = Object.values(newErrors).flat().length === 0;
+      const isFormValid = Object.values(newErrors).flat().length === 0;
 
-    return [isFormValid, newErrors] as [boolean, typeof newErrors];
-  };
+      return [isFormValid, newErrors] as [boolean, typeof newErrors];
+    },
+    getStableObjectValues((stateSchema as any) ?? {}).map(i => i?.validator)
+  );
 
   const clearErrors = () => {
     return setFormState(prevFormState => ({
@@ -238,7 +246,6 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
 /**
  * TODO: add documentation
  * don't recreate redundant object every render cycle
- * add possible to parametrize default value
  */
 export const getUseFormio = <T extends Record<string, UserFieldValue>>(
   initStateArg: T,
@@ -249,8 +256,3 @@ export const getUseFormio = <T extends Record<string, UserFieldValue>>(
     };
   }
 ) => () => useFormio(initStateArg, stateSchema);
-// ) => (getDefaultValue) => useFormio(initStateArg & defaultValue, stateSchema);
-// ) => (defaultValue) => useFormio(initStateArg & defaultValue, stateSchema);
-// TODO: add getUseCombineFormio?
-
-// TODO: make formData.validate() sync

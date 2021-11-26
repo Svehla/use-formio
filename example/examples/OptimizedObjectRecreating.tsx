@@ -40,19 +40,15 @@ export const OptimizedObjectRecreating = () => {
           if (isValid) alert("form is valid");
         }}
       >
-        <TextInput label={"First name"} {...f.firstName} />
-        <TextInput label={"Last name"} {...f.lastName} />
+        <TextInput1 label={"First name"} {...f.firstName} />
+        <TextInput2 label={"Last name"} field={f.lastName} />
         <button type="submit">Submit</button>
       </form>
     </DEBUG_FormWrapper>
   );
 };
 
-/**
- * thanks to the stable pointer of methods + React.memo,
- * the component is rerendered only if value is changed
- */
-const TextInput = React.memo((props: { label: string } & Field<string>) => {
+const TextInput1 = React.memo((props: { label: string } & Field<string>) => {
   return (
     <div>
       <label>{props.label}</label>
@@ -65,6 +61,23 @@ const TextInput = React.memo((props: { label: string } & Field<string>) => {
         />
       </div>
       <div className="input-error">{props.errors.join(", ")}</div>
+    </div>
+  );
+});
+
+const TextInput2 = React.memo((props: { label: string; field: Field<string> }) => {
+  return (
+    <div>
+      <label>{props.label}</label>
+      <div style={{ background: getRandomRGBLightColor(), padding: "1rem" }}>
+        <input
+          type="text"
+          value={props.field.value}
+          onChange={e => props.field.set(e.target.value)}
+          onBlur={props.field.validate}
+        />
+      </div>
+      <div className="input-error">{props.field.errors.join(", ")}</div>
     </div>
   );
 });

@@ -1,22 +1,16 @@
 ## TODO:
 
 - rename to use-form-engine?
-- dynamic inputs
-- highlight that this library is for react only
 - type inferring example
 - splash screen (with logo, inferring + light example + description)
 - screenshot/gif with type inferring
+- TODO: should i memoize all levels of objects??? :thinking-face:
+- TODO: should i memoize useFormValues
 
 - ## add tests for:
+  - add tests for memozied form.validate()
 
-  - validate on onTouch (after first inital validation has come)
-
-- useWasFieldValidated
-
-  - should I move this hook into the core use-formio library?
-  - add tests
-
-- add `meta` for option stable pointer to configure component like
+* add `meta` for option stable pointer to configure component like
 
 ```js
 validator: xxx;
@@ -44,3 +38,8 @@ React.useEffect(() => {
 ```
 
 if I'll do sync validations onchange validation hook will stops to work
+
+getUseFormio
+
+- make possible to parametrize default valueI => or we can use just:
+- useComponentDidMount(() => f.firstName.set('x'))

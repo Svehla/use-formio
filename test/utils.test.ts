@@ -1,4 +1,9 @@
-import { mapObjectValues, notNullable, promiseAllObjectValues } from "../src/utils";
+import {
+  getStableObjectValues,
+  mapObjectValues,
+  notNullable,
+  promiseAllObjectValues
+} from "../src/utils";
 
 describe("promiseAllObjectValues", () => {
   it("1", async () => {
@@ -137,5 +142,37 @@ describe("mapObjectValues", () => {
       );
       expect(order).toEqual(["b", "a", "c"]);
     });
+  });
+});
+
+describe("getStableObjectValues", () => {
+  it("1", async () => {
+    const data = {
+      a: "a-v",
+      b: "b-v",
+      c: "c-v"
+    };
+    const values = getStableObjectValues(data);
+    expect(values).toEqual(["a-v", "b-v", "c-v"]);
+  });
+
+  it("1", async () => {
+    const data = {
+      b: "b-v",
+      c: "c-v",
+      a: "a-v"
+    };
+    const values = getStableObjectValues(data);
+    expect(values).toEqual(["a-v", "b-v", "c-v"]);
+  });
+
+  it("1", async () => {
+    const data = {
+      c: "c-v",
+      bb: "b-v",
+      aaa: "a-v"
+    };
+    const values = getStableObjectValues(data);
+    expect(values).toEqual(["a-v", "b-v", "c-v"]);
   });
 });
