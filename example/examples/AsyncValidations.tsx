@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
-import { useFormio } from "../../dist";
+import { Field, useFormio } from "../../dist";
 
 const delay = (time: number) => new Promise(res => setTimeout(res, time));
 
@@ -36,22 +36,8 @@ export const AsyncValidations = () => {
           if (isValid) alert("form is valid");
         }}
       >
-        <label>First name</label>
-        <input
-          type="text"
-          onChange={e => f.firstName.set(e.target.value)}
-          value={f.firstName.value}
-          disabled={f.firstName.isValidating}
-        />
-        <div className="input-error">{f.firstName.errors.join(",")}</div>
-        <label>Last name</label>
-        <input
-          type="text"
-          onChange={e => f.lastName.set(e.target.value)}
-          value={f.lastName.value}
-          disabled={f.lastName.isValidating}
-        />
-        <div className="input-error">{f.lastName.errors.join(",")}</div>
+        <TextInput label={"First name"} {...f.firstName} />
+        <TextInput label={"Last name"} {...f.lastName} />
         <button type="submit" disabled={form.isValidating}>
           Submit
         </button>
@@ -59,3 +45,22 @@ export const AsyncValidations = () => {
     </DEBUG_FormWrapper>
   );
 };
+
+const TextInput = React.memo((props: { label: string } & Field<string>) => {
+  return (
+    <div>
+      <label>{props.label}</label>
+      <input
+        type="text"
+        onChange={e => props.set(e.target.value)}
+        value={props.value}
+        onBlur={() => props.validate()}
+        disabled={props.isValidating}
+      />
+      <button type="button" onClick={() => props.validate()}>
+        validate
+      </button>
+      <div className="input-error">{props.errors.join(",")}</div>
+    </div>
+  );
+});
