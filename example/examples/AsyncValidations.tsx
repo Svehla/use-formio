@@ -41,7 +41,6 @@ export const AsyncValidations = () => {
           type="text"
           onChange={e => f.firstName.set(e.target.value)}
           value={f.firstName.value}
-          onBlur={() => f.firstName.validate()}
           disabled={f.firstName.isValidating}
         />
         <div className="input-error">{f.firstName.errors.join(",")}</div>
@@ -50,7 +49,6 @@ export const AsyncValidations = () => {
           type="text"
           onChange={e => f.lastName.set(e.target.value)}
           value={f.lastName.value}
-          onBlur={() => f.lastName.validate()}
           disabled={f.lastName.isValidating}
         />
         <div className="input-error">{f.lastName.errors.join(",")}</div>
