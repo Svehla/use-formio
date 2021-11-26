@@ -9,6 +9,7 @@
 
 - ## add tests for:
   - add tests for memozied form.validate()
+  - getUseFormio
 
 * add `meta` for option stable pointer to configure component like
 
@@ -21,25 +22,6 @@ meta: {
   maxLen: 10;
 }
 ```
-
-add pointers to check value by your own for uncontrolled inputs
-`static_shouldChangeValue: shouldChangeValue`
-
-```ts
-React.useEffect(() => {
-  if (field.isValidating === true) setWasValidated(true);
-}, [field.isValidating]);
-
-vs;
-
-React.useEffect(() => {
-  setWasValidated(true);
-}, [field.isValidating]);
-```
-
-if I'll do sync validations onchange validation hook will stops to work
-
-getUseFormio
 
 - make possible to parametrize default valueI => or we can use just:
 - useComponentDidMount(() => f.firstName.set('x'))
