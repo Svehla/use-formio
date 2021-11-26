@@ -162,7 +162,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
           validate,
           setErrors
         }),
-        [value, errors, isValidating, shouldChangeValue, validator]
+        [value, errors, isValidating, set, validate, setErrors]
       );
     },
     formState.values,
