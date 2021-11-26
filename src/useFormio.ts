@@ -51,7 +51,7 @@ export type Field<T> = {
   setErrors: (newErrors: string[] | ((prevState: string[]) => string[])) => void;
 };
 
-// TODO: what about race-condition while doing async validation and setting new value?
+// TODO: what about race-condition while doing async validation and setting new a value?
 export const useFormio = <T extends Record<string, UserFieldValue>>(
   initStateArg: T,
   stateSchema?: {

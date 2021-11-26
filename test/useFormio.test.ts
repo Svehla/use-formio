@@ -29,10 +29,12 @@ describe("useFormio", () => {
         }
       )
     );
+
     await act(async () => {
       result.current.fields.str1.set(p => `${p}x`);
       result.current.fields.str1.set("xxx");
-      await result.current.fields.str1.validate();
+      const returnedValidate = await result.current.fields.str1.validate();
+      expect(returnedValidate).toEqual([false, ["ERR"]]);
     });
     expect(result.current.fields.str1.value).toBe("xxx");
     expect(result.current.fields.str1.errors).toEqual(["ERR"]);
@@ -85,12 +87,36 @@ describe("useFormio", () => {
         }
       )
     );
+
     await act(async () => {
       result.current.fields.str1.set("xxx");
       result.current.fields.str2.set("xxx");
-      await result.current.validate();
+      const returnedValidate = await result.current.validate();
+      expect(returnedValidate).toEqual([false, { str1: ["ERR"], str2: [] }]);
     });
     expect(result.current.fields.str1.errors).toEqual(["ERR"]);
+  });
+
+  it("field validation", async () => {
+    const { result } = renderHook(() =>
+      useFormio(
+        {
+          str1: "str1"
+        },
+        {
+          str1: {
+            validator: (v, state) => (state.str1 === "xxx" ? ["ERROR!!!"] : [])
+          }
+        }
+      )
+    );
+
+    await act(async () => {
+      result.current.fields.str1.set("xxx");
+      const returnedValidate = await result.current.validate();
+      expect(returnedValidate).toEqual([false, { str1: ["ERROR!!!"] }]);
+    });
+    expect(result.current.fields.str1.errors).toEqual(["ERROR!!!"]);
   });
 
   it("success async validations", async () => {
@@ -106,8 +132,10 @@ describe("useFormio", () => {
         }
       )
     );
+
     await act(async () => {
-      await result.current.validate();
+      const returnedValidate = await result.current.validate();
+      expect(returnedValidate).toEqual([true, { str1: [] }]);
     });
     expect(result.current.fields.str1.errors).toEqual([]);
   });
@@ -126,26 +154,8 @@ describe("useFormio", () => {
       )
     );
     await act(async () => {
-      await result.current.validate();
-    });
-    expect(result.current.fields.str1.errors).toEqual(["ERR"]);
-  });
-
-  it("unsuccess async validations", async () => {
-    const { result } = renderHook(() =>
-      useFormio(
-        {
-          str1: "str1"
-        },
-        {
-          str1: {
-            validator: () => Promise.resolve(["ERR"])
-          }
-        }
-      )
-    );
-    await act(async () => {
-      await result.current.validate();
+      const returnedValidate = await result.current.validate();
+      expect(returnedValidate).toEqual([false, { str1: ["ERR"] }]);
     });
     expect(result.current.isValid).toEqual(false);
   });
@@ -193,7 +203,8 @@ describe("useFormio", () => {
 
     await act(async () => {
       result.current.fields.str1.set("a");
-      result.current.validate();
+      const returnedValidate = await result.current.validate();
+      expect(returnedValidate).toEqual([true, { str1: [] }]);
     });
     expect(result.current.fields.str1.errors).toEqual([]);
 

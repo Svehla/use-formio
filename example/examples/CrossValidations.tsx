@@ -7,11 +7,10 @@ export const CrossValidations = () => {
   const form = useFormio(
     {
       parentID: "",
-      age: ""
+      age: "15"
     },
     {
       parentID: {
-        /** for dependencies between inputs we use the second argument of validator fn */
         validator: (value, state) => {
           const isOlder18 = parseInt(state.age) < 18;
           if (!isOlder18) return undefined;
@@ -33,7 +32,7 @@ export const CrossValidations = () => {
           if (isValid) alert("form is valid");
         }}
       >
-        <label>parentID</label>
+        <label>parent ID</label>
         <input
           type="text"
           onChange={e => f.parentID.set(e.target.value)}
