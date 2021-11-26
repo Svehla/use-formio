@@ -47,6 +47,7 @@ export const StableMethodPointers = () => {
  * because isValidating is changed from false to true and back to false
  */
 const TextInput = React.memo((props: Field<string> & { label: string }) => {
+  console.log("rerender");
   return (
     <div>
       <label>{props.label}</label>

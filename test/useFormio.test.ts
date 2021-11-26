@@ -332,7 +332,7 @@ describe("useFormio", () => {
     });
   });
 
-  it("non-constant field object pointer if field is not changed", async () => {
+  it("non-constant field object pointer if field is changed", async () => {
     const stableMinLen2 = (v: string) => (v.length < 2 ? "error" : undefined);
 
     const { result } = renderHook(() =>
@@ -353,11 +353,44 @@ describe("useFormio", () => {
     let thirdErrorPointer;
 
     await act(async () => {
-      await result.current.fields.str2.set("xxx");
+      await result.current.fields.str2.set("x");
       firstErrorPointer = result.current.fields.str2;
-      await result.current.fields.str2.validate();
+      await result.current.fields.str2.set("xx");
       secondErrorPointer = result.current.fields.str2;
-      await result.current.fields.str2.validate();
+      await result.current.fields.str2.set("xxx");
+      thirdErrorPointer = result.current.fields.str2;
+    });
+
+    expect(firstErrorPointer === secondErrorPointer).toEqual(false);
+    expect(firstErrorPointer === thirdErrorPointer).toEqual(false);
+  });
+
+  it("isValidating is constant if validation is sync", async () => {
+    const stableMinLen2 = (v: string) => (v.length < 2 ? "error" : undefined);
+
+    const { result } = renderHook(() =>
+      useFormio(
+        {
+          str1: "str1",
+          str2: "str1"
+        },
+        {
+          str1: { validator: stableMinLen2 },
+          str2: { validator: stableMinLen2 }
+        }
+      )
+    );
+
+    let firstErrorPointer;
+    let secondErrorPointer;
+    let thirdErrorPointer;
+
+    await act(async () => {
+      await result.current.fields.str2.set("x");
+      firstErrorPointer = result.current.fields.str2;
+      await result.current.fields.str2.set("xx");
+      secondErrorPointer = result.current.fields.str2;
+      await result.current.fields.str2.set("xxx");
       thirdErrorPointer = result.current.fields.str2;
     });
 
