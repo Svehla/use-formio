@@ -67,30 +67,41 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     convertInitStateToFormState(initState)
   );
 
-  const getFormInputErrors = async (key: keyof T, currFormState: typeof formState) => {
+  const getFormInputErrors = (
+    key: keyof T,
+    currFormState: typeof formState
+  ): [boolean, () => Promise<string[]>] => {
     const schemaDef = stateSchema?.[key];
     const prevErrors = currFormState.errors[key as any];
-    // we want to be sure that empty array pointer is not override with new empty array pointer
-    if (!schemaDef) return prevErrors;
 
-    let errors = [] as (string | undefined | null)[];
+    let userErrorsPromisedMaybe: MaybePromise<UserFormError>;
 
     if (schemaDef?.validator) {
-      // add await only if validator returns promise => else do sync validation
-      const userErrors = await schemaDef?.validator(
-        currFormState.values[key],
-        currFormState.values
-      );
-      errors.push(...(Array.isArray(userErrors) ? userErrors : [userErrors]));
+      userErrorsPromisedMaybe =
+        schemaDef?.validator(currFormState.values[key], currFormState.values) ?? [];
+    } else {
+      // we want to be sure that empty array pointer is not override with new empty array pointer
+      return [true, () => Promise.resolve(prevErrors)];
     }
 
-    const newErrors = errors.filter(notNullable);
-    // === same value pointer optimization ===
-    // we want to be sure that empty array pointer is not override with new empty array pointer
-    if (newErrors.length === 0 && prevErrors.length === 0) {
-      return prevErrors;
-    }
-    return newErrors;
+    const isValidatorSync = !Boolean(userErrorsPromisedMaybe instanceof Promise);
+
+    return [
+      isValidatorSync,
+      async () => {
+        let errors = [] as (string | undefined | null)[];
+        const userErrors = await userErrorsPromisedMaybe;
+        errors.push(...(Array.isArray(userErrors) ? userErrors : [userErrors]));
+
+        const newErrors = errors.filter(notNullable);
+        // === same value pointer optimization ===
+        // we want to be sure that empty array pointer is not override with new empty array pointer
+        if (newErrors.length === 0 && prevErrors.length === 0) {
+          return prevErrors;
+        }
+        return newErrors;
+      }
+    ];
   };
 
   const fields = mapObjectValues(
@@ -128,12 +139,13 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
         [shouldChangeValue]
       );
       const validate = useCallback(async () => {
-        setFormState(p => ({
-          ...p,
-          isValidating: { ...p.isValidating, [key]: true }
-        }));
         const prevFormState = await getFormState();
-        const newErrors = await getFormInputErrors(key, prevFormState);
+        const [isValidationSync, getErrors] = getFormInputErrors(key, prevFormState);
+
+        if (!isValidationSync) {
+          setFormState(p => ({ ...p, isValidating: { ...p.isValidating, [key]: true } }));
+        }
+        const newErrors = await getErrors();
         setFormState(p => ({
           ...p,
           isValidating: { ...p.isValidating, [key]: false },
@@ -179,18 +191,21 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
 
   const validate = useCallback(
     async () => {
-      setFormState(p => ({
-        ...p,
-        isValidating: mapObjectValues(() => true, p.isValidating)
-      }));
-
       const prevFormState = await getFormState();
 
+      const fieldsValidators = mapObjectValues(
+        (_v, key) => getFormInputErrors(key, prevFormState),
+        prevFormState.values
+      );
+
+      mapObjectValues(([isValidatorSync], key) => {
+        if (!isValidatorSync) {
+          setFormState(p => ({ ...p, isValidating: { ...p.isValidating, [key]: true } }));
+        }
+      }, fieldsValidators);
+
       const newErrors = await promiseAllObjectValues(
-        mapObjectValues(
-          (_v, key) => getFormInputErrors(key, prevFormState),
-          prevFormState.values
-        ) as {
+        mapObjectValues(([_isValidatorSync, getErrors]) => getErrors(), fieldsValidators) as {
           [K in keyof T]: Promise<string[]>;
         }
       );

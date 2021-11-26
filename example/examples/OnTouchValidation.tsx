@@ -2,13 +2,12 @@ import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { Field, useFormio } from "../../dist";
 
-const useWasFieldValidated = <T,>(field: { isValidating: boolean }) => {
-  const [wasValidated, setWasValidated] = React.useState(false);
+const useWasFieldInvalid = (field: { errors: string[] }) => {
+  const [wasInvalid, setWasInvalid] = React.useState(false);
   React.useEffect(() => {
-    if (field.isValidating === true) setWasValidated(true);
-  }, [field.isValidating]);
-
-  return wasValidated;
+    if (field.errors.length > 0) setWasInvalid(true);
+  }, [field.errors]);
+  return wasInvalid;
 };
 
 const minLength10 = (value: string) =>
@@ -45,7 +44,7 @@ export const OnTouchValidation = () => {
 };
 
 const TextInput = React.memo((props: { label: string } & Field<string>) => {
-  const wasFieldValidated = useWasFieldValidated(props);
+  const wasFieldInvalid = useWasFieldInvalid(props);
   return (
     <div>
       <label>{props.label}</label>
@@ -54,7 +53,7 @@ const TextInput = React.memo((props: { label: string } & Field<string>) => {
         value={props.value}
         onChange={e => {
           props.set(e.target.value);
-          if (wasFieldValidated) props.validate();
+          if (wasFieldInvalid) props.validate();
         }}
       />
       <div className="input-error">{props.errors.join(", ")}</div>
