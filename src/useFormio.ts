@@ -177,12 +177,6 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     };
   };
 
-  // 1. add useCallback
-  // example: useCallback: `Object.stableValues(stateSchema!).map(i => i?.validator)`
-  // 2. double react render optimization
-  // check if all validators are sync/async (check if they are returning Promise)
-  // if field validator is not returning promise then do sync validation and do not change
-  // isValidating to make React.memo works correctly
   const validate = useCallback(
     async () => {
       setFormState(p => ({

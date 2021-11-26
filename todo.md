@@ -43,3 +43,8 @@ getUseFormio
 
 - make possible to parametrize default valueI => or we can use just:
 - useComponentDidMount(() => f.firstName.set('x'))
+
+validate()
+// check if all validators are sync/async (check if they are returning Promise)
+// if field validator is not returning promise then do sync validation and do not change
+// isValidating to make React.memo works correctly
