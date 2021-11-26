@@ -1,5 +1,10 @@
-import { mapObjectValues, notNullable, promiseAllObjectValues } from "./utils";
-import { useCallback, useState } from "react";
+import {
+  getStableObjectValues,
+  mapObjectValues,
+  notNullable,
+  promiseAllObjectValues
+} from "./utils";
+import { useCallback, useMemo, useState } from "react";
 
 type MaybePromise<T> = T | Promise<T>;
 
@@ -71,6 +76,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     let errors = [] as (string | undefined | null)[];
 
     if (schemaDef?.validator) {
+      // add await only if validator returns promise => else do sync validation
       const userErrors = await schemaDef?.validator(
         currFormState.values[key],
         currFormState.values
@@ -88,11 +94,12 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
   };
 
   const fields = mapObjectValues(
-    (value, key) => ({
-      value,
-      errors: formState.errors[key],
-      isValidating: formState.isValidating[key],
-      set: useCallback(
+    (value, key) => {
+      const errors = formState.errors[key];
+      const isValidating = formState.isValidating[key];
+      const shouldChangeValue = stateSchema?.[key]?.shouldChangeValue;
+      const validator = stateSchema?.[key]?.validator;
+      const set = useCallback(
         (userValue: any | ((prevState: any) => any)) => {
           setFormState(prevFormState => {
             const schemaDef = stateSchema?.[key];
@@ -118,9 +125,9 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
             };
           });
         },
-        [stateSchema?.[key]?.shouldChangeValue]
-      ),
-      validate: useCallback(async () => {
+        [shouldChangeValue]
+      );
+      const validate = useCallback(async () => {
         setFormState(p => ({
           ...p,
           isValidating: { ...p.isValidating, [key]: true }
@@ -134,14 +141,30 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
         }));
         const isFieldValid = newErrors.length === 0;
         return [isFieldValid, newErrors] as [boolean, typeof newErrors];
-      }, [stateSchema?.[key]?.validator]),
-      setErrors: useCallback((userErrors: string[] | ((prevState: string[]) => string[])) => {
-        setFormState(p => {
-          const newErrors = userErrors instanceof Function ? userErrors(p.errors[key]) : userErrors;
-          return { ...p, errors: { ...p.errors, [key]: newErrors } };
-        });
-      }, [])
-    }),
+      }, [validator]);
+
+      const setErrors = useCallback(
+        (userErrors: string[] | ((prevState: string[]) => string[])) => {
+          setFormState(p => {
+            const newErrors =
+              userErrors instanceof Function ? userErrors(p.errors[key]) : userErrors;
+            return { ...p, errors: { ...p.errors, [key]: newErrors } };
+          });
+        },
+        []
+      );
+      return useMemo(
+        () => ({
+          value,
+          errors,
+          isValidating,
+          set,
+          validate,
+          setErrors
+        }),
+        [value, errors, isValidating, set, validate, setErrors]
+      );
+    },
     formState.values,
     // we use stable iteration because we need to keep calling of hooks in the same order
     // for the all react useCallback hooks
@@ -154,39 +177,36 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     };
   };
 
-  // 1. add useCallback
-  // example: useCallback: `Object.stableValues(stateSchema!).map(i => i?.validator)`
-  // 2. double react render optimization
-  // check if all validators are sync/async (check if they are returning Promise)
-  // if field validator is not returning promise then do sync validation and do not change
-  // isValidating to make React.memo works correctly
-  const validate = async () => {
-    setFormState(p => ({
-      ...p,
-      isValidating: mapObjectValues(() => true, p.isValidating)
-    }));
+  const validate = useCallback(
+    async () => {
+      setFormState(p => ({
+        ...p,
+        isValidating: mapObjectValues(() => true, p.isValidating)
+      }));
 
-    const prevFormState = await getFormState();
+      const prevFormState = await getFormState();
 
-    const newErrors = await promiseAllObjectValues(
-      mapObjectValues(
-        (_v, key) => getFormInputErrors(key, prevFormState),
-        prevFormState.values
-      ) as {
-        [K in keyof T]: Promise<string[]>;
-      }
-    );
+      const newErrors = await promiseAllObjectValues(
+        mapObjectValues(
+          (_v, key) => getFormInputErrors(key, prevFormState),
+          prevFormState.values
+        ) as {
+          [K in keyof T]: Promise<string[]>;
+        }
+      );
 
-    setFormState(p => ({
-      ...p,
-      errors: newErrors,
-      isValidating: mapObjectValues(() => false, p.isValidating)
-    }));
+      setFormState(p => ({
+        ...p,
+        errors: newErrors,
+        isValidating: mapObjectValues(() => false, p.isValidating)
+      }));
 
-    const isFormValid = Object.values(newErrors).flat().length === 0;
+      const isFormValid = Object.values(newErrors).flat().length === 0;
 
-    return [isFormValid, newErrors] as [boolean, typeof newErrors];
-  };
+      return [isFormValid, newErrors] as [boolean, typeof newErrors];
+    },
+    getStableObjectValues((stateSchema as any) ?? {}).map(i => i?.validator)
+  );
 
   const clearErrors = () => {
     return setFormState(prevFormState => ({
