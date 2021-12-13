@@ -264,4 +264,17 @@ export const getUseFormio = <T extends Record<string, UserFieldValue>>(
       validator?: (value: T[K], state: T) => MaybePromise<UserFormError>;
     };
   }
-) => () => useFormio(initStateArg, stateSchema);
+) => (
+  overrideInitStateArg = {} as Partial<T>,
+  overrideInitStateSchema = {} as typeof stateSchema
+) =>
+  useFormio(
+    {
+      ...initStateArg,
+      ...overrideInitStateArg
+    },
+    {
+      ...stateSchema,
+      ...(overrideInitStateSchema as any)
+    }
+  );

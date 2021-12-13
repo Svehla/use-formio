@@ -57,4 +57,43 @@ describe("getUseFormio.test", () => {
     expect(firstPointer === secondPointer).toEqual(false);
     expect(firstPointer === thirdPointer).toEqual(false);
   });
+
+  it("parametrized getUseFormio", async () => {
+    const useForm = getUseFormio(
+      {
+        str1: "str1",
+        str2: ""
+      },
+      {
+        str1: { validator: v => (v.length === 0 ? "field is required" : undefined) }
+      }
+    );
+    const { result: getUseFormioResult } = renderHook(() =>
+      useForm(
+        {
+          str2: "default value"
+        },
+        {
+          str2: {
+            validator: (v, s) => (v === s.str1 ? "ERROR" : undefined)
+          }
+        }
+      )
+    );
+
+    await act(async () => {
+      getUseFormioResult.current.fields.str1;
+    });
+
+    // every rerender, validator function has the same pointer
+    expect(getUseFormioResult.current.fields.str1.value).toEqual("str1");
+    expect(getUseFormioResult.current.fields.str2.value).toEqual("default value");
+
+    await act(async () => {
+      getUseFormioResult.current.fields.str1.set("default value");
+      getUseFormioResult.current.fields.str2.validate();
+    });
+
+    expect(getUseFormioResult.current.fields.str2.errors).toEqual(["ERROR"]);
+  });
 });
