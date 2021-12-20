@@ -160,6 +160,32 @@ describe("useFormio", () => {
     expect(result.current.isValid).toEqual(false);
   });
 
+  it("revertToInitState", async () => {
+    const { result } = renderHook(() =>
+      useFormio({
+        str1: "str1",
+        str2: "str2",
+        str3: "str3"
+      })
+    );
+
+    await act(async () => {
+      result.current.fields.str1.set("e");
+      result.current.fields.str2.set("e");
+      result.current.fields.str3.set("e");
+    });
+    expect(result.current.fields.str1.value).toEqual("e");
+    expect(result.current.fields.str2.value).toEqual("e");
+    expect(result.current.fields.str3.value).toEqual("e");
+
+    await act(async () => {
+      result.current.revertToInitState();
+    });
+    expect(result.current.fields.str1.value).toEqual("str1");
+    expect(result.current.fields.str2.value).toEqual("str2");
+    expect(result.current.fields.str3.value).toEqual("str3");
+  });
+
   it("Reset field errors while update errored value 1", async () => {
     const { result } = renderHook(() =>
       useFormio(

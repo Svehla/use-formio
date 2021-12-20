@@ -142,4 +142,27 @@ describe("it", () => {
     expect(result.current.forms.form1.isValid).toEqual(true);
     expect(result.current.forms.form2.isValid).toEqual(false);
   });
+
+  it("revertToInitState", async () => {
+    const { result } = renderHook(() =>
+      useCombineFormio({
+        form1: useFormio({ a: "x" }),
+        form2: useFormio({ b: "x" })
+      })
+    );
+
+    await act(async () => {
+      result.current.forms.form1.fields.a.set("y");
+      result.current.forms.form2.fields.b.set("y");
+    });
+
+    expect(result.current.forms.form1.fields.a.value).toEqual("y");
+    expect(result.current.forms.form2.fields.b.value).toEqual("y");
+
+    await act(async () => {
+      result.current.revertToInitState();
+    });
+    expect(result.current.forms.form1.fields.a.value).toEqual("x");
+    expect(result.current.forms.form2.fields.b.value).toEqual("x");
+  });
 });
