@@ -237,8 +237,14 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
   const isValidating = Object.values(formState.isValidating).some(v => v === true);
   const isValid = Object.values(formState.errors).flat().length === 0;
 
+  const getFieldsState = async () => {
+    const formState = await getFormState();
+    return formState.values;
+  };
+
   return {
     fields,
+    getFieldsState,
     revertToInitState,
     validate,
     clearErrors,

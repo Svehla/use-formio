@@ -1,14 +1,14 @@
 {
   "name": "example",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
+  "main": "index.js",
   "scripts": {
-    "regenerate-examples:watch": "nodemon regenerate-examples.js",
-    "regenerate-examples": "node regenerate-examples.js",
+    "build": "npm run r && parcel build index.html",
     "r": "npm run regenerate-examples",
-    "start": "npm run r && parcel index.html",
-    "build": "npm run r && parcel build index.html"
+    "regenerate-examples": "node regenerate-examples.js",
+    "regenerate-examples:watch": "nodemon regenerate-examples.js",
+    "start": "npm run r && parcel index.html"
   },
   "dependencies": {
     "@types/react-highlight": "^0.12.5",
@@ -17,15 +17,15 @@
     "react-app-polyfill": "^1.0.0",
     "react-highlight": "^0.14.0"
   },
-  "alias": {
-    "react": "../node_modules/react",
-    "react-dom": "../node_modules/react-dom/profiling",
-    "scheduler/tracing": "../node_modules/scheduler/tracing-profiling"
-  },
   "devDependencies": {
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.8.4",
     "parcel": "1.12.3",
     "typescript": "^3.4.5"
+  },
+  "alias": {
+    "react": "../node_modules/react",
+    "react-dom": "../node_modules/react-dom/profiling",
+    "scheduler/tracing": "../node_modules/scheduler/tracing-profiling"
   }
 }

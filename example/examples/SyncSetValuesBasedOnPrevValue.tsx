@@ -33,6 +33,9 @@ export const SyncSetValuesBasedOnPrevValue = () => {
           f.amount.set(p => p + 4);
           // f.amount has value 5
           const [isValid, errors] = await form.validate();
+
+          const fields = await form.getFieldsState();
+
           if (isValid) return;
           if (errors.ID.length > 0) {
             alert("there is problem with ID field");

@@ -1,12 +1,12 @@
 {
   "name": "use-formio",
-  "version": "0.0.16",
+  "version": "0.0.17",
+  "repository": "https://github.com/Svehla/use-formio",
   "license": "MIT",
   "author": "Jakub Švehla",
   "main": "dist/index.js",
   "module": "dist/use-formio.esm.js",
   "typings": "dist/index.d.ts",
-  "repository": "https://github.com/Svehla/use-formio",
   "files": [
     "dist",
     "src"
@@ -30,11 +30,8 @@
   "prettier": {
     "printWidth": 100
   },
-  "// prettier": {
-    "printWidth": 100,
-    "semi": true,
-    "singleQuote": false,
-    "trailingComma": "all"
+  "dependencies": {
+    "reactstrap": "^9.0.1"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^5.0.5",
@@ -57,6 +54,12 @@
   "engines": {
     "node": ">=10"
   },
+  "// prettier": {
+    "printWidth": 100,
+    "semi": true,
+    "singleQuote": false,
+    "trailingComma": "all"
+  },
   "size-limit": [
     {
       "path": "dist/use-formio.cjs.production.min.js",
@@ -66,8 +69,5 @@
       "path": "dist/use-formio.esm.js",
       "limit": "10 KB"
     }
-  ],
-  "dependencies": {
-    "reactstrap": "^9.0.1"
-  }
+  ]
 }
