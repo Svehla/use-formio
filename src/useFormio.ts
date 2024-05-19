@@ -49,6 +49,7 @@ export type Field<T> = {
   set: (userValue: T | ((prevState: T) => T)) => void;
   validate: () => Promise<[boolean, string[]]>;
   setErrors: (newErrors: string[] | ((prevState: string[]) => string[])) => void;
+  getValue: () => Promise<T>;
 };
 
 // TODO: what about race-condition while doing async validation and setting new a value?
@@ -110,6 +111,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
       const isValidating = formState.isValidating[key];
       const shouldChangeValue = stateSchema?.[key]?.shouldChangeValue;
       const validator = stateSchema?.[key]?.validator;
+
       const set = useCallback(
         (userValue: any | ((prevState: any) => any)) => {
           setFormState(prevFormState => {
@@ -123,7 +125,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
 
             // === same value pointer optimization ===
             // need to be sure that empty array pointer is not override with new empty array pointer
-            // thanks to that we may optimise react render memoization
+            // thanks to that we may optimize react render memoization
             const newErrors =
               prevFormState.errors[key].length === 0
                 ? prevFormState.errors
@@ -138,6 +140,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
         },
         [shouldChangeValue]
       );
+
       const validate = useCallback(async () => {
         const prevFormState = await getFormState();
         const [isValidationSync, getErrors] = getFormInputErrors(key, prevFormState);
@@ -165,6 +168,12 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
         },
         []
       );
+
+      const getValue = useCallback(async () => {
+        const currFormState = await getFormState();
+        return currFormState.values[key];
+      }, []);
+
       return useMemo(
         () => ({
           value,
@@ -172,9 +181,10 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
           isValidating,
           set,
           validate,
-          setErrors
+          setErrors,
+          getValue
         }),
-        [value, errors, isValidating, set, validate, setErrors]
+        [value, errors, isValidating, set, validate, setErrors, getValue]
       );
     },
     formState.values,

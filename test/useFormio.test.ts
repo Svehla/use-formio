@@ -434,4 +434,26 @@ describe("useFormio", () => {
     expect(firstErrorPointer === secondErrorPointer).toEqual(false);
     expect(firstErrorPointer === thirdErrorPointer).toEqual(false);
   });
+
+  it("get async value", async () => {
+    const stableMinLen2 = (v: string) => (v.length < 2 ? "error" : undefined);
+
+    const { result } = renderHook(() =>
+      useFormio(
+        {
+          str1: "str1"
+        },
+        {}
+      )
+    );
+
+    await act(async () => {
+      result.current.fields.str1.set("xx");
+      result.current.fields.str1.set(p => p + "xx");
+
+      const value = await result.current.fields.str1.getValue();
+
+      expect(value).toEqual("xxxx");
+    });
+  });
 });
