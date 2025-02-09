@@ -1,8 +1,11 @@
+// tsdx is deprecated, so i cannot use modern ts generics like Awaited<>
+export type Await<T> = T extends Promise<infer U> ? U : T;
+
 const promiseAllObjectValues = async <T extends Record<any, any>>(obj: T) => {
   const entriesObj = await Promise.all(
     Object.entries(obj).map(async ([key, value]) => [key, await value])
   );
-  return Object.fromEntries(entriesObj) as { [K in keyof T]: Awaited<T[K]> };
+  return Object.fromEntries(entriesObj) as { [K in keyof T]: Await<T[K]> };
 };
 
 const mapObjectValues = <Key extends string, Value, NewValue>(
