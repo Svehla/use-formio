@@ -1,4 +1,5 @@
-import { Await, mapObjectValues, promiseAllObjectValues } from "./utils";
+import { formioUtils } from "./utils";
+const { mapObjectValues, promiseAllObjectValues } = formioUtils;
 
 // TODO: add useCallbacks and make sure that all useFormio functions are stable
 // should useCombineFormio be hook? will I use useCallbacks here?
@@ -19,7 +20,7 @@ export const useCombineFormio = <T extends Record<string, any>>(forms: T) => {
 
   const validate = async () => {
     const results = (await promiseAllObjectValues(mapObjectValues(v => v.validate(), forms))) as {
-      [K in keyof T]: Await<ReturnType<T[K]["validate"]>>;
+      [K in keyof T]: Awaited<ReturnType<T[K]["validate"]>>;
     };
 
     const isValid = Object.values(

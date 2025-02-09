@@ -22,6 +22,7 @@
     "prepare": "tsdx build",
     "size": "size-limit",
     "start": "tsdx watch",
+    "ts:check-types": "tsc",
     "test": "tsdx test --passWithNoTests",
     "test:watch": "tsdx test --passWithNoTests --watchAll"
   },
@@ -34,7 +35,6 @@
     "printWidth": 100
   },
   "devDependencies": {
-    "reactstrap": "^9.0.1",
     "@size-limit/preset-small-lib": "^5.0.5",
     "@testing-library/react-hooks": "^7.0.2",
     "@types/react": "^17.0.27",
@@ -44,10 +44,11 @@
     "husky": "^7.0.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "reactstrap": "^9.0.1",
     "size-limit": "^5.0.5",
     "tsdx": "^0.14.1",
     "tslib": "^2.3.1",
-    "typescript": "^4.4.3"
+    "typescript": "^5.7.3"
   },
   "peerDependencies": {
     "react": ">=16"

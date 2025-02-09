@@ -1,13 +1,11 @@
-export type Await<T> = T extends Promise<infer U> ? U : T;
-
-export const promiseAllObjectValues = async <T>(obj: T) => {
+const promiseAllObjectValues = async <T extends Record<any, any>>(obj: T) => {
   const entriesObj = await Promise.all(
     Object.entries(obj).map(async ([key, value]) => [key, await value])
   );
-  return Object.fromEntries(entriesObj) as { [K in keyof T]: Await<T[K]> };
+  return Object.fromEntries(entriesObj) as { [K in keyof T]: Awaited<T[K]> };
 };
 
-export const mapObjectValues = <Key extends string, Value, NewValue>(
+const mapObjectValues = <Key extends string, Value, NewValue>(
   fn: (value: Value, key: Key) => NewValue,
   obj: Record<Key, Value>,
   { stableKeyOrder = false } = {}
@@ -31,9 +29,9 @@ export const mapObjectValues = <Key extends string, Value, NewValue>(
   >;
 };
 
-export const notNullable = <T>(x: T | null | undefined): x is T => x !== undefined && x !== null;
+const notNullable = <T>(x: T | null | undefined): x is T => x !== undefined && x !== null;
 
-export const getStableObjectValues = (obj: Record<string, any>) => {
+const getStableObjectValues = (obj: Record<string, any>) => {
   let entries = Object.entries(obj);
 
   entries = entries.sort(([firstKey], [secondKey]) => {
@@ -46,4 +44,11 @@ export const getStableObjectValues = (obj: Record<string, any>) => {
   });
 
   return entries.map(t => t[1]);
+};
+
+export const formioUtils = {
+  getStableObjectValues,
+  notNullable,
+  mapObjectValues,
+  promiseAllObjectValues
 };

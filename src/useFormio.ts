@@ -1,10 +1,7 @@
-import {
-  getStableObjectValues,
-  mapObjectValues,
-  notNullable,
-  promiseAllObjectValues
-} from "./utils";
+import { formioUtils } from "./utils";
 import { useCallback, useMemo, useState } from "react";
+
+const { getStableObjectValues, mapObjectValues, notNullable, promiseAllObjectValues } = formioUtils;
 
 type MaybePromise<T> = T | Promise<T>;
 
