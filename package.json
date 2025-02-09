@@ -1,10 +1,13 @@
 {
   "name": "use-formio",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "repository": "https://github.com/Svehla/use-formio",
   "license": "MIT",
   "author": "Jakub Švehla",
   "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "module": "dist/use-formio.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
