@@ -35,6 +35,7 @@
     "printWidth": 100
   },
   "devDependencies": {
+    "reactstrap": "^9.0.1",
     "@size-limit/preset-small-lib": "^5.0.5",
     "@testing-library/react-hooks": "^7.0.2",
     "@types/react": "^17.0.27",

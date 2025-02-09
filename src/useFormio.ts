@@ -6,7 +6,7 @@ const { getStableObjectValues, mapObjectValues, notNullable, promiseAllObjectVal
 type MaybePromise<T> = T | Promise<T>;
 
 // TODO: add docs how to handle useCallbacks with just stable `set` pointers
-export const useAsyncState = <T>(defaultState: T) => {
+export const _useAsyncState = <T>(defaultState: T) => {
   const [state, _setState] = useState(defaultState);
 
   const setState = useCallback(
@@ -61,7 +61,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
 ) => {
   // we use this useState to memoize init componentDidMount value for the form
   const [initState] = useState(initStateArg);
-  const [formState, setFormState, getFormState] = useAsyncState(
+  const [formState, setFormState, getFormState] = _useAsyncState(
     convertInitStateToFormState(initState)
   );
 
