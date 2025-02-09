@@ -46,6 +46,7 @@ const getStableObjectValues = (obj: Record<string, any>) => {
   return entries.map(t => t[1]);
 };
 
+// i wrap that into an object to hide them from the intelligent imports of end library user :|
 export const formioUtils = {
   getStableObjectValues,
   notNullable,
