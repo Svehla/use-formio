@@ -1,4 +1,5 @@
 import { Await, mapObjectValues, promiseAllObjectValues } from "./utils";
+import { useCallback } from "react";
 
 // TODO: add useCallbacks and make sure that all useFormio functions are stable
 // should useCombineFormio be hook? will I use useCallbacks here?
@@ -38,12 +39,25 @@ export const useCombineFormio = <T extends Record<string, any>>(forms: T) => {
     .map(i => i.isValid)
     .every(i => i);
 
+  const getFormValues = useCallback(async () => {
+    const data = Object.fromEntries(
+      await Promise.all(Object.entries(forms).map(async ([k, v]) => [k, await v.getFormValues()]))
+    ) as {
+      [K in keyof T]: {
+        [KK in keyof T[K]["fields"]]: T[K]["fields"][KK]["value"];
+      };
+    };
+
+    return data;
+  }, [forms]);
+
   return {
     isValidating,
     isValid,
     forms,
     revertToInitState,
     validate,
-    clearErrors
+    clearErrors,
+    getFormValues
   };
 };

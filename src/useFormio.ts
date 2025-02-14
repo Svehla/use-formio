@@ -252,14 +252,21 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     return formState.values;
   };
 
+  const getFormValues = useCallback(async () => {
+    const state = await getFormState();
+    return state.values;
+  }, []);
+
   return {
     fields,
     getFieldsState,
     revertToInitState,
     validate,
     clearErrors,
+    getFormValues,
     isValidating,
     isValid,
+
     // TODO: should i keep it there?
     __dangerous: {
       setFormState,

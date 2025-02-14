@@ -85,6 +85,30 @@ describe("it", () => {
     expect(result.current.forms.form2.fields.a.errors).toEqual(["ERR2"]);
   });
 
+  it("combined form validate 1.1", async () => {
+    const { result } = renderHook(() =>
+      useCombineFormio({
+        form1: useFormio({ a: "x" }, { a: { validator: v => (v === "a" ? "ERR1" : undefined) } }),
+        form2: useFormio({ b: "x" }, { b: { validator: v => (v === "b" ? "ERR2" : undefined) } })
+      })
+    );
+
+    await act(async () => {
+      result.current.forms.form1.fields.a.set("a");
+      result.current.forms.form2.fields.b.set("b");
+      result.current.forms.form2.fields.b.set("c");
+      result.current.forms.form2.fields.b.set("d");
+
+      var form1Data = await result.current.forms.form1.getFormValues();
+      var form2Data = await result.current.forms.form2.getFormValues();
+      var bothFormsData = await result.current.getFormValues();
+
+      expect(form1Data).toEqual({ a: "a" });
+      expect(form2Data).toEqual({ b: "d" });
+      expect(bothFormsData).toEqual({ form1: { a: "a" }, form2: { b: "d" } });
+    });
+  });
+
   it("combined form validate 2", async () => {
     const { result } = renderHook(() =>
       useCombineFormio({
