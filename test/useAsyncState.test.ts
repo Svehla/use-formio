@@ -1,10 +1,10 @@
+import { _useAsyncState } from "../src/useFormio";
 import { act, renderHook } from "@testing-library/react-hooks";
-import { useAsyncState } from "../src/useFormio";
 // import { useCallback, useEffect } from 'react';
 
 describe("useAsyncState", () => {
   it("1", async () => {
-    const { result } = renderHook(() => useAsyncState("a"));
+    const { result } = renderHook(() => _useAsyncState("a"));
     const [value, setValue, getValue] = result.current;
 
     // !!!!!!! MISSING AWAIT !!!!!!!

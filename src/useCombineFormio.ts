@@ -1,5 +1,7 @@
-import { Await, mapObjectValues, promiseAllObjectValues } from "./utils";
+import { Await, formioUtils } from "./utils";
 import { useCallback } from "react";
+
+const { mapObjectValues, promiseAllObjectValues } = formioUtils;
 
 // TODO: add useCallbacks and make sure that all useFormio functions are stable
 // should useCombineFormio be hook? will I use useCallbacks here?

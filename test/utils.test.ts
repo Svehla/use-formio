@@ -1,9 +1,6 @@
-import {
-  getStableObjectValues,
-  mapObjectValues,
-  notNullable,
-  promiseAllObjectValues
-} from "../src/utils";
+import { formioUtils } from "../src/utils";
+
+const { getStableObjectValues, mapObjectValues, notNullable, promiseAllObjectValues } = formioUtils;
 
 describe("promiseAllObjectValues", () => {
   it("1", async () => {
