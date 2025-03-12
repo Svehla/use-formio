@@ -205,8 +205,15 @@ export const useFormio = <
         return extraConfig?.metadata?.[key]?.(currFormState.values[key], currFormState.values);
       }, []);
 
-      return useMemo(
-        () => ({
+      // TODO: fix stable pointer for metadata
+      // 1. make stable pointer for metadata via removing requirement of functions...
+      // 2. make stable pointer by formioUtils.memoReturnDeepValuePointer
+      // 3. return useMemo deps
+
+      const metadata = extraConfig?.metadata?.[key]?.(value, formState.values);
+
+      return useMemo(() => {
+        return {
           value,
           errors,
           isValidating,
@@ -215,11 +222,10 @@ export const useFormio = <
           setErrors,
           getValue,
           // this fn needs to be inside useMemo, because it is not stable
-          metadata: extraConfig?.metadata?.[key]?.(value, formState.values),
-          getMetadata: getMetadata
-        }),
-        [value, errors, isValidating, set, validate, setErrors, getValue]
-      );
+          metadata,
+          getMetadata
+        };
+      }, [value, errors, isValidating, set, validate, setErrors, getValue, metadata]);
     },
     formState.values,
     // we use stable iteration because we need to keep calling of hooks in the same order
@@ -312,7 +318,7 @@ export const useFormio = <
 export const getUseFormio = <
   T extends Record<string, UserFieldValue>,
   M extends {
-    [K in keyof T]?: (value: T[K]) => any;
+    [K in keyof T]?: (value: T[K], state: T) => any;
   }
 >(
   initStateArg: T,
