@@ -59,7 +59,7 @@ export const useFormio = <
   T extends Record<string, UserFieldValue>,
   // metadata may be object, or function: MaybeFunction<any>
   M extends {
-    [K in keyof T]?: (value: T[K]) => any;
+    [K in keyof T]?: (value: T[K], state: T) => any;
   }
 >(
   initStateArg: T,
@@ -72,11 +72,11 @@ export const useFormio = <
   },
   stateSchema?: {
     [K in keyof T]?: {
-      shouldChangeValue?: (newValue: T[K], prevState: T) => boolean;
+      shouldChangeValue?: (newValue: T[K], prevState: T, metadata: ReturnType<M[K]>) => boolean;
       validator?: (
         value: T[K],
         state: T,
-        metadata?: ReturnType<M[K]>
+        metadata: ReturnType<M[K]>
       ) => MaybePromise<UserFormError>;
     };
   }
@@ -86,12 +86,6 @@ export const useFormio = <
   const [formState, setFormState, getFormState] = _useAsyncState(
     convertInitStateToFormState(initState)
   );
-
-  const getMetadata = (a: { key: keyof T; value: T[keyof T] }) => {
-    // const prevFormState = await getFormState();
-    // , prevFormState.values
-    return extraConfig?.metadata?.[a.key]?.(a.value);
-  };
 
   const getFormInputErrors = (
     key: keyof T,
@@ -103,9 +97,9 @@ export const useFormio = <
     let userErrorsPromisedMaybe: MaybePromise<UserFormError>;
 
     if (schemaDef?.validator) {
-      const value = currFormState.values[key];
       const state = currFormState.values;
-      const metadata = extraConfig?.metadata?.[key]?.(value);
+      const value = state[key];
+      const metadata = extraConfig?.metadata?.[key]?.(value, state);
       userErrorsPromisedMaybe = schemaDef?.validator(value, state, metadata) ?? [];
     } else {
       // we want to be sure that empty array pointer is not override with new empty array pointer
@@ -142,11 +136,15 @@ export const useFormio = <
       const set = useCallback(
         (userValue: any | ((prevState: any) => any)) => {
           setFormState(prevFormState => {
+            const metadata = extraConfig?.metadata?.[key]?.(value, formState.values);
+
             const schemaDef = stateSchema?.[key];
             const newValue =
               userValue instanceof Function ? userValue(prevFormState.values[key]) : userValue;
 
-            if (schemaDef?.shouldChangeValue?.(newValue, prevFormState.values) === false) {
+            if (
+              schemaDef?.shouldChangeValue?.(newValue, prevFormState.values, metadata) === false
+            ) {
               return prevFormState;
             }
 
@@ -204,7 +202,7 @@ export const useFormio = <
       const getMetadata = useCallback(async () => {
         const currFormState = await getFormState();
 
-        return extraConfig?.metadata?.[key]?.(currFormState.values[key]);
+        return extraConfig?.metadata?.[key]?.(currFormState.values[key], currFormState.values);
       }, []);
 
       return useMemo(
@@ -217,7 +215,7 @@ export const useFormio = <
           setErrors,
           getValue,
           // this fn needs to be inside useMemo, because it is not stable
-          metadata: extraConfig?.metadata?.[key]?.(value),
+          metadata: extraConfig?.metadata?.[key]?.(value, formState.values),
           getMetadata: getMetadata
         }),
         [value, errors, isValidating, set, validate, setErrors, getValue]
@@ -323,8 +321,12 @@ export const getUseFormio = <
   },
   stateSchema?: {
     [K in keyof T]?: {
-      shouldChangeValue?: (newValue: T[K], prevState: T) => boolean;
-      validator?: (value: T[K], state: T) => MaybePromise<UserFormError>;
+      shouldChangeValue?: (newValue: T[K], prevState: T, metadata: ReturnType<M[K]>) => boolean;
+      validator?: (
+        value: T[K],
+        state: T,
+        metadata: ReturnType<M[K]>
+      ) => MaybePromise<UserFormError>;
     };
   }
 ) => (

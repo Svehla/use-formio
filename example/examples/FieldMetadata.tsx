@@ -2,9 +2,12 @@ import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { useFormio } from "../../dist";
 
-const minMaxUtil = (value, metadata) => [
-  value.length > metadata.max ? "max len is " + metadata.max : undefined,
-  value.length < metadata.min ? "min len is " + metadata.min : undefined
+const minMaxUtil = (
+  value: string,
+  metadata: { minLen: number; maxLen: number }
+): (string | undefined)[] => [
+  value.length > metadata.maxLen ? "max len is " + metadata.maxLen : undefined,
+  value.length < metadata.minLen ? "min len is " + metadata.minLen : undefined
 ];
 
 export const FieldMetadata = () => {
@@ -16,25 +19,32 @@ export const FieldMetadata = () => {
     },
     {
       metadata: {
-        firstName: val => ({
-          label: "first name" + val,
-          min: 10,
-          max: 500
+        firstName: (val, state) => ({
+          label: "first name: " + val,
+          minLen: 10,
+          maxLen: 500
+
+          // TODO: create isActive abstraction for: skipping validation if not active
+          // isActive: state.lastName === "333"
         }),
 
-        lastName: val =>
+        lastName: () =>
           ({
             label: "last name",
-            min: 2,
-            max: 3
+            minLen: 2,
+            maxLen: 3
           } as const)
       } as const
     },
 
+    // TODO: add ignore, if metadata.isActive === false object high-order decorator
     {
       firstName: {
         validator: (value, _state, metadata) => {
           return minMaxUtil(value, metadata);
+        },
+        shouldChangeValue: (_value, _state, metadata) => {
+          return metadata.label !== "first name: deadlock";
         }
       },
       lastName: {
@@ -51,9 +61,6 @@ export const FieldMetadata = () => {
       <form
         onSubmit={async e => {
           e.preventDefault();
-
-          console.log("a");
-
           // change value afterSubmit
           f.firstName.set(p => p + "added");
           const currentFirstNameMetadata = await f.firstName.getMetadata();
@@ -73,7 +80,7 @@ export const FieldMetadata = () => {
         <div>
           <div>
             Used characters: {f.firstName.value.length} / Min:
-            {f.firstName.metadata.min} / Max: {f.firstName.metadata.max}
+            {f.firstName.metadata.minLen} / Max: {f.firstName.metadata.maxLen}
           </div>
         </div>
 
@@ -89,7 +96,7 @@ export const FieldMetadata = () => {
         <div>
           <div>
             Used characters: {f.lastName.value.length} / Min:
-            {f.lastName.metadata.min} / Max: {f.lastName.metadata.max}
+            {f.lastName.metadata.minLen} / Max: {f.lastName.metadata.maxLen}
           </div>
         </div>
 
