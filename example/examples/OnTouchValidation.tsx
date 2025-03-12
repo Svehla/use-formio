@@ -19,6 +19,7 @@ export const OnTouchValidation = () => {
       firstName: "",
       lastName: ""
     },
+    {},
     {
       firstName: { validator: minLength10 },
       lastName: { validator: minLength10 }

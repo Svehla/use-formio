@@ -7,6 +7,7 @@ describe("getUseFormio.test", () => {
       {
         str1: "str1"
       },
+      {},
       {
         str1: { validator: v => (v.length === 0 ? "field is required" : undefined) }
       }
@@ -37,6 +38,7 @@ describe("getUseFormio.test", () => {
         {
           str1: "str1"
         },
+        {},
         {
           // unstable pointer validator
           str1: { validator: v => (v.length === 0 ? "field is required" : undefined) }
@@ -64,6 +66,7 @@ describe("getUseFormio.test", () => {
         str1: "str1",
         str2: ""
       },
+      {},
       {
         str1: { validator: v => (v.length === 0 ? "field is required" : undefined) }
       }
@@ -73,6 +76,7 @@ describe("getUseFormio.test", () => {
         {
           str2: "default value"
         },
+        {},
         {
           str2: {
             validator: (v, s) => (v === s.str1 ? "ERROR" : undefined)

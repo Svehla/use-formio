@@ -22,6 +22,7 @@ describe("useFormio", () => {
         {
           str1: "str1"
         },
+        {},
         {
           str1: {
             validator: v => (v === "xxx" ? "ERR" : undefined)
@@ -80,6 +81,7 @@ describe("useFormio", () => {
           str1: "str1",
           str2: "str2"
         },
+        {},
         {
           str1: {
             validator: (v, state) => (state.str2 === "xxx" && v === "xxx" ? "ERR" : undefined)
@@ -103,6 +105,7 @@ describe("useFormio", () => {
         {
           str1: "str1"
         },
+        {},
         {
           str1: {
             validator: (v, state) => (state.str1 === "xxx" ? ["ERROR!!!"] : [])
@@ -125,6 +128,7 @@ describe("useFormio", () => {
         {
           str1: "str1"
         },
+        {},
         {
           str1: {
             validator: () => Promise.resolve(undefined)
@@ -146,6 +150,7 @@ describe("useFormio", () => {
         {
           str1: "str1"
         },
+        {},
         {
           str1: {
             validator: () => Promise.resolve(["ERR"])
@@ -192,6 +197,7 @@ describe("useFormio", () => {
         {
           str1: "str1"
         },
+        {},
         {
           str1: {
             validator: v => (v === "e" ? "error" : [])
@@ -219,6 +225,7 @@ describe("useFormio", () => {
         {
           str1: "str1"
         },
+        {},
         {
           str1: {
             validator: v => (v === "e" ? "error" : [])
@@ -344,6 +351,7 @@ describe("useFormio", () => {
             str1: "str1",
             str2: "str1"
           },
+          {},
           {
             str1: { validator: stableMinLen2 },
             str2: { validator: stableMinLen2 }
@@ -378,6 +386,7 @@ describe("useFormio", () => {
           str1: "str1",
           str2: "str1"
         },
+        {},
         {
           str1: { validator: stableMinLen2 },
           str2: { validator: stableMinLen2 }
@@ -411,6 +420,7 @@ describe("useFormio", () => {
           str1: "str1",
           str2: "str1"
         },
+        {},
         {
           str1: { validator: stableMinLen2 },
           str2: { validator: stableMinLen2 }
@@ -439,12 +449,9 @@ describe("useFormio", () => {
     const stableMinLen2 = (v: string) => (v.length < 2 ? "error" : undefined);
 
     const { result } = renderHook(() =>
-      useFormio(
-        {
-          str1: "str1"
-        },
-        {}
-      )
+      useFormio({
+        str1: "str1"
+      })
     );
 
     await act(async () => {

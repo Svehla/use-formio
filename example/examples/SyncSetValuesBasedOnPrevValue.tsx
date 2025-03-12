@@ -8,6 +8,7 @@ export const SyncSetValuesBasedOnPrevValue = () => {
       ID: "",
       amount: 0
     },
+    {},
     {
       ID: {
         validator: value => (value === "xxx" ? "ID cannot has value xxx" : undefined)

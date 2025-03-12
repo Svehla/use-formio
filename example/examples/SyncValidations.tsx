@@ -9,6 +9,7 @@ export const SyncValidations = () => {
       age: "",
       isVerified: false
     },
+    {},
     {
       firstName: {
         validator: value => [

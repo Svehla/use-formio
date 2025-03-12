@@ -36,6 +36,7 @@ export const Example = () => {
       firstName: "",
       lastName: ""
     },
+    {},
     {
       firstName: {
         validator: value => [

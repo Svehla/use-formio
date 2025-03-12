@@ -60,6 +60,7 @@ const DynamicUserForm = (props: {
       firstName: "",
       lastName: ""
     },
+    {},
     {
       firstName: { validator: isRequired },
       lastName: { validator: isRequired }

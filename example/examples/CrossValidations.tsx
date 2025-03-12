@@ -9,6 +9,7 @@ export const CrossValidations = () => {
       parentID: "",
       age: "15"
     },
+    {},
     {
       parentID: {
         validator: (value, state) => {

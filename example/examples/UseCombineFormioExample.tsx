@@ -12,6 +12,7 @@ export const UseCombineFormioExample = () => {
         firstName: "",
         lastName: ""
       },
+      {},
       {
         firstName: { validator: isRequired },
         lastName: { validator: isRequired }
@@ -22,6 +23,7 @@ export const UseCombineFormioExample = () => {
         age: "",
         id: ""
       },
+      {},
       {
         age: { validator: isRequired },
         id: { validator: isRequired }

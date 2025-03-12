@@ -10,6 +10,7 @@ export const AsyncValidations = () => {
       firstName: "",
       lastName: ""
     },
+    {},
     {
       firstName: {
         validator: async () => {

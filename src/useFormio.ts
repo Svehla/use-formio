@@ -5,6 +5,8 @@ const { getStableObjectValues, mapObjectValues, notNullable, promiseAllObjectVal
 
 type MaybePromise<T> = T | Promise<T>;
 
+type ReturnType<T> = T extends (...args: any[]) => infer R ? R : T;
+
 // TODO: add docs how to handle useCallbacks with just stable `set` pointers
 export const _useAsyncState = <T>(defaultState: T) => {
   const [state, _setState] = useState(defaultState);
@@ -39,7 +41,7 @@ type UserFormError = (string | null | undefined | string)[] | undefined | string
 
 type UserFieldValue = string | boolean | number | null | undefined | any;
 
-export type Field<T> = {
+export type Field<T, Metadata = any> = {
   value: T;
   errors: string[];
   isValidating: boolean;
@@ -47,15 +49,35 @@ export type Field<T> = {
   validate: () => Promise<[boolean, string[]]>;
   setErrors: (newErrors: string[] | ((prevState: string[]) => string[])) => void;
   getValue: () => Promise<T>;
+  metadata: Metadata;
+  getMetadata: () => Promise<Metadata>;
 };
 
 // TODO: what about race-condition while doing async validation and setting new a value?
-export const useFormio = <T extends Record<string, UserFieldValue>>(
+export const useFormio = <
+  //
+  T extends Record<string, UserFieldValue>,
+  // metadata may be object, or function: MaybeFunction<any>
+  M extends {
+    [K in keyof T]?: (value: T[K]) => any;
+  }
+>(
   initStateArg: T,
+
+  // this config cant be inside stateSchema,
+  // because inferring data from obj value to another obj value is not possible
+  // wrapping with extraConfig to keep it future proof
+  extraConfig?: {
+    metadata?: M;
+  },
   stateSchema?: {
     [K in keyof T]?: {
       shouldChangeValue?: (newValue: T[K], prevState: T) => boolean;
-      validator?: (value: T[K], state: T) => MaybePromise<UserFormError>;
+      validator?: (
+        value: T[K],
+        state: T,
+        metadata?: ReturnType<M[K]>
+      ) => MaybePromise<UserFormError>;
     };
   }
 ) => {
@@ -64,6 +86,12 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
   const [formState, setFormState, getFormState] = _useAsyncState(
     convertInitStateToFormState(initState)
   );
+
+  const getMetadata = (a: { key: keyof T; value: T[keyof T] }) => {
+    // const prevFormState = await getFormState();
+    // , prevFormState.values
+    return extraConfig?.metadata?.[a.key]?.(a.value);
+  };
 
   const getFormInputErrors = (
     key: keyof T,
@@ -75,8 +103,10 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     let userErrorsPromisedMaybe: MaybePromise<UserFormError>;
 
     if (schemaDef?.validator) {
-      userErrorsPromisedMaybe =
-        schemaDef?.validator(currFormState.values[key], currFormState.values) ?? [];
+      const value = currFormState.values[key];
+      const state = currFormState.values;
+      const metadata = extraConfig?.metadata?.[key]?.(value);
+      userErrorsPromisedMaybe = schemaDef?.validator(value, state, metadata) ?? [];
     } else {
       // we want to be sure that empty array pointer is not override with new empty array pointer
       return [true, () => Promise.resolve(prevErrors)];
@@ -171,6 +201,12 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
         return currFormState.values[key];
       }, []);
 
+      const getMetadata = useCallback(async () => {
+        const currFormState = await getFormState();
+
+        return extraConfig?.metadata?.[key]?.(currFormState.values[key]);
+      }, []);
+
       return useMemo(
         () => ({
           value,
@@ -179,7 +215,10 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
           set,
           validate,
           setErrors,
-          getValue
+          getValue,
+          // this fn needs to be inside useMemo, because it is not stable
+          metadata: extraConfig?.metadata?.[key]?.(value),
+          getMetadata: getMetadata
         }),
         [value, errors, isValidating, set, validate, setErrors, getValue]
       );
@@ -189,11 +228,7 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
     // for the all react useCallback hooks
     { stableKeyOrder: true }
   ) as {
-    [K in keyof T]: {
-      // redundant nested cycle to unwrap on hover typescript hint in the IDE
-      // `[K in keyof T]: Field<T[K]>` will be effective enough but with less nice TS hints
-      [KK in keyof Field<T[K]>]: Field<T[K]>[KK];
-    };
+    [K in keyof T]: Field<T[K], ReturnType<M[K]>>;
   };
 
   const validate = useCallback(
@@ -276,8 +311,16 @@ export const useFormio = <T extends Record<string, UserFieldValue>>(
  * TODO: add documentation
  * don't recreate redundant object every render cycle
  */
-export const getUseFormio = <T extends Record<string, UserFieldValue>>(
+export const getUseFormio = <
+  T extends Record<string, UserFieldValue>,
+  M extends {
+    [K in keyof T]?: (value: T[K]) => any;
+  }
+>(
   initStateArg: T,
+  extraConfig?: {
+    metadata?: M;
+  },
   stateSchema?: {
     [K in keyof T]?: {
       shouldChangeValue?: (newValue: T[K], prevState: T) => boolean;
@@ -286,12 +329,17 @@ export const getUseFormio = <T extends Record<string, UserFieldValue>>(
   }
 ) => (
   overrideInitStateArg = {} as Partial<T>,
+  overrideExtraConfig = {} as typeof extraConfig,
   overrideInitStateSchema = {} as typeof stateSchema
 ) =>
   useFormio(
     {
       ...initStateArg,
       ...overrideInitStateArg
+    },
+    {
+      ...extraConfig,
+      ...(overrideExtraConfig as any)
     },
     {
       ...stateSchema,

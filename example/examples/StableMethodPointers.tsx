@@ -16,6 +16,7 @@ export const StableMethodPointers = () => {
       firstName: "",
       lastName: ""
     },
+    {},
     {
       firstName: { validator: isRequired },
       lastName: { validator: isRequired }

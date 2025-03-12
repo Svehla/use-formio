@@ -33,7 +33,9 @@ import { raw_CustomFormSchemaFramework } from "./__generated_examples__/CustomFo
 import { raw_DebouncedInput } from "./__generated_examples__/DebouncedInput";
 import { raw_InputConstrains } from "./__generated_examples__/InputConstrains";
 // eslint-disable-next-line max-len
+import { FieldMetadata } from "./examples/FieldMetadata";
 import { raw_DynamicForms } from "./__generated_examples__/DynamicForms";
+import { raw_FieldMetadata } from "./__generated_examples__/FieldMetadata";
 import { raw_OnTouchValidation } from "./__generated_examples__/OnTouchValidation";
 import { raw_OptimizedObjectRecreating } from "./__generated_examples__/OptimizedObjectRecreating";
 import { raw_RevertToInitState } from "./__generated_examples__/RevertToInitState";
@@ -54,6 +56,12 @@ const examples = {
       githubFileName: "SyncValidations",
       Comp: SyncValidations,
       code: raw_SyncValidations
+    },
+    {
+      title: "Field Metadata",
+      githubFileName: "FieldMetadata",
+      Comp: FieldMetadata,
+      code: raw_FieldMetadata
     },
     {
       title: "Async validations",
