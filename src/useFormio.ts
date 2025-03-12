@@ -55,9 +55,7 @@ export type Field<T, Metadata = any> = {
 
 // TODO: what about race-condition while doing async validation and setting new a value?
 export const useFormio = <
-  //
   T extends Record<string, UserFieldValue>,
-  // metadata may be object, or function: MaybeFunction<any>
   M extends {
     [K in keyof T]?: (value: T[K], state: T) => any;
   }
@@ -347,7 +345,7 @@ export const getUseFormio = <
     },
     {
       ...extraConfig,
-      ...(overrideExtraConfig as any)
+      ...overrideExtraConfig
     },
     {
       ...stateSchema,

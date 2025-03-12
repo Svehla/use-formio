@@ -2,8 +2,7 @@ import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { Field, useFormio } from "../../dist";
 
-// ------------------------ utils --------------------------------
-
+// Simple validation utility for min/max length
 const minMaxUtil = (
   value: string,
   metadata: { minLen: number; maxLen: number }
@@ -12,104 +11,38 @@ const minMaxUtil = (
   value.length < metadata.minLen ? "min len is " + metadata.minLen : undefined
 ];
 
-// Higher-order function to validate only if metadata.isActive is true
-const validateOnlyIfActive = <T,>(validationSchema: T): T => {
-  const newSchema = { ...validationSchema };
-
-  for (const key in newSchema) {
-    // @ts-expect-error
-    if (newSchema[key].validator) {
-      // @ts-expect-error
-      const originalValidator = newSchema[key].validator;
-      // @ts-expect-error
-      newSchema[key].validator = (value: any, state: any, metadata: any) => {
-        if (metadata.isActive === false) {
-          return undefined;
-        }
-        return originalValidator(value, state, metadata);
-      };
-    }
-  }
-
-  return newSchema;
-};
-
-// ------------------------ ----- --------------------------------
-
-const options = ["user", "company"] as const;
-
 export const FieldMetadata = () => {
   const form = useFormio(
     {
-      type: "user" as typeof options[number],
-      user_firstName: "",
-      user_lastName: "",
-      company_name: "",
-      company_address: "",
-      isOk: true
+      firstName: "",
+      lastName: ""
     },
     {
       metadata: {
-        type: () => ({
-          label: "type",
-          options: options
+        firstName: () => ({
+          label: "First name",
+          minLen: 3,
+          maxLen: 10
         }),
-
-        // return rerender deps: [val, state.type] somehow :thinking:
-        user_firstName: (val, state) => ({
-          // return deps:
-          label: "first name: " + val,
-          isActive: state.type === "user",
-          minLen: 10,
-          maxLen: 500
-        }),
-
-        user_lastName: (val, state) =>
-          ({
-            label: "last name",
-            isActive: state.type === "user",
-            minLen: 2,
-            maxLen: 3
-          } as const),
-
-        company_name: (val, state) => ({
-          label: "company name",
-          isActive: state.type === "company",
+        lastName: () => ({
+          label: "Last name",
           minLen: 2,
-          maxLen: 3
-        }),
-
-        company_address: (val, state) => ({
-          label: "company address",
-          isActive: state.type === "company",
-          minLen: 2,
-          maxLen: 3
+          maxLen: 15
         })
-      } as const
+      }
     },
-
-    // TODO: add ignore, if metadata.isActive === false object high-order decorator
-    // validateOnlyIfMetadataIsActive: true
-    validateOnlyIfActive({
-      type: {
-        validator: (value, _state, metadata) => {
-          return metadata.options.includes(value) ? undefined : "invalid option";
-        }
-      },
-      user_firstName: {
+    {
+      firstName: {
         validator: (value, _state, metadata) => {
           return minMaxUtil(value, metadata);
-        },
-        shouldChangeValue: (_value, _state, metadata) => {
-          return metadata.label !== "first name: deadlock";
         }
       },
-      user_lastName: {
+      lastName: {
         validator: (value, _state, metadata) => {
           return minMaxUtil(value, metadata);
         }
       }
-    })
+    }
   );
 
   const f = form.fields;
@@ -119,43 +52,14 @@ export const FieldMetadata = () => {
       <form
         onSubmit={async e => {
           e.preventDefault();
-          // change value afterSubmit
-          f.user_firstName.set(p => p + "added");
-          const currentFirstNameMetadata = await f.user_firstName.getMetadata();
-          console.log("currentFirstNameMetadata", currentFirstNameMetadata);
-
           const [isValid] = await form.validate();
           if (isValid) alert("form is valid");
         }}
       >
-        <div>
-          <label>{f.type.metadata.label}</label>
-          <select
-            onChange={e =>
-              f.type.set(
-                // @ts-expect-error
-                e.target.value
-              )
-            }
-            value={f.type.value}
-          >
-            <option value="" disabled>
-              Please select
-            </option>
-            {options.map(option => (
-              <option key={option} value={option}>
-                Option {option}
-              </option>
-            ))}
-          </select>
-        </div>
+        <FormField {...f.firstName} />
+        <FormField {...f.lastName} />
 
-        {f.user_firstName.metadata.isActive && <FormField {...f.user_firstName} />}
-        {f.user_lastName.metadata.isActive && <FormField {...f.user_lastName} />}
-        {f.company_name.metadata.isActive && <FormField {...f.company_name} />}
-        {f.company_address.metadata.isActive && <FormField {...f.company_address} />}
-
-        <button type="submit">submit</button>
+        <button type="submit">Submit</button>
 
         <div style={{ color: "red" }}>
           {Object.entries(f).map(

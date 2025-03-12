@@ -42,6 +42,8 @@ import { raw_RevertToInitState } from "./__generated_examples__/RevertToInitStat
 import { raw_StableMethodPointers } from "./__generated_examples__/StableMethodPointers";
 import { raw_ThrottledCallToServer } from "./__generated_examples__/ThrottledCallToServer";
 // eslint-disable-next-line max-len
+import { AdvancedFieldMetadataValidations } from "./examples/AdvancedFieldMetadataValidations";
+import { raw_AdvancedFieldMetadataValidations } from "./__generated_examples__/AdvancedFieldMetadataValidations";
 import { raw_SyncSetValuesBasedOnPrevValue } from "./__generated_examples__/SyncSetValuesBasedOnPrevValue";
 import { raw_SyncValidations } from "./__generated_examples__/SyncValidations";
 import { raw_UncontrolledInput } from "./__generated_examples__/UncontrolledInput";
@@ -136,6 +138,12 @@ const examples = {
       githubFileName: "OptimizedObjectRecreating",
       Comp: OptimizedObjectRecreating,
       code: raw_OptimizedObjectRecreating
+    },
+    {
+      title: "Advanced field metadata validations",
+      githubFileName: "AdvancedFieldMetadataValidations",
+      Comp: AdvancedFieldMetadataValidations,
+      code: raw_AdvancedFieldMetadataValidations
     },
     {
       title: "Custom form schema framework",
