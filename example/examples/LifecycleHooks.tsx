@@ -6,30 +6,38 @@ export const LifecycleHooks = () => {
   const form = useFormio(
     {
       ID: "",
-      age: ""
+      age: 0
     },
     {
       metadata: {
-        ID: () => ({
-          label: "ID"
-        }),
-        age: () => ({
-          label: "Age"
-        })
-      }
-    },
-    {
-      ID: {
-        hookAfterSet: (value, state, { metadata }) => {
-          console.log("hookAfterSet", metadata.label, value, state);
+        ID: () =>
+          ({
+            label: "ID"
+          } as const),
+        age: () =>
+          ({
+            label: "Age"
+          } as const)
+      },
+      globalHooks: {
+        afterSet: (key, value, state) => {
+          console.log("globalHookAfterSet", key, value, state);
         }
       },
-      age: {
-        hookAfterSet: (value, state, { metadata }) => {
-          console.log("hookAfterSet", metadata.label, value, state);
+      hooks: {
+        ID: {
+          afterSet: (value, state, { metadata }) => {
+            console.log("hookAfterSet", metadata.label, value, state);
+          }
+        },
+        age: {
+          afterSet: (value, state, { metadata }) => {
+            console.log("hookAfterSet", metadata.label, value, state);
+          }
         }
       }
-    }
+    },
+    {}
   );
 
   const f = form.fields;
@@ -47,7 +55,11 @@ export const LifecycleHooks = () => {
         <input type="text" onChange={e => f.ID.set(e.target.value)} value={f.ID.value} />
         <div className="input-error">{f.ID.errors.join(",")}</div>
         <label>age</label>
-        <input type="text" onChange={e => f.age.set(e.target.value)} value={f.age.value} />
+        <input
+          type="number"
+          onChange={e => f.age.set(Number(e.target.value))}
+          value={f.age.value}
+        />
         <div className="input-error">{f.age.errors.join(",")}</div>
         <button type="submit">Submit</button>
       </form>

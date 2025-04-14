@@ -67,6 +67,14 @@ export const useFormio = <
   // wrapping with extraConfig to keep it future proof
   extraConfig?: {
     metadata?: M;
+    hooks?: {
+      [K in keyof T]?: {
+        afterSet?: (value: T[K], state: T, extra: { metadata: ReturnType<M[K]> }) => void;
+      };
+    };
+    globalHooks?: {
+      afterSet?: <K extends keyof T>(key: K, value: T[K], state: T) => void;
+    };
   },
   stateSchema?: {
     [K in keyof T]?: {
@@ -76,7 +84,6 @@ export const useFormio = <
         state: T,
         metadata: ReturnType<M[K]>
       ) => MaybePromise<UserFormError>;
-      hookAfterSet?: (value: T[K], state: T, extra: { metadata: ReturnType<M[K]> }) => void;
     };
   }
 ) => {
@@ -154,7 +161,8 @@ export const useFormio = <
                 ? prevFormState.errors
                 : { ...prevFormState.errors, [key]: [] };
 
-            stateSchema?.[key]?.hookAfterSet?.(newValue, values, { metadata });
+            extraConfig?.hooks?.[key]?.afterSet?.(newValue, values, { metadata });
+            extraConfig?.globalHooks?.afterSet?.(key, newValue, values);
 
             return {
               ...prevFormState,
