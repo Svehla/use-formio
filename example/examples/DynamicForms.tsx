@@ -2,23 +2,21 @@ import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
 import { useCombineFormio, useFormio } from "../../dist";
 
-// HACK: useCombineFormio is not hook!!!! (at the moment) xd
-const combineFormio = useCombineFormio;
-
 export const isRequired = (value: string) =>
   value.trim() === "" ? "Field is required" : undefined;
 
 export const DynamicForms = () => {
   const [formsKeys, setFormsKeys] = React.useState(["1", "2"]);
   const formsRefs = React.useRef<Record<string, any>>({});
+  const forms = useCombineFormio(
+    Object.fromEntries(Object.entries(formsRefs.current).map(([k, v]) => [k, v.current]))
+  );
 
   return (
     <div>
       <form
         onSubmit={async e => {
-          const combinedForms1 = combineFormio(
-            Object.fromEntries(Object.entries(formsRefs.current).map(([k, v]) => [k, v.current]))
-          );
+          const combinedForms1 = forms;
           e.preventDefault();
           const [isValid] = await combinedForms1.validate();
           if (isValid) alert("form is valid");

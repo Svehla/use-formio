@@ -43,7 +43,10 @@ import { raw_StableMethodPointers } from "./__generated_examples__/StableMethodP
 import { raw_ThrottledCallToServer } from "./__generated_examples__/ThrottledCallToServer";
 // eslint-disable-next-line max-len
 import { AdvancedFieldMetadataValidations } from "./examples/AdvancedFieldMetadataValidations";
+import { LifecycleHooks } from "./examples/LifecycleHooks";
+// eslint-disable-next-line max-len
 import { raw_AdvancedFieldMetadataValidations } from "./__generated_examples__/AdvancedFieldMetadataValidations";
+// eslint-disable-next-line max-len
 import { raw_SyncSetValuesBasedOnPrevValue } from "./__generated_examples__/SyncSetValuesBasedOnPrevValue";
 import { raw_SyncValidations } from "./__generated_examples__/SyncValidations";
 import { raw_UncontrolledInput } from "./__generated_examples__/UncontrolledInput";
@@ -93,6 +96,12 @@ const examples = {
       title: "Use combine formio example",
       githubFileName: "UseCombineFormioExample",
       Comp: UseCombineFormioExample,
+      code: raw_UseCombineFormioExample
+    },
+    {
+      title: "Use after set hook",
+      githubFileName: "LifecycleHooks",
+      Comp: LifecycleHooks,
       code: raw_UseCombineFormioExample
     },
     {

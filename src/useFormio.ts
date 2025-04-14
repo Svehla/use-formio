@@ -76,6 +76,7 @@ export const useFormio = <
         state: T,
         metadata: ReturnType<M[K]>
       ) => MaybePromise<UserFormError>;
+      hookAfterSet?: (value: T[K], state: T, extra: { metadata: ReturnType<M[K]> }) => void;
     };
   }
 ) => {
@@ -134,15 +135,14 @@ export const useFormio = <
       const set = useCallback(
         (userValue: any | ((prevState: any) => any)) => {
           setFormState(prevFormState => {
-            const metadata = extraConfig?.metadata?.[key]?.(value, formState.values);
-
             const schemaDef = stateSchema?.[key];
             const newValue =
               userValue instanceof Function ? userValue(prevFormState.values[key]) : userValue;
 
-            if (
-              schemaDef?.shouldChangeValue?.(newValue, prevFormState.values, metadata) === false
-            ) {
+            const values = { ...prevFormState.values, [key]: newValue };
+            const metadata = extraConfig?.metadata?.[key]?.(newValue, values);
+
+            if (schemaDef?.shouldChangeValue?.(newValue, values, metadata) === false) {
               return prevFormState;
             }
 
@@ -154,9 +154,11 @@ export const useFormio = <
                 ? prevFormState.errors
                 : { ...prevFormState.errors, [key]: [] };
 
+            stateSchema?.[key]?.hookAfterSet?.(newValue, values, { metadata });
+
             return {
               ...prevFormState,
-              values: { ...prevFormState.values, [key]: newValue },
+              values,
               errors: newErrors
             };
           });
