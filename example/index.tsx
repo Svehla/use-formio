@@ -47,6 +47,7 @@ import { LifecycleHooks } from "./examples/LifecycleHooks";
 // eslint-disable-next-line max-len
 import { raw_AdvancedFieldMetadataValidations } from "./__generated_examples__/AdvancedFieldMetadataValidations";
 // eslint-disable-next-line max-len
+import { raw_LifecycleHooks } from "./__generated_examples__/LifecycleHooks";
 import { raw_SyncSetValuesBasedOnPrevValue } from "./__generated_examples__/SyncSetValuesBasedOnPrevValue";
 import { raw_SyncValidations } from "./__generated_examples__/SyncValidations";
 import { raw_UncontrolledInput } from "./__generated_examples__/UncontrolledInput";
@@ -99,10 +100,10 @@ const examples = {
       code: raw_UseCombineFormioExample
     },
     {
-      title: "Use after set hook",
+      title: "Use lifecycle hook",
       githubFileName: "LifecycleHooks",
       Comp: LifecycleHooks,
-      code: raw_UseCombineFormioExample
+      code: raw_LifecycleHooks
     },
     {
       title: "Sync set valuesBased on prev value",
