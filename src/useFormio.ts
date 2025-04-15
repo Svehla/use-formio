@@ -138,6 +138,9 @@ export const useFormio = <
       const isValidating = formState.isValidating[key];
       const shouldChangeValue = stateSchema?.[key]?.shouldChangeValue;
       const validator = stateSchema?.[key]?.validator;
+      const afterSetHook = extraConfig?.hooks?.[key]?.afterSet;
+      const globalAfterSetHook = extraConfig?.globalHooks?.afterSet;
+      const getMetadataPointer = extraConfig?.metadata?.[key];
 
       const set = useCallback(
         (userValue: any | ((prevState: any) => any)) => {
@@ -147,7 +150,7 @@ export const useFormio = <
               userValue instanceof Function ? userValue(prevFormState.values[key]) : userValue;
 
             const values = { ...prevFormState.values, [key]: newValue };
-            const metadata = extraConfig?.metadata?.[key]?.(newValue, values);
+            const metadata = getMetadataPointer?.(newValue, values);
 
             if (schemaDef?.shouldChangeValue?.(newValue, values, metadata) === false) {
               return prevFormState;
@@ -171,7 +174,7 @@ export const useFormio = <
             };
           });
         },
-        [shouldChangeValue]
+        [shouldChangeValue, afterSetHook, globalAfterSetHook, getMetadataPointer]
       );
 
       const validate = useCallback(async () => {
@@ -210,8 +213,8 @@ export const useFormio = <
       const getMetadata = useCallback(async () => {
         const currFormState = await getFormState();
 
-        return extraConfig?.metadata?.[key]?.(currFormState.values[key], currFormState.values);
-      }, []);
+        return getMetadataPointer?.(currFormState.values[key], currFormState.values);
+      }, [getMetadataPointer]);
 
       // TODO: fix stable pointer for metadata
       // 1. make stable pointer for metadata via removing requirement of functions...
