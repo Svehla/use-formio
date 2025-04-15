@@ -20,8 +20,10 @@ export const LifecycleHooks = () => {
           } as const)
       },
       globalHooks: {
-        afterSet: (key, value, state) => {
+        afterSet: async (key, value, state) => {
+          const allData = await form.getFormValues();
           console.log("globalHookAfterSet", key, value, state);
+          console.log(allData);
         }
       },
       hooks: {

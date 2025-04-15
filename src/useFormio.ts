@@ -164,8 +164,12 @@ export const useFormio = <
                 ? prevFormState.errors
                 : { ...prevFormState.errors, [key]: [] };
 
-            extraConfig?.hooks?.[key]?.afterSet?.(newValue, values, { metadata });
-            extraConfig?.globalHooks?.afterSet?.(key, newValue, values);
+            setTimeout(() => {
+              // wait one tick, to have the latest sequence of react callback registered
+              // and it enable to await getFormState() work
+              extraConfig?.hooks?.[key]?.afterSet?.(newValue, values, { metadata });
+              extraConfig?.globalHooks?.afterSet?.(key, newValue, values);
+            }, 0);
 
             return {
               ...prevFormState,
