@@ -81,7 +81,7 @@ export const useFormio = <
       shouldChangeValue?: (newValue: T[K], prevState: T, metadata: ReturnType<M[K]>) => boolean;
       validator?: (
         value: T[K],
-        state: T,
+        values: T,
         metadata: ReturnType<M[K]>
       ) => MaybePromise<UserFormError>;
     };
@@ -103,10 +103,10 @@ export const useFormio = <
     let userErrorsPromisedMaybe: MaybePromise<UserFormError>;
 
     if (schemaDef?.validator) {
-      const state = currFormState.values;
-      const value = state[key];
-      const metadata = extraConfig?.metadata?.[key]?.(value, state);
-      userErrorsPromisedMaybe = schemaDef?.validator(value, state, metadata) ?? [];
+      const values = currFormState.values;
+      const value = values[key];
+      const metadata = extraConfig?.metadata?.[key]?.(value, values);
+      userErrorsPromisedMaybe = schemaDef?.validator(value, values, metadata) ?? [];
     } else {
       // we want to be sure that empty array pointer is not override with new empty array pointer
       return [true, () => Promise.resolve(prevErrors)];
@@ -345,7 +345,7 @@ export const getUseFormio = <
       shouldChangeValue?: (newValue: T[K], prevState: T, metadata: ReturnType<M[K]>) => boolean;
       validator?: (
         value: T[K],
-        state: T,
+        values: T,
         metadata: ReturnType<M[K]>
       ) => MaybePromise<UserFormError>;
     };
