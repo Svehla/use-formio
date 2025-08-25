@@ -36,7 +36,7 @@ export const useCombineFormio = <T extends Record<string, any>>(forms: T) => {
 
   const isValidating = Object.values(forms)
     .map(i => i.isValidating)
-    .every(i => i);
+    .some(i => i);
   const isValid = Object.values(forms)
     .map(i => i.isValid)
     .every(i => i);
