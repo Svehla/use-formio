@@ -21,20 +21,32 @@ import { expect, test, type Page } from "@playwright/test";
 
 const CPU_THROTTLE_RATE = 4;
 
+/**
+ * Time budgets are calibrated on an Apple-silicon laptop (~2x the measured value). Shared CI
+ * runners are 2-4x slower and noisier, so CI sets `PERF_BUDGET_SCALE` (see .github/workflows/
+ * e2e.yml) to widen only the time-based budgets. Structural assertions - zero long tasks once
+ * idle, zero DOM mutations outside the edited section, the gzip size, no highlighter runtime in
+ * the bundle - are never scaled.
+ */
+// the example tsconfig has no @types/node (see playwright.config.ts for the same trick)
+declare const process: { env: Record<string, string | undefined> };
+const BUDGET_SCALE = Number(process.env.PERF_BUDGET_SCALE ?? 1) || 1;
+const scaled = (ms: number) => Math.round(ms * BUDGET_SCALE);
+
 /** measured on the optimised build, see `example/PERF.md` */
 const BUDGET = {
   /** `Performance.ScriptDuration` accumulated up to "the page is interactive" (~100 ms) */
-  loadScriptMs: 250,
+  loadScriptMs: scaled(250),
   /** `Performance.TaskDuration` accumulated up to "the page is interactive" (~265 ms) */
-  loadTaskMs: 650,
+  loadTaskMs: scaled(650),
   /** the longest single long task while booting (~65 ms) */
-  loadLongTaskMs: 160,
+  loadLongTaskMs: scaled(160),
   /** once booted, the page must be completely idle: no long task at all */
   idleLongTaskMs: 50,
   /** `Performance.TaskDuration` for 20 keystrokes into one field (~65-105 ms) */
-  typeTaskMs: 260,
+  typeTaskMs: scaled(260),
   /** `Performance.ScriptDuration` for 20 keystrokes into one field (~10-20 ms) */
-  typeScriptMs: 60,
+  typeScriptMs: scaled(60),
   /** gzip size of the initial JS payload (~94 kB since the shiki markup, ~85 kB before) */
   jsGzipKB: 110
 } as const;
@@ -135,9 +147,7 @@ test.describe("@perf docs page CPU budget", () => {
     const taskMs = round(loaded.TaskDuration * 1000);
     const maxLongTaskMs = round(bootLongTasks.reduce((a, t) => Math.max(a, t.duration), 0));
     // "total blocking time": everything a long task spends beyond the 50 ms responsiveness budget
-    const blockingMs = round(
-      bootLongTasks.reduce((a, t) => a + Math.max(0, t.duration - 50), 0)
-    );
+    const blockingMs = round(bootLongTasks.reduce((a, t) => a + Math.max(0, t.duration - 50), 0));
 
     // the page must be *quiet* once it is up: nothing may schedule work after boot
     await page.evaluate(() => ((window as any).__longTasks.length = 0));
@@ -159,9 +169,7 @@ test.describe("@perf docs page CPU budget", () => {
       "JS heap": `${round(loaded.JSHeapUsedSize / 1048576)} MB`
     });
 
-    expect(scriptMs, "script evaluation + first render on load").toBeLessThan(
-      BUDGET.loadScriptMs
-    );
+    expect(scriptMs, "script evaluation + first render on load").toBeLessThan(BUDGET.loadScriptMs);
     expect(taskMs, "total main thread task time on load").toBeLessThan(BUDGET.loadTaskMs);
     expect(maxLongTaskMs, "longest blocking task while booting").toBeLessThan(
       BUDGET.loadLongTaskMs
@@ -279,9 +287,9 @@ test.describe("@perf docs page CPU budget", () => {
     const bundle = await (await page.request.get(scripts[0])).text();
 
     report("initial JS payload", {
-      "chunks": scripts.length,
-      "raw": `${round(rawKB)} kB`,
-      "gzip": `${round(gzipKB)} kB   (budget ${BUDGET.jsGzipKB})`
+      chunks: scripts.length,
+      raw: `${round(rawKB)} kB`,
+      gzip: `${round(gzipKB)} kB   (budget ${BUDGET.jsGzipKB})`
     });
 
     expect(round(gzipKB), "gzipped initial JS").toBeLessThan(BUDGET.jsGzipKB);

@@ -122,6 +122,10 @@ jobs:
 
       - name: Run docs-page performance spec
         working-directory: example
+        # shared runners are 2-4x slower than the laptop the budgets were calibrated on;
+        # only the time budgets are scaled (see the header of e2e/perf.spec.ts)
+        env:
+          PERF_BUDGET_SCALE: "4"
         run: npm run test:perf
 
       - name: Upload Playwright report

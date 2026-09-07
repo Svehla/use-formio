@@ -4,7 +4,7 @@ Thanks for helping out. Issues, examples and pull requests are all welcome.
 
 ## Dev setup
 
-Node >= 20 (the CI matrix is 20 / 22 / 24; the published package supports Node >= 18).
+Node >= 22 for development (jsdom 30 requires it; the CI matrix is 22 / 24). The published package itself runs on Node >= 18.
 
 ```sh
 git clone https://github.com/Svehla/use-formio.git
