@@ -1,7 +1,7 @@
 import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
-import { Field } from "../../dist";
-import { useFormio } from "../../dist";
+import { Field } from "../../src";
+import { useFormio } from "../../src";
 
 // validator functions has to be stable pointer to optimise React runtime
 export const isRequired = (value: string) =>
@@ -11,6 +11,7 @@ const getRandomRGBLightColor = () =>
   "rgb(" + [Math.random(), Math.random(), Math.random()].map(i => i * 150 + 100).join(",") + ")";
 
 export const StableMethodPointers = () => {
+  const [result, setResult] = React.useState("");
   const form = useFormio(
     {
       firstName: "",
@@ -30,14 +31,19 @@ export const StableMethodPointers = () => {
         onSubmit={async e => {
           e.preventDefault();
           const [isValid] = await form.validate();
-          if (isValid) alert("form is valid");
+          setResult(isValid ? "form is valid" : "form is invalid");
         }}
       >
-        <TextInput label={"f.firstName"} {...f.firstName} />
-        <TextInput label={"f.lastName"} {...f.lastName} />
-        <button type="submit" disabled={form.isValidating}>
+        <TextInput testId="StableMethodPointers-firstName" label={"f.firstName"} {...f.firstName} />
+        <TextInput testId="StableMethodPointers-lastName" label={"f.lastName"} {...f.lastName} />
+        <button
+          type="submit"
+          disabled={form.isValidating}
+          data-testid="StableMethodPointers-submit"
+        >
           Submit
         </button>
+        <div data-testid="StableMethodPointers-result">{result}</div>
       </form>
     </DEBUG_FormWrapper>
   );
@@ -47,20 +53,23 @@ export const StableMethodPointers = () => {
  * component si rerendered even if input is valid
  * because isValidating is changed from false to true and back to false
  */
-const TextInput = React.memo((props: Field<string> & { label: string }) => {
+const TextInput = React.memo((props: Field<string> & { label: string; testId: string }) => {
   return (
     <div>
       <label>{props.label}</label>
       <div style={{ background: getRandomRGBLightColor(), padding: "1rem" }}>
         <input
           type="text"
+          data-testid={`${props.testId}-input`}
           value={props.value}
           onChange={e => props.set(e.target.value)}
           disabled={props.isValidating}
           onBlur={props.validate}
         />
       </div>
-      <div className="input-error">{props.errors.join(", ")}</div>
+      <div className="input-error" data-testid={`${props.testId}-errors`}>
+        {props.errors.join(", ")}
+      </div>
     </div>
   );
 });

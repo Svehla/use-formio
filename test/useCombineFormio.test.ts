@@ -1,4 +1,5 @@
-import { act, renderHook } from "@testing-library/react-hooks";
+import { act, renderHook } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import { useCombineFormio } from "../src/useCombineFormio";
 import { useFormio } from "../src/useFormio";
 
@@ -77,18 +78,19 @@ describe("it", () => {
       })
     );
 
+    let returnedValidate: unknown;
     await act(async () => {
       result.current.forms.form1.fields.a.set("a");
       result.current.forms.form2.fields.a.set("b");
-      const returnedValidate = await result.current.validate();
-      expect(returnedValidate).toEqual([
-        false,
-        {
-          form1: [false, { a: ["ERR1"] }],
-          form2: [false, { a: ["ERR2"] }]
-        }
-      ]);
+      returnedValidate = await result.current.validate();
     });
+    expect(returnedValidate).toEqual([
+      false,
+      {
+        form1: [false, { a: ["ERR1"] }],
+        form2: [false, { a: ["ERR2"] }]
+      }
+    ]);
     expect(result.current.forms.form1.fields.a.errors).toEqual(["ERR1"]);
     expect(result.current.forms.form2.fields.a.errors).toEqual(["ERR2"]);
   });
@@ -109,20 +111,22 @@ describe("it", () => {
       })
     );
 
+    let form1Data: unknown, form2Data: unknown, bothFormsData: unknown;
     await act(async () => {
       result.current.forms.form1.fields.a.set("a");
       result.current.forms.form2.fields.b.set("b");
       result.current.forms.form2.fields.b.set("c");
       result.current.forms.form2.fields.b.set("d");
-
-      var form1Data = await result.current.forms.form1.getFormValues();
-      var form2Data = await result.current.forms.form2.getFormValues();
-      var bothFormsData = await result.current.getFormValues();
-
-      expect(form1Data).toEqual({ a: "a" });
-      expect(form2Data).toEqual({ b: "d" });
-      expect(bothFormsData).toEqual({ form1: { a: "a" }, form2: { b: "d" } });
+      [form1Data, form2Data, bothFormsData] = await Promise.all([
+        result.current.forms.form1.getFormValues(),
+        result.current.forms.form2.getFormValues(),
+        result.current.getFormValues()
+      ]);
     });
+
+    expect(form1Data).toEqual({ a: "a" });
+    expect(form2Data).toEqual({ b: "d" });
+    expect(bothFormsData).toEqual({ form1: { a: "a" }, form2: { b: "d" } });
   });
 
   it("combined form validate 2", async () => {
@@ -135,34 +139,30 @@ describe("it", () => {
         )
       })
     );
+    let returnedValidate: unknown;
     await act(async () => {
       result.current.forms.form1.fields.a.set("aa");
-
-      const returnedValidate = await result.current.validate();
-      expect(returnedValidate).toEqual([true, { form1: [true, { a: [] }] }]);
+      returnedValidate = await result.current.validate();
     });
+    expect(returnedValidate).toEqual([true, { form1: [true, { a: [] }] }]);
     expect(result.current.forms.form1.fields.a.errors).toEqual([]);
   });
 
   it("combined form async validate", async () => {
     const { result } = renderHook(() =>
       useCombineFormio({
-        form1: useFormio(
-          { a: "x" },
-          {},
-          // eslint-disable-next-line
-          { a: { validator: () => Promise.resolve(undefined) } }
-        ),
+        form1: useFormio({ a: "x" }, {}, { a: { validator: () => Promise.resolve(undefined) } }),
         form2: useFormio({ a: "x" }, {}, { a: { validator: () => Promise.resolve(undefined) } })
       })
     );
+    let isValid: any, errors: any;
     await act(async () => {
-      const [isValid, errors] = await result.current.validate();
-      expect(isValid).toEqual(true);
-      expect(errors).toEqual({
-        form1: [true, { a: [] }],
-        form2: [true, { a: [] }]
-      });
+      [isValid, errors] = await result.current.validate();
+    });
+    expect(isValid).toEqual(true);
+    expect(errors).toEqual({
+      form1: [true, { a: [] }],
+      form2: [true, { a: [] }]
     });
     expect(result.current.forms.form1.isValid).toEqual(true);
   });
@@ -174,16 +174,17 @@ describe("it", () => {
         form2: useFormio({ a: "x" }, {}, { a: { validator: () => "error2" } })
       })
     );
+    let returnedValidate: unknown;
     await act(async () => {
-      const returnedValidate = await result.current.validate();
-      expect(returnedValidate).toEqual([
-        false,
-        {
-          form1: [true, { b: [] }],
-          form2: [false, { a: ["error2"] }]
-        }
-      ]);
+      returnedValidate = await result.current.validate();
     });
+    expect(returnedValidate).toEqual([
+      false,
+      {
+        form1: [true, { b: [] }],
+        form2: [false, { a: ["error2"] }]
+      }
+    ]);
     expect(result.current.forms.form1.isValid).toEqual(true);
     expect(result.current.forms.form2.isValid).toEqual(false);
   });

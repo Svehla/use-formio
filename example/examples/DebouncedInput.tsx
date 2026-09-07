@@ -1,11 +1,14 @@
 import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
-import { Field, getUseFormio, useFormio } from "../../dist";
+import { Field, getUseFormio } from "../../src";
 
-export const debounce = (callback: Function, delay: number) => {
-  let timeout: NodeJS.Timeout;
+export const debounce = <Args extends any[]>(
+  callback: (...args: Args) => void,
+  delay: number
+) => {
+  let timeout: ReturnType<typeof setTimeout>;
 
-  return (...args: any[]) => {
+  return (...args: Args) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => callback(...args), delay);
   };
@@ -16,6 +19,7 @@ const useForm = getUseFormio(
     text1: "",
     text2: ""
   },
+  {},
   {
     text1: { validator: v => (v.length < 20 ? "LENGTH SHOULD BE >= 20" : undefined) },
     text2: { validator: v => (v.length < 20 ? "LENGTH SHOULD BE >= 20" : undefined) }
@@ -23,6 +27,7 @@ const useForm = getUseFormio(
 );
 
 export const DebouncedInput = () => {
+  const [result, setResult] = React.useState("");
   const form = useForm();
   const f = form.fields;
 
@@ -32,16 +37,17 @@ export const DebouncedInput = () => {
         onSubmit={async e => {
           e.preventDefault();
           const [isValid] = await form.validate();
-          if (isValid) alert("form is valid");
+          setResult(isValid ? "form is valid" : "form is invalid");
         }}
       >
         <label>Text with 500ms debounce</label>
-        <MyTextArea {...f.text1} />
-        <MyTextArea {...f.text2} />
+        <MyTextArea testId="DebouncedInput-text1" {...f.text1} />
+        <MyTextArea testId="DebouncedInput-text2" {...f.text2} />
 
-        <button type="submit" disabled={form.isValidating}>
+        <button type="submit" disabled={form.isValidating} data-testid="DebouncedInput-submit">
           Submit
         </button>
+        <div data-testid="DebouncedInput-result">{result}</div>
       </form>
     </DEBUG_FormWrapper>
   );
@@ -51,10 +57,10 @@ const getRandomRGBLightColor = () =>
   "rgb(" + [Math.random(), Math.random(), Math.random()].map(i => i * 100 + 155).join(",") + ")";
 
 // You can't use this component with shouldUpdateValue
-const MyTextArea = React.memo((props: Field<string>) => {
-  const inputRef = React.useRef<any>(undefined);
-  const debouncedSet = React.useCallback(
-    debounce((set: typeof props["set"]) => set(inputRef.current.value), 500),
+const MyTextArea = React.memo((props: Field<string> & { testId: string }) => {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const debouncedSet = React.useMemo(
+    () => debounce((set: (typeof props)["set"]) => set(inputRef.current?.value ?? ""), 500),
     []
   );
 
@@ -69,18 +75,25 @@ const MyTextArea = React.memo((props: Field<string>) => {
         maxLength={30}
         style={{ background: getRandomRGBLightColor(), padding: "1rem" }}
         type="text"
+        data-testid={`${props.testId}-input`}
         ref={inputRef}
-        onChange={e => {
+        onChange={() => {
           if (props.errors.length > 0) props.setErrors([]);
           debouncedSet(props.set);
         }}
-        onBlur={() => props.set(inputRef.current.value)}
+        onBlur={() => props.set(inputRef.current?.value ?? "")}
       />
-      <button type="button" onClick={() => props.set("hello")}>
+      <button
+        type="button"
+        data-testid={`${props.testId}-set-hello`}
+        onClick={() => props.set("hello")}
+      >
         set text1 to {'"'}HELLO{'"'}
       </button>
 
-      <div className="input-error">{props.errors.join(", ")}</div>
+      <div className="input-error" data-testid={`${props.testId}-errors`}>
+        {props.errors.join(", ")}
+      </div>
     </div>
   );
 });

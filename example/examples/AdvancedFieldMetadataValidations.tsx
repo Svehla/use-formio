@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
-import { Field, getUseFormio, useFormio } from "../../dist";
+import { Field, getUseFormio, useFormio } from "../../src";
 
 // -------------- custom declarative metadata validation framework  --------------
 const transformValidationSchema = <T,>(
@@ -85,7 +85,7 @@ const addMinMaxValidation = <T,>(validationSchema: T): T => {
   });
 };
 
-const applyValidationEnhancements = (initStateArg: any, extraConfig?: any, stateSchema?: any) => {
+const applyValidationEnhancements = (initStateArg: any, _extraConfig?: any, stateSchema?: any) => {
   const stateSchemaWithEmptyKeys = {
     ...stateSchema,
     ...Object.fromEntries(
@@ -105,21 +105,21 @@ const applyValidationEnhancements = (initStateArg: any, extraConfig?: any, state
   );
 };
 
-const enhanced_getUseFormio = (((initStateArg: any, extraConfig?: any, stateSchema?: any) => {
+const enhanced_getUseFormio = ((initStateArg: any, extraConfig?: any, stateSchema?: any) => {
   return getUseFormio(
     initStateArg,
     extraConfig,
     applyValidationEnhancements(initStateArg, extraConfig, stateSchema)
   );
-}) as any) as typeof getUseFormio;
+}) as any as typeof getUseFormio;
 
-const useFormioEnhanced = (((initStateArg: any, extraConfig?: any, stateSchema?: any) => {
+const useFormioEnhanced = ((initStateArg: any, extraConfig?: any, stateSchema?: any) => {
   return useFormio(
     initStateArg,
     extraConfig,
     applyValidationEnhancements(initStateArg, extraConfig, stateSchema)
   );
-}) as any) as typeof useFormio;
+}) as any as typeof useFormio;
 
 // -------------- -------------------------------------------------- --------------
 
@@ -127,9 +127,10 @@ const useFormioEnhanced = (((initStateArg: any, extraConfig?: any, stateSchema?:
 const typeOptions = ["user", "company"] as const;
 
 export const AdvancedFieldMetadataValidations = () => {
+  const [result, setResult] = React.useState("");
   const form = useFormioEnhanced(
     {
-      type: "user" as typeof typeOptions[number],
+      type: "user" as (typeof typeOptions)[number],
       user_firstName: "",
       user_lastName: "",
       company_name: "",
@@ -193,15 +194,16 @@ export const AdvancedFieldMetadataValidations = () => {
         onSubmit={async e => {
           e.preventDefault();
           const [isValid] = await form.validate();
-          if (isValid) alert("form is valid");
+          setResult(isValid ? "form is valid" : "form is invalid");
         }}
       >
         <div>
           <label>{f.type.metadata.label}</label>
           <select
+            data-testid="AdvancedFieldMetadataValidations-type-input"
             onChange={e =>
               f.type.set(
-                // @ts-expect-error
+                // @ts-expect-error the <select /> gives us a plain string
                 e.target.value
               )
             }
@@ -220,14 +222,30 @@ export const AdvancedFieldMetadataValidations = () => {
           </select>
         </div>
 
-        {f.user_firstName.metadata.isActive && <FormField {...f.user_firstName} />}
-        {f.user_lastName.metadata.isActive && <FormField {...f.user_lastName} />}
-        {f.company_name.metadata.isActive && <FormField {...f.company_name} />}
-        {f.company_address.metadata.isActive && <FormField {...f.company_address} />}
+        {f.user_firstName.metadata.isActive && (
+          <FormField
+            testId="AdvancedFieldMetadataValidations-user_firstName"
+            {...f.user_firstName}
+          />
+        )}
+        {f.user_lastName.metadata.isActive && (
+          <FormField testId="AdvancedFieldMetadataValidations-user_lastName" {...f.user_lastName} />
+        )}
+        {f.company_name.metadata.isActive && (
+          <FormField testId="AdvancedFieldMetadataValidations-company_name" {...f.company_name} />
+        )}
+        {f.company_address.metadata.isActive && (
+          <FormField
+            testId="AdvancedFieldMetadataValidations-company_address"
+            {...f.company_address}
+          />
+        )}
 
-        <button type="submit">submit</button>
+        <button type="submit" data-testid="AdvancedFieldMetadataValidations-submit">
+          submit
+        </button>
 
-        <div style={{ color: "red" }}>
+        <div style={{ color: "red" }} data-testid="AdvancedFieldMetadataValidations-errors">
           {Object.entries(f).map(
             ([fieldName, field]) =>
               field.errors.length > 0 && (
@@ -237,13 +255,14 @@ export const AdvancedFieldMetadataValidations = () => {
               )
           )}
         </div>
+        <div data-testid="AdvancedFieldMetadataValidations-result">{result}</div>
       </form>
     </DEBUG_FormWrapper>
   );
 };
 
 // -------------- custom rendering formio libarary --------------
-const FormField = ({ ...field }: Field<string>) => {
+const FormField = ({ testId, ...field }: Field<string> & { testId: string }) => {
   const hasErrors = field.errors.length > 0;
 
   return (
@@ -251,6 +270,7 @@ const FormField = ({ ...field }: Field<string>) => {
       <label style={{ color: hasErrors ? "red" : undefined }}>{field.metadata.label}</label>
       <input
         type="text"
+        data-testid={`${testId}-input`}
         onChange={e => field.set(e.target.value)}
         value={field.value}
         style={{ borderColor: hasErrors ? "red" : undefined, boxShadow: "none" }}
@@ -261,7 +281,9 @@ const FormField = ({ ...field }: Field<string>) => {
         {field.metadata.minLen} / Max: {field.metadata.maxLen}
       </div>
 
-      <div className="input-error">{field.errors.join(",")}</div>
+      <div className="input-error" data-testid={`${testId}-errors`}>
+        {field.errors.join(",")}
+      </div>
     </>
   );
 };

@@ -1,40 +1,31 @@
 import * as React from "react";
-import { BG_CODE_COLOR } from ".";
-import { Container, NavLink, Navbar, NavbarBrand, NavbarText, NavbarToggler } from "reactstrap";
-import { GithubIcon, NpmIcon, UseFormioLogoOnlySqIcon } from "./icons";
-import { useWindowDimensions } from "./hooks";
+import { GithubIcon, LogoMark, LogoWordmark, NpmIcon } from "./icons";
+import { NPM_URL, REPO_URL, VERSION } from "./constants";
+import { ThemeToggle } from "./ThemeToggle";
 
-export const Header = (props: {
-  basicExamples: {
-    title: string;
-    githubFileName: string;
-  }[];
-  advancedExamples: {
-    title: string;
-    githubFileName: string;
-  }[];
-}) => {
-  const dim = useWindowDimensions();
+/** the sticky top bar: brand, version, project links, theme toggle */
+export const Header = () => (
+  <header className="topbar" data-testid="site-header">
+    <div className="topbar__inner">
+      <a className="brand" href="./" aria-label="use-formio, back to the top">
+        <LogoMark className="brand__mark" />
+        <LogoWordmark className="brand__word" />
+      </a>
+      <span className="badge" title="library version">
+        v{VERSION}
+      </span>
 
-  const showCodeRight = dim.width > 1200;
-  return (
-    <div style={{ background: "#f8f9fa" }}>
-      <Container style={showCodeRight ? { marginRight: 0 } : {}}>
-        <Navbar color="light" expand="md" style={{ background: BG_CODE_COLOR }}>
-          <NavbarBrand href="/">
-            <UseFormioLogoOnlySqIcon width={50} height={50} />
-          </NavbarBrand>
-          <NavbarToggler onClick={function noRefCheck() {}} />
-          <NavbarText style={{ display: "flex" }}>
-            <NavLink target="_blank" href="https://npmjs.com/package/use-formio">
-              <NpmIcon />
-            </NavLink>
-            <NavLink target="_blank" href="https://github.com/Svehla/use-formio">
-              <GithubIcon />
-            </NavLink>
-          </NavbarText>
-        </Navbar>
-      </Container>
+      <nav className="topbar__links" aria-label="Project links">
+        <a href={NPM_URL} target="_blank" rel="noreferrer" data-testid="npm-link">
+          <NpmIcon />
+          <span>npm</span>
+        </a>
+        <a href={REPO_URL} target="_blank" rel="noreferrer" data-testid="github-link">
+          <GithubIcon />
+          <span>GitHub</span>
+        </a>
+        <ThemeToggle />
+      </nav>
     </div>
-  );
-};
+  </header>
+);

@@ -1,8 +1,9 @@
 import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
-import { useFormio } from "../../dist";
+import { useFormio } from "../../src";
 
 export const LifecycleHooks = () => {
+  const [result, setResult] = React.useState("");
   const form = useFormio(
     {
       ID: "",
@@ -50,20 +51,33 @@ export const LifecycleHooks = () => {
         onSubmit={async e => {
           e.preventDefault();
           const [isValid] = await form.validate();
-          if (isValid) alert("form is valid");
+          setResult(isValid ? "form is valid" : "form is invalid");
         }}
       >
         <label>ID</label>
-        <input type="text" onChange={e => f.ID.set(e.target.value)} value={f.ID.value} />
-        <div className="input-error">{f.ID.errors.join(",")}</div>
+        <input
+          type="text"
+          data-testid="LifecycleHooks-ID-input"
+          onChange={e => f.ID.set(e.target.value)}
+          value={f.ID.value}
+        />
+        <div className="input-error" data-testid="LifecycleHooks-ID-errors">
+          {f.ID.errors.join(",")}
+        </div>
         <label>age</label>
         <input
           type="number"
+          data-testid="LifecycleHooks-age-input"
           onChange={e => f.age.set(Number(e.target.value))}
           value={f.age.value}
         />
-        <div className="input-error">{f.age.errors.join(",")}</div>
-        <button type="submit">Submit</button>
+        <div className="input-error" data-testid="LifecycleHooks-age-errors">
+          {f.age.errors.join(",")}
+        </div>
+        <button type="submit" data-testid="LifecycleHooks-submit">
+          Submit
+        </button>
+        <div data-testid="LifecycleHooks-result">{result}</div>
       </form>
     </DEBUG_FormWrapper>
   );

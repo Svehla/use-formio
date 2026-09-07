@@ -1,0 +1,125 @@
+/*
+ * Design tokens - see DESIGN.md.
+ *
+ * Light is the default on bare `:root`; dark is defined twice, once for the system preference
+ * (guarded so an explicit light choice wins) and once for the explicit `data-theme="dark"` choice
+ * made with the toggle in the top bar.
+ *
+ * The page has two kinds of surface: the light *content* (paper, panels) and the dark *code*
+ * surfaces (`--rail`: the source column on the right, the live state panel, the hero snippet).
+ * The code surfaces are dark in both themes; in the dark theme the rail is a near-black that is
+ * darker than the page, so the split still reads.
+ */
+:root {
+  color-scheme: light;
+
+  /* the three logo blues, untouched */
+  --blue: #00a9ff;
+  --blue-deep: #0077c2; /* the accent for text: #00a9ff on white is only 2.6:1 */
+  --blue-tint: #98dfff;
+  --blue-soft: #e3f6ff;
+
+  /* neutrals */
+  --ink: #0e1621;
+  --slate: #3c4a59;
+  --mist: #7c8a99;
+  --line: #dde2e7;
+  --line-strong: #c5ccd4;
+  --paper: #ffffff;
+  --panel: #ffffff;
+  --panel-2: #f4f6f8;
+
+  /* semantic, separate from the accent */
+  --error: #d6341f;
+
+  /* the dark code surfaces: One Dark's #282c34, the colour of the original docs page's column */
+  --rail: #282c34;
+  --rail-2: #21252b;
+  --rail-line: #3b4049;
+  --code-fg: #abb2bf;
+  --code-muted: #7f8794;
+
+  /* JSON dump tokens (highlightJson.ts) - the One Dark palette shiki uses for the snippets */
+  --tok-attr: #e06c75;
+  --tok-string: #98c379;
+  --tok-number: #d19a66;
+  --tok-literal: #56b6c2;
+
+  --focus: #00a9ff;
+  --selection: #98dfff;
+
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --fs-0: 0.75rem;
+  --fs-1: 0.875rem;
+  --fs-2: 1.0625rem;
+  --fs-3: 1.25rem;
+  --fs-4: 1.5625rem;
+  --fs-5: 1.953rem;
+  --fs-6: clamp(2.2rem, 4.5vw, 3.4rem);
+
+  --topbar-h: 56px;
+  --sidebar-w: 190px;
+  /* the dark source column: ~36% of the viewport, like the original page's right column */
+  --rail-w: clamp(400px, 36vw, 680px);
+  --radius: 3px;
+  --radius-control: 4px; /* form controls, the demo card, the dark panels */
+  --gutter: clamp(16px, 3vw, 32px);
+  --measure: 65ch;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --blue-deep: #5dd2ff;
+    --blue-tint: #0b2e45;
+    --blue-soft: #0b2233;
+    --ink: #e8eef4;
+    --slate: #a6b3c1;
+    --mist: #6f7e8e;
+    --line: #2a3644;
+    --line-strong: #3a4757;
+    --paper: #141a22;
+    --panel: #1a222c;
+    --panel-2: #212b36;
+    --error: #ff6b57;
+    --rail: #0b0f14;
+    --rail-2: #11161c;
+    --rail-line: #1f2730;
+    --code-fg: #e6edf3;
+    --code-muted: #8b949e;
+    --tok-attr: #7ee787;
+    --tok-string: #a5d6ff;
+    --tok-number: #79c0ff;
+    --tok-literal: #79c0ff;
+    --selection: #0b2e45;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --blue-deep: #5dd2ff;
+  --blue-tint: #0b2e45;
+  --blue-soft: #0b2233;
+  --ink: #e8eef4;
+  --slate: #a6b3c1;
+  --mist: #6f7e8e;
+  --line: #2a3644;
+  --line-strong: #3a4757;
+  --paper: #141a22;
+  --panel: #1a222c;
+  --panel-2: #212b36;
+  --error: #ff6b57;
+  --rail: #0b0f14;
+  --rail-2: #11161c;
+  --rail-line: #1f2730;
+  --code-fg: #e6edf3;
+  --code-muted: #8b949e;
+  --tok-attr: #7ee787;
+  --tok-string: #a5d6ff;
+  --tok-number: #79c0ff;
+  --tok-literal: #79c0ff;
+  --selection: #0b2e45;
+}

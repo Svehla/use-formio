@@ -1,0 +1,412 @@
+/* top bar --------------------------------------------------------------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: var(--topbar-h);
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar__inner,
+.footer__inner {
+  padding: 0 var(--gutter);
+}
+
+.topbar__inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.brand__mark {
+  width: 26px;
+  height: 26px;
+}
+
+.brand__word {
+  height: 16px;
+  width: auto;
+}
+
+.badge {
+  font: 600 var(--fs-0) / 1 var(--font-mono);
+  padding: 4px 7px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  color: var(--slate);
+  letter-spacing: 0.02em;
+}
+
+.topbar__links {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.topbar__links a,
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--slate);
+  font: 600 var(--fs-1) / 1 var(--font-body);
+  text-decoration: none;
+}
+
+.topbar__links a:hover,
+.theme-toggle:hover {
+  color: var(--ink);
+  background: var(--panel-2);
+}
+
+.topbar__links svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 599px) {
+  .topbar__links a span {
+    display: none;
+  }
+}
+
+/* shell: sidebar + main, with the dark rail painted down the right edge --- */
+.shell {
+  padding: 0 var(--gutter);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.main {
+  min-width: 0;
+  padding-bottom: 32px;
+}
+
+@media (min-width: 1200px) {
+  .shell {
+    grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+    column-gap: 32px;
+    padding: 0 0 0 var(--gutter);
+    /* the rail: one continuous dark column from the top bar to the footer, full bleed right.
+       Every row (hero, examples) puts its code into a `var(--rail-w)` wide last column, so the
+       panes always sit on this background. */
+    background: linear-gradient(
+      90deg,
+      var(--paper) 0 calc(100% - var(--rail-w)),
+      var(--rail) calc(100% - var(--rail-w))
+    );
+  }
+
+  .main {
+    padding-bottom: 0;
+  }
+
+  /* a row of the split page: light content on the left, the dark rail on the right */
+  .hero,
+  .example {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--rail-w);
+    column-gap: 32px;
+    align-items: start;
+  }
+
+  .examples-head {
+    padding-right: calc(var(--rail-w) + 32px);
+  }
+}
+
+/* sidebar table of contents -------------------------------------------- */
+.sidebar {
+  position: sticky;
+  top: var(--topbar-h);
+  align-self: start;
+  max-height: calc(100vh - var(--topbar-h));
+  overflow-y: auto;
+  padding: 36px 0 40px;
+  font-size: 0.8125rem;
+}
+
+.sidebar .kicker {
+  color: var(--mist);
+  padding-left: 12px;
+}
+
+.sidebar ol {
+  list-style: none;
+  margin: 8px 0 24px;
+  padding: 0;
+}
+
+.sidebar a,
+.toc-tabs a {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 4px 6px 4px 10px;
+  border-left: 2px solid transparent;
+  color: var(--slate);
+  text-decoration: none;
+  line-height: 1.35;
+}
+
+.sidebar a:hover,
+.toc-tabs a:hover {
+  color: var(--blue-deep);
+}
+
+.sidebar a[aria-current="true"] {
+  color: var(--ink);
+  border-left-color: var(--blue);
+  font-weight: 600;
+}
+
+.sidebar__overview {
+  margin-bottom: 18px;
+}
+
+.toc-num {
+  flex: none;
+  font: 500 var(--fs-0) / 1 var(--font-mono);
+  color: var(--mist);
+  min-width: 1.6em;
+}
+
+/* narrow-viewport table of contents */
+.toc-tabs {
+  margin: 0 0 32px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  background: var(--panel);
+  font-size: var(--fs-1);
+}
+
+.toc-tabs .tabs {
+  padding: 0 8px;
+}
+
+.toc-tabs ol {
+  list-style: none;
+  margin: 0;
+  padding: 10px 6px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 0 8px;
+}
+
+/* hero ------------------------------------------------------------------- */
+.hero {
+  display: grid;
+  gap: 32px;
+  padding-top: clamp(28px, 4vw, 48px);
+}
+
+.hero__text {
+  min-width: 0;
+  padding-bottom: clamp(28px, 4vw, 44px);
+  border-bottom: 1px solid var(--line);
+}
+
+/* the big horizontal logo is the h1 (the wordmark is `currentColor`, so it follows the theme) */
+.hero__logo {
+  margin: 0 0 22px;
+  color: var(--ink);
+}
+
+.hero__logo svg {
+  width: min(100%, 420px);
+  height: auto;
+}
+
+.hero__tagline {
+  font: 800 var(--fs-5) / 1.1 var(--font-display);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  margin: 0 0 14px;
+  color: var(--ink);
+}
+
+.hero__tagline em {
+  font-style: normal;
+  color: var(--blue-deep);
+}
+
+.lead {
+  font-size: var(--fs-3);
+  line-height: 1.5;
+  color: var(--slate);
+  max-width: 34em;
+  margin-bottom: 24px;
+}
+
+.lead code {
+  font-size: 0.9em;
+  color: var(--ink);
+}
+
+.install {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 7px 7px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: var(--panel-2);
+  font: 500 0.9375rem / 1 var(--font-mono);
+  color: var(--ink);
+  max-width: 100%;
+}
+
+.install code::before {
+  content: "$ ";
+  color: var(--mist);
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 40px;
+  margin: 28px 0 0;
+}
+
+.facts > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.facts dt {
+  order: 2;
+  font: 600 var(--fs-0) / 1 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+
+.facts dd {
+  margin: 0;
+  font: 700 2rem / 1 var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.facts dd small {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-left: 4px;
+  color: var(--slate);
+}
+
+/* the type-inference snippet: a dark block under the text, the top of the rail on wide screens */
+.hero__code {
+  margin: 0;
+  min-width: 0;
+  background: var(--rail);
+  color: var(--code-fg);
+  border-radius: var(--radius-control);
+  overflow: hidden;
+}
+
+.hero__code figcaption {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--rail-line);
+  font: 600 var(--fs-1) / 1.3 var(--font-body);
+  color: var(--code-fg);
+}
+
+.hero__code figcaption code {
+  font-weight: 400;
+  color: var(--code-muted);
+  font-size: var(--fs-0);
+}
+
+.hero__code pre {
+  padding: 16px 18px 20px;
+  overflow: auto;
+  font: 400 0.8125rem / 1.6 var(--font-mono);
+}
+
+@media (min-width: 1200px) {
+  .hero__code {
+    border-radius: 0;
+    background: transparent;
+    padding: 28px var(--gutter) 40px 14px;
+  }
+}
+
+/* examples heading ------------------------------------------------------ */
+.examples-head {
+  padding: 40px 0 8px;
+}
+
+.examples-head h2 {
+  font-size: var(--fs-5);
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 8px 0 10px;
+}
+
+.examples-head p {
+  max-width: var(--measure);
+  color: var(--slate);
+}
+
+/* footer ----------------------------------------------------------------- */
+.footer {
+  border-top: 1px solid var(--line);
+  padding: 36px 0 56px;
+  font-size: var(--fs-1);
+  color: var(--slate);
+}
+
+.footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px 28px;
+}
+
+.footer__inner p {
+  margin: 0;
+  flex-basis: 100%;
+  max-width: var(--measure);
+}
+
+.footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+}
+
+.footer a {
+  color: var(--slate);
+}
+
+.footer a:hover {
+  color: var(--ink);
+}
+
+.footer .brand__word {
+  height: 13px;
+  color: var(--ink);
+}

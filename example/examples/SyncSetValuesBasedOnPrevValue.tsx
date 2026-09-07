@@ -1,8 +1,9 @@
 import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
-import { useFormio } from "../../dist";
+import { useFormio } from "../../src";
 
 export const SyncSetValuesBasedOnPrevValue = () => {
+  const [result, setResult] = React.useState("");
   const form = useFormio(
     {
       ID: "",
@@ -35,18 +36,25 @@ export const SyncSetValuesBasedOnPrevValue = () => {
           // f.amount has value 5
           const [isValid, errors] = await form.validate();
 
-          const fields = await form.getFieldsState();
+          if (isValid) {
+            setResult("form is valid");
+            return;
+          }
 
-          if (isValid) return;
-          if (errors.ID.length > 0) {
-            alert("there is problem with ID field");
-          }
-          if (errors.amount.length > 0) {
-            alert("there is problem with ID amount");
-          }
+          setResult(
+            [
+              errors.ID.length > 0 ? "there is problem with ID field" : undefined,
+              errors.amount.length > 0 ? "there is problem with ID amount" : undefined
+            ]
+              .filter(Boolean)
+              .join(", ")
+          );
         }}
       >
-        <button type="submit">Submit</button>
+        <button type="submit" data-testid="SyncSetValuesBasedOnPrevValue-submit">
+          Submit
+        </button>
+        <div data-testid="SyncSetValuesBasedOnPrevValue-result">{result}</div>
       </form>
     </DEBUG_FormWrapper>
   );

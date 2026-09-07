@@ -1,0 +1,136 @@
+name: E2E
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: e2e-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------------------------------------
+  # the default suite, on bundled Chromium
+  # ---------------------------------------------------------------------------------------------
+  chromium:
+    name: playwright (chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: example/package-lock.json
+
+      - name: Install example dependencies
+        working-directory: example
+        run: npm ci
+
+      - name: Install Playwright browser
+        working-directory: example
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E tests
+        working-directory: example
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-chromium
+          path: |
+            example/playwright-report/
+            example/test-results/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # ---------------------------------------------------------------------------------------------
+  # the same suite on real Google Chrome (channel: "chrome") — catches the differences between
+  # bundled Chromium and the browser users actually run
+  # ---------------------------------------------------------------------------------------------
+  chrome:
+    name: playwright (google chrome)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: example/package-lock.json
+
+      - name: Install example dependencies
+        working-directory: example
+        run: npm ci
+
+      - name: Install Google Chrome
+        working-directory: example
+        run: npx playwright install --with-deps chrome
+
+      - name: Run E2E tests on Chrome
+        working-directory: example
+        run: npm run test:e2e:chrome
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-chrome
+          path: |
+            example/playwright-report/
+            example/test-results/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # ---------------------------------------------------------------------------------------------
+  # the docs-page CPU performance spec — a gate, not an informational run
+  # ---------------------------------------------------------------------------------------------
+  docs-perf:
+    name: docs page perf
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    continue-on-error: false
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: example/package-lock.json
+
+      - name: Install example dependencies
+        working-directory: example
+        run: npm ci
+
+      - name: Install Playwright browser
+        working-directory: example
+        run: npx playwright install --with-deps chromium
+
+      - name: Run docs-page performance spec
+        working-directory: example
+        run: npm run test:perf
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-perf
+          path: |
+            example/playwright-report/
+            example/test-results/
+          if-no-files-found: ignore
+          retention-days: 14
