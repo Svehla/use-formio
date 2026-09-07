@@ -9,11 +9,11 @@
     "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test:e2e": "playwright test --project=chromium",
+    "test:e2e": "playwright test --project=chromium --grep-invert @perf",
     "test:e2e:chrome": "playwright test --project=chrome",
-    "test:e2e:all": "playwright test --project=chromium --project=chrome",
+    "test:e2e:all": "playwright test --project=chromium --project=chrome --grep-invert @perf",
     "test:e2e:ui": "playwright test --ui",
-    "test:perf": "playwright test --project=chromium --grep @perf",
+    "test:perf": "playwright test --project=chromium --grep @perf --workers=1",
     "ts:check-types": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {

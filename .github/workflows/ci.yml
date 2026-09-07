@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [20, 22, 24]
+        node: [22, 24] # jsdom 30 needs Node >= 22.22; the published package itself runs on Node >= 18
 
     steps:
       - uses: actions/checkout@v4
