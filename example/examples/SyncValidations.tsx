@@ -1,8 +1,9 @@
 import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
-import { useFormio } from "../../dist";
+import { useFormio } from "../../src";
 
 export const SyncValidations = () => {
+  const [result, setResult] = React.useState("");
   const form = useFormio(
     {
       firstName: "",
@@ -36,27 +37,43 @@ export const SyncValidations = () => {
         onSubmit={async e => {
           e.preventDefault();
           const [isValid] = await form.validate();
-          if (isValid) alert("form is valid");
+          setResult(isValid ? "form is valid" : "form is invalid");
         }}
       >
         <label>First name</label>
         <input
           type="text"
+          data-testid="SyncValidations-firstName-input"
           onChange={e => f.firstName.set(e.target.value)}
           value={f.firstName.value}
         />
-        <div className="input-error">{f.firstName.errors.join(",")}</div>
+        <div className="input-error" data-testid="SyncValidations-firstName-errors">
+          {f.firstName.errors.join(",")}
+        </div>
         <label>Age</label>
-        <input type="number" onChange={e => f.age.set(e.target.value)} value={f.age.value} />
-        <div className="input-error">{f.age.errors.join(",")}</div>
+        <input
+          type="number"
+          data-testid="SyncValidations-age-input"
+          onChange={e => f.age.set(e.target.value)}
+          value={f.age.value}
+        />
+        <div className="input-error" data-testid="SyncValidations-age-errors">
+          {f.age.errors.join(",")}
+        </div>
         <label>Terms of conditions</label>
         <input
           type="checkbox"
+          data-testid="SyncValidations-isVerified-input"
           checked={f.isVerified.value}
           onChange={e => f.isVerified.set(e.target.checked)}
         />
-        <div className="input-error">{f.isVerified.errors.join(", ")}</div>
-        <button type="submit">submit</button>
+        <div className="input-error" data-testid="SyncValidations-isVerified-errors">
+          {f.isVerified.errors.join(", ")}
+        </div>
+        <button type="submit" data-testid="SyncValidations-submit">
+          submit
+        </button>
+        <div data-testid="SyncValidations-result">{result}</div>
       </form>
     </DEBUG_FormWrapper>
   );

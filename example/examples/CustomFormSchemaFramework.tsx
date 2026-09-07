@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
-import { Field, getUseFormio, useFormio } from "../../dist";
+import { Field, getUseFormio } from "../../src";
 
 const isRequired = (value: string) => (value.trim() === "" ? "Field is required" : undefined);
 const minNum = (min: number) => (value: number) =>
@@ -85,6 +85,7 @@ const useForm = getUseFormio(
     isOlder18: true,
     isHappy: false
   },
+  {},
   {
     firstName: { validator: isRequired },
     lastName: { validator: isRequired },
@@ -96,16 +97,19 @@ const useForm = getUseFormio(
 );
 
 export const CustomFormSchemaFramework = () => {
+  const [result, setResult] = React.useState("");
   const form = useForm();
 
   return (
     <DEBUG_FormWrapper form={form}>
       <UISchemaFormAbstraction
+        testIdPrefix="CustomFormSchemaFramework"
         form={form}
         fields={fields}
         onSubmit={([isValid, _errors]) => {
-          if (isValid) alert("form is valid");
+          setResult(isValid ? "form is valid" : "form is invalid");
         }}
+        result={result}
       />
     </DEBUG_FormWrapper>
   );
@@ -117,6 +121,8 @@ const UISchemaFormAbstraction = (props: {
   form: { fields: any; validate: any };
   fields: { label: string; key: string }[];
   onSubmit: (arg: [boolean, any]) => void;
+  testIdPrefix: string;
+  result?: string;
 }) => (
   <form
     onSubmit={async e => {
@@ -127,42 +133,51 @@ const UISchemaFormAbstraction = (props: {
     {props.fields.map(f => {
       const field = props.form.fields[f.key];
       const inputType = typeof field.value;
+      const testId = `${props.testIdPrefix}-${f.key}`;
 
       return (
-        <div key={f.key as any}>
+        <div key={f.key}>
           {inputType === "string" ? (
-            <FTextInput label={f.label} {...field} />
+            <FTextInput testId={testId} label={f.label} {...field} />
           ) : inputType === "number" ? (
-            <FNumberInput label={f.label} {...field} />
+            <FNumberInput testId={testId} label={f.label} {...field} />
           ) : inputType === "boolean" ? (
-            <FCheckbox label={f.label} {...field} />
-          ) : (
-            undefined
-          )}
+            <FCheckbox testId={testId} label={f.label} {...field} />
+          ) : undefined}
           <hr />
         </div>
       );
     })}
-    <button type="submit">Submit</button>
+    <button type="submit" data-testid={`${props.testIdPrefix}-submit`}>
+      Submit
+    </button>
+    <div data-testid={`${props.testIdPrefix}-result`}>{props.result}</div>
   </form>
 );
 
 // ---------------------------
 // ---- component library ----
 
-const FTextInput = React.memo((props: { label: string } & Field<string>) => {
+const FTextInput = React.memo((props: { label: string; testId: string } & Field<string>) => {
   return (
     <div>
       <label>{props.label}</label>
       <div>
-        <input value={props.value} type="text" onChange={e => props.set(e.target.value)} />
+        <input
+          value={props.value}
+          type="text"
+          data-testid={`${props.testId}-input`}
+          onChange={e => props.set(e.target.value)}
+        />
       </div>
-      <div className="input-error">{props.errors.join(", ")}</div>
+      <div className="input-error" data-testid={`${props.testId}-errors`}>
+        {props.errors.join(", ")}
+      </div>
     </div>
   );
 });
 
-const FNumberInput = React.memo((props: { label: string } & Field<number>) => {
+const FNumberInput = React.memo((props: { label: string; testId: string } & Field<number>) => {
   return (
     <div>
       <label>{props.label}</label>
@@ -170,22 +185,32 @@ const FNumberInput = React.memo((props: { label: string } & Field<number>) => {
         <input
           value={props.value}
           type="number"
+          data-testid={`${props.testId}-input`}
           onChange={e => props.set(parseFloat(e.target.value))}
         />
       </div>
-      <div className="input-error">{props.errors.join(", ")}</div>
+      <div className="input-error" data-testid={`${props.testId}-errors`}>
+        {props.errors.join(", ")}
+      </div>
     </div>
   );
 });
 
-const FCheckbox = React.memo((props: { label: string } & Field<boolean>) => {
+const FCheckbox = React.memo((props: { label: string; testId: string } & Field<boolean>) => {
   return (
     <div>
       <label>{props.label}</label>
       <div>
-        <input type="checkbox" checked={props.value} onChange={e => props.set(e.target.checked)} />
+        <input
+          type="checkbox"
+          data-testid={`${props.testId}-input`}
+          checked={props.value}
+          onChange={e => props.set(e.target.checked)}
+        />
       </div>
-      <div className="input-error">{props.errors.join(", ")}</div>
+      <div className="input-error" data-testid={`${props.testId}-errors`}>
+        {props.errors.join(", ")}
+      </div>
     </div>
   );
 });

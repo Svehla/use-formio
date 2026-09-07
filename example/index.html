@@ -3,12 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>use-formio</title>
+    <meta
+      name="description"
+      content="use-formio: a 3 kB, zero-dependency, fully type-inferred React form hook. Eighteen live examples, each next to the source that produced it."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141a22" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="/useformio-sq.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=JetBrains+Mono:wght@400;500;600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap"
+    />
+    <title>use-formio — typed React forms in 3 kB</title>
+    <!-- apply the stored theme before the first paint, so there is no flash -->
+    <script>
+      try {
+        var t = localStorage.getItem("use-formio:theme");
+        if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    </script>
   </head>
 
   <body>
     <div id="root"></div>
-    <script src="./index.tsx"></script>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>

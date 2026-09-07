@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
-import { Field, useFormio } from "../../dist";
+import { Field, useFormio } from "../../src";
 
 // Simple validation utility for min/max length
 const minMaxUtil = (
@@ -12,6 +12,7 @@ const minMaxUtil = (
 ];
 
 export const FieldMetadata = () => {
+  const [result, setResult] = React.useState("");
   const form = useFormio(
     {
       firstName: "",
@@ -53,15 +54,17 @@ export const FieldMetadata = () => {
         onSubmit={async e => {
           e.preventDefault();
           const [isValid] = await form.validate();
-          if (isValid) alert("form is valid");
+          setResult(isValid ? "form is valid" : "form is invalid");
         }}
       >
-        <FormField {...f.firstName} />
-        <FormField {...f.lastName} />
+        <FormField testId="FieldMetadata-firstName" {...f.firstName} />
+        <FormField testId="FieldMetadata-lastName" {...f.lastName} />
 
-        <button type="submit">Submit</button>
+        <button type="submit" data-testid="FieldMetadata-submit">
+          Submit
+        </button>
 
-        <div style={{ color: "red" }}>
+        <div style={{ color: "red" }} data-testid="FieldMetadata-errors">
           {Object.entries(f).map(
             ([fieldName, field]) =>
               field.errors.length > 0 && (
@@ -71,12 +74,13 @@ export const FieldMetadata = () => {
               )
           )}
         </div>
+        <div data-testid="FieldMetadata-result">{result}</div>
       </form>
     </DEBUG_FormWrapper>
   );
 };
 
-const FormField = ({ ...field }: Field<string>) => {
+const FormField = ({ testId, ...field }: Field<string> & { testId: string }) => {
   const hasErrors = field.errors.length > 0;
 
   return (
@@ -84,6 +88,7 @@ const FormField = ({ ...field }: Field<string>) => {
       <label style={{ color: hasErrors ? "red" : undefined }}>{field.metadata.label}</label>
       <input
         type="text"
+        data-testid={`${testId}-input`}
         onChange={e => field.set(e.target.value)}
         value={field.value}
         style={{ borderColor: hasErrors ? "red" : undefined }}
@@ -94,7 +99,9 @@ const FormField = ({ ...field }: Field<string>) => {
         {field.metadata.minLen} / Max: {field.metadata.maxLen}
       </div>
 
-      <div className="input-error">{field.errors.join(",")}</div>
+      <div className="input-error" data-testid={`${testId}-errors`}>
+        {field.errors.join(",")}
+      </div>
     </>
   );
 };

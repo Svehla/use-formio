@@ -1,9 +1,10 @@
 import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
-import { useFormio } from "../../dist";
+import { useFormio } from "../../src";
 
 /** demonstrate how to do that 1 input validations depends on value of another input */
 export const CrossValidations = () => {
+  const [result, setResult] = React.useState("");
   const form = useFormio(
     {
       parentID: "",
@@ -30,20 +31,33 @@ export const CrossValidations = () => {
         onSubmit={async e => {
           e.preventDefault();
           const [isValid] = await form.validate();
-          if (isValid) alert("form is valid");
+          setResult(isValid ? "form is valid" : "form is invalid");
         }}
       >
         <label>parent ID</label>
         <input
           type="text"
+          data-testid="CrossValidations-parentID-input"
           onChange={e => f.parentID.set(e.target.value)}
           value={f.parentID.value}
         />
-        <div className="input-error">{f.parentID.errors.join(",")}</div>
+        <div className="input-error" data-testid="CrossValidations-parentID-errors">
+          {f.parentID.errors.join(",")}
+        </div>
         <label>age</label>
-        <input type="number" onChange={e => f.age.set(e.target.value)} value={f.age.value} />
-        <div className="input-error">{f.age.errors.join(",")}</div>
-        <button type="submit">Submit</button>
+        <input
+          type="number"
+          data-testid="CrossValidations-age-input"
+          onChange={e => f.age.set(e.target.value)}
+          value={f.age.value}
+        />
+        <div className="input-error" data-testid="CrossValidations-age-errors">
+          {f.age.errors.join(",")}
+        </div>
+        <button type="submit" data-testid="CrossValidations-submit">
+          Submit
+        </button>
+        <div data-testid="CrossValidations-result">{result}</div>
       </form>
     </DEBUG_FormWrapper>
   );

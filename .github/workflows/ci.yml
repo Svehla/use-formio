@@ -1,0 +1,151 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# a new push to the same branch/PR supersedes the previous run
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------------------------------------
+  # lint + types + unit tests + build + bundle size + performance gates, on every supported Node
+  # ---------------------------------------------------------------------------------------------
+  test:
+    name: test (node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20, 22, 24]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # vitest type-level tests (test/types/*.test-d.ts) — `tsc` alone does not run these
+      - name: Type-level tests
+        run: npm run test:types
+
+      - name: Unit tests (with coverage)
+        run: npm run test:coverage
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-node-${{ matrix.node }}
+          path: coverage/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Build
+        run: npm run build
+
+      # the 3 KB budget declared in package.json > size-limit; needs dist/, so it runs after build
+      - name: Bundle size budget
+        run: npm run size
+
+      # threshold + memoization regression tests; the measured numbers are printed to the log
+      - name: Performance gates
+        run: npm run test:perf
+
+  # ---------------------------------------------------------------------------------------------
+  # compatibility gate: the same unit tests against every supported React version.
+  #
+  # One job per version so the Actions UI shows which one broke. The identical coverage (plus a
+  # typecheck per version) is reproducible locally with `npm run test:react-matrix`.
+  # ---------------------------------------------------------------------------------------------
+  react-versions:
+    name: test (react ${{ matrix.react }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        react: ["18.2", "18.3", "19"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # --no-save keeps package.json / package-lock.json untouched: only this job's node_modules
+      # is swapped to the React version under test
+      - name: Install React ${{ matrix.react }}
+        run: npm install --no-save react@${{ matrix.react }} react-dom@${{ matrix.react }}
+
+      - name: Report installed React version
+        run: node -p "'react ' + require('react/package.json').version + ' / react-dom ' + require('react-dom/package.json').version"
+
+      - name: Unit tests
+        run: npm test
+
+      # only the memoization/identity gate, not the timing thresholds: three React versions racing
+      # on one runner would make wall-clock assertions noisy, while field identity is exactly the
+      # thing that could differ between React majors
+      - name: Memoization + identity gate
+        run: npx vitest run --config bench/vitest.perf.config.mts bench/renderCount.test.tsx
+
+  # ---------------------------------------------------------------------------------------------
+  # benchmarks: informational only (they never fail the build), published as an artifact and as a
+  # table in the job summary
+  # ---------------------------------------------------------------------------------------------
+  bench:
+    name: bench
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # --expose-gc makes the allocation/GC-pressure measurements meaningful
+      - name: Run performance tests with forced GC
+        run: npm run bench:gc
+
+      - name: Run benchmarks
+        run: npm run bench:json
+
+      - name: Write summary table
+        if: always()
+        run: node scripts/benchSummary.mjs bench-results/bench.json >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload benchmark JSON
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bench-results
+          path: bench-results/
+          if-no-files-found: warn
+          retention-days: 30

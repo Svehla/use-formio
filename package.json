@@ -1,75 +1,112 @@
 {
   "name": "use-formio",
-  "version": "1.0.6",
-  "repository": "https://github.com/Svehla/use-formio",
+  "version": "2.0.0",
+  "description": "Tiny, fully type-inferred React form state hook — sync + async validation, zero dependencies, no form components",
+  "keywords": [
+    "react",
+    "hooks",
+    "form",
+    "forms",
+    "validation",
+    "typescript",
+    "use-formio"
+  ],
+  "homepage": "http://use-formio.svehlik.eu",
+  "bugs": {
+    "url": "https://github.com/Svehla/use-formio/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Svehla/use-formio.git"
+  },
   "license": "MIT",
   "author": "Jakub Švehla",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js"
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./package.json": "./package.json"
   },
-  "module": "dist/use-formio.esm.js",
-  "typings": "dist/index.d.ts",
   "files": [
     "dist",
     "src"
   ],
+  "sideEffects": false,
   "scripts": {
     "analyze": "size-limit --why",
-    "build": "tsdx build",
-    "lint": "tsdx lint",
-    "lint:fix": "tsdx lint --fix",
-    "prepare": "tsdx build",
+    "bench": "vitest bench --run --passWithNoTests",
+    "bench:gc": "NODE_OPTIONS=--expose-gc vitest run --config bench/vitest.perf.config.mts",
+    "bench:json": "vitest bench --run --passWithNoTests --outputJson=bench-results/bench.json",
+    "bench:summary": "node scripts/benchSummary.mjs bench-results/bench.json",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "format": "prettier --write \"{src,test,bench}/**/*.{ts,tsx}\" \"*.{ts,mts,mjs,json,md}\"",
+    "format:check": "prettier --check \"{src,test,bench}/**/*.{ts,tsx}\" \"*.{ts,mts,mjs,json,md}\"",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prepare": "husky || true",
+    "prepublishOnly": "npm run lint && npm run typecheck && npm test && npm run build",
     "size": "size-limit",
-    "start": "tsdx watch",
-    "ts:check-types": "tsc",
-    "test": "tsdx test --passWithNoTests",
-    "test:watch": "tsdx test --passWithNoTests --watchAll"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
-  },
-  "prettier": {
-    "printWidth": 100
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:perf": "vitest run --config bench/vitest.perf.config.mts",
+    "test:react-matrix": "bash scripts/test-react-matrix.sh",
+    "test:types": "vitest run --typecheck.enabled --typecheck.only",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "verify:consumer": "bash scripts/verify-consumer.sh"
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^5.0.5",
-    "@testing-library/react-hooks": "^7.0.2",
-    "@types/react": "^17.0.27",
-    "@types/react-dom": "^17.0.9",
-    "eslint-config-react-app": "^6.0.0",
-    "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
-    "husky": "^7.0.2",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "reactstrap": "^9.0.1",
-    "size-limit": "^5.0.5",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.3.1",
-    "typescript": "^5.7.3"
+    "@eslint/js": "^10.0.1",
+    "@size-limit/preset-small-lib": "^13.0.3",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitest/coverage-v8": "^4.1.11",
+    "eslint": "^10.10.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "fast-check": "^4.9.0",
+    "globals": "^17.12.0",
+    "husky": "^9.1.7",
+    "jsdom": "^30.0.1",
+    "prettier": "^3.9.6",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "size-limit": "^13.0.3",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.69.0",
+    "vitest": "^4.1.11"
   },
   "peerDependencies": {
-    "react": ">=16"
+    "react": ">=18.0.0"
   },
   "engines": {
-    "node": ">=10"
-  },
-  "// prettier": {
-    "printWidth": 100,
-    "semi": true,
-    "singleQuote": false,
-    "trailingComma": "all"
+    "node": ">=18"
   },
   "size-limit": [
     {
-      "path": "dist/use-formio.cjs.production.min.js",
-      "limit": "10 KB"
+      "path": "dist/index.js",
+      "limit": "3.5 KB"
     },
     {
-      "path": "dist/use-formio.esm.js",
-      "limit": "10 KB"
+      "path": "dist/index.mjs",
+      "limit": "3.5 KB"
     }
-  ]
+  ],
+  "type": "commonjs"
 }

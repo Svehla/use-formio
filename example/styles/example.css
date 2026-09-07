@@ -1,0 +1,527 @@
+/* one example = one row: (header, live state | demo) on the left, source in the rail ------- */
+.example {
+  min-width: 0;
+}
+
+.example__main {
+  min-width: 0;
+  padding: 40px 0 8px;
+  border-top: 1px solid var(--line);
+}
+
+.example:first-of-type .example__main {
+  border-top: 0;
+  padding-top: 20px;
+}
+
+.example__head {
+  margin-bottom: 20px;
+}
+
+/* GitHub icon, then the title in the link blue - like the original page */
+.example__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 8px;
+}
+
+.example__title h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--blue-deep);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.example__title h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.example__title h3 a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+.example__github {
+  flex: none;
+  display: inline-flex;
+  color: var(--ink);
+  border-radius: var(--radius);
+}
+
+.example__github:hover {
+  color: var(--blue-deep);
+}
+
+.example__github svg {
+  width: 26px;
+  height: 26px;
+}
+
+.example__desc {
+  max-width: var(--measure);
+  color: var(--slate);
+  margin: 0;
+}
+
+.example__desc code {
+  font-size: 0.9em;
+  color: var(--ink);
+}
+
+/* the panes ------------------------------------------------------------- */
+.example__body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.example__body > .demo {
+  order: 0;
+}
+
+.example__body > .tabs {
+  order: 1;
+}
+
+.example__body > .state {
+  order: 2;
+}
+
+/* wide enough for the original's three columns: state | form | source */
+@media (min-width: 1360px) {
+  .example__body {
+    display: grid;
+    grid-template-columns: minmax(0, 9fr) minmax(0, 11fr);
+    gap: 20px;
+    align-items: start;
+  }
+
+  .example__body > .state {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .example__body > .demo {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+/* the source rail */
+.source {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--rail);
+  color: var(--code-fg);
+  border-radius: var(--radius-control);
+}
+
+@media (min-width: 1200px) {
+  .source {
+    position: sticky;
+    top: calc(var(--topbar-h) + 24px);
+    margin: 40px 0 40px;
+    padding: 0 var(--gutter) 0 14px;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .example:first-of-type .source {
+    margin-top: 20px;
+  }
+}
+
+/* demo ----------------------------------------------------------------- */
+.example__body > .demo {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  background: var(--panel);
+  min-width: 0;
+}
+
+/* a nested demo + state (DynamicForms sub-forms) sits inside the card already */
+.example__body form .demo {
+  padding: 0;
+  border: 0;
+}
+
+.example__body form .state {
+  margin: 12px 0 4px;
+}
+
+.example__body form {
+  margin: 0;
+}
+
+/* form controls: light, 1 px border, 4 px radius, bold labels - the bootstrap-ish look of the
+   original page, on the design tokens */
+.example__body form label {
+  display: block;
+  margin: 14px 0 6px;
+  font: 600 0.9375rem / 1.3 var(--font-body);
+  color: var(--ink);
+}
+
+.example__body form label:first-child,
+.example__body form > div:first-child > label:first-child {
+  margin-top: 0;
+}
+
+.example__body form label span {
+  margin-left: 8px;
+  font-weight: 400;
+  color: var(--blue-deep);
+}
+
+.example__body form input:not([type="checkbox"]),
+.example__body form select,
+.example__body form textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: var(--panel);
+  color: var(--ink);
+  font: 400 1rem / 1.4 var(--font-body);
+  box-shadow: none;
+}
+
+.example__body form textarea {
+  height: auto;
+  min-height: 96px;
+  padding: 8px 12px;
+  resize: vertical;
+}
+
+.example__body form select {
+  appearance: none;
+  padding-right: 32px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%237c8a99' stroke-width='1.6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.example__body form input[type="checkbox"] {
+  display: block;
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 6px;
+  accent-color: var(--blue);
+}
+
+.example__body form :is(input, select, textarea):focus-visible {
+  outline: 0;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 28%, transparent);
+}
+
+.example__body form input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.example__body form :is(input, select, textarea):disabled {
+  background: var(--panel-2);
+  color: var(--mist);
+  cursor: not-allowed;
+}
+
+.example__body form input::placeholder {
+  color: var(--mist);
+}
+
+.input-error {
+  color: var(--error);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  min-height: 1.1rem;
+  margin: 5px 0 6px;
+  overflow-wrap: anywhere;
+}
+
+.field-error {
+  font-size: var(--fs-1);
+  margin-top: 4px;
+}
+
+.example__body form button {
+  display: inline-block;
+  height: 38px;
+  padding: 0 14px;
+  margin: 8px 8px 0 0;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: var(--panel-2);
+  color: var(--ink);
+  font: 400 1rem / 1 var(--font-body);
+  vertical-align: middle;
+}
+
+.example__body form button:hover {
+  background: var(--line);
+  border-color: var(--slate);
+}
+
+/* the plain, full width, light "submit" of the original */
+.example__body form button[type="submit"] {
+  display: block;
+  width: 100%;
+  margin: 18px 0 0;
+}
+
+.example__body form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.example__body form hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 16px 0;
+}
+
+.example__body form [data-testid$="-result"]:not(:empty):not(ul) {
+  margin-top: 12px;
+  font: 500 0.8125rem / 1.4 var(--font-mono);
+  color: var(--slate);
+}
+
+.example__body form ul {
+  margin: 8px 0;
+  padding-left: 20px;
+  font: 400 var(--fs-1) / 1.5 var(--font-mono);
+}
+
+.example__body form [data-testid$="-calls-count"] {
+  font: 500 0.8125rem / 1.4 var(--font-mono);
+  color: var(--slate);
+}
+
+/* live form state: a dark panel on the same palette as the source rail ---------------------- */
+.state {
+  background: var(--rail);
+  color: var(--code-fg);
+  border-radius: var(--radius-control);
+  min-width: 0;
+}
+
+.state > summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid transparent;
+}
+
+.state[open] > summary {
+  border-bottom-color: var(--rail-line);
+}
+
+.state > summary::-webkit-details-marker {
+  display: none;
+}
+
+.state > summary::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid var(--code-muted);
+  border-bottom: 1.5px solid var(--code-muted);
+  transform: rotate(-45deg) translateY(1px);
+}
+
+.state[open] > summary::before {
+  transform: rotate(45deg) translateY(-1px);
+}
+
+.state .pane-label,
+.state__hint {
+  color: var(--code-muted);
+  white-space: nowrap;
+}
+
+.state__hint {
+  margin-left: auto;
+  font: 400 var(--fs-0) / 1 var(--font-mono);
+}
+
+/* the state column is narrowest when it first sits next to the form: drop the hint there */
+@media (min-width: 1360px) and (max-width: 1599px) {
+  .state__hint {
+    display: none;
+  }
+}
+
+.state pre {
+  margin: 0;
+  padding: 12px 14px 16px;
+  max-height: 560px;
+  overflow: auto;
+  font: 400 0.8125rem / 1.55 var(--font-mono);
+}
+
+/* source pane ---------------------------------------------------------- */
+.pane-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 8px 14px;
+  border-bottom: 1px solid var(--rail-line);
+}
+
+.source .pane-label,
+.source__file {
+  color: var(--code-muted);
+}
+
+.source__file {
+  margin-left: auto;
+  font: 400 var(--fs-0) / 1 var(--font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.source__scroll {
+  height: min(72vh, 720px);
+  overflow: auto;
+}
+
+@media (max-width: 1199px) {
+  .source__scroll {
+    height: min(60vh, 560px);
+  }
+}
+
+.source pre {
+  padding: 14px 18px 24px;
+  font: 400 0.8125rem / 1.6 var(--font-mono);
+  min-width: max-content;
+}
+
+/* copy button + tabs ----------------------------------------------------- */
+.copy {
+  flex: none;
+  height: 26px;
+  padding: 0 9px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--slate);
+  font: 600 var(--fs-0) / 1 var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+.copy:hover {
+  color: var(--ink);
+  border-color: var(--slate);
+}
+
+.copy[data-copied="true"] {
+  color: var(--blue-deep);
+  border-color: var(--blue);
+}
+
+/* on the dark surfaces */
+.source .copy,
+.state .copy {
+  background: transparent;
+  border-color: var(--rail-line);
+  color: var(--code-fg);
+}
+
+.source .copy:hover,
+.state .copy:hover {
+  border-color: var(--code-muted);
+  color: #ffffff;
+}
+
+.source .copy[data-copied="true"] {
+  color: var(--blue);
+  border-color: var(--blue);
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--line);
+}
+
+.tabs button {
+  padding: 9px 12px;
+  margin-bottom: -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--slate);
+  font: 600 var(--fs-1) / 1 var(--font-body);
+}
+
+.tabs button:hover {
+  color: var(--ink);
+}
+
+.tabs button[aria-selected="true"] {
+  color: var(--ink);
+  border-bottom-color: var(--blue);
+}
+
+/* code colours ------------------------------------------------------------
+   The TSX snippets come out of the build with shiki's dual-theme variables on every span
+   (`style="--shiki-light:#…;--shiki-dark:#…"`, see vite.config.ts); the page theme decides which
+   of the two is used. All code surfaces are dark, so "light" = One Dark on the light page and
+   "dark" = GitHub Dark on the dark page. */
+.shiki,
+.hljs {
+  color: var(--code-fg);
+  background: transparent;
+}
+
+.shiki span {
+  color: var(--shiki-light);
+  font-style: var(--shiki-light-font-style, normal);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .shiki span {
+    color: var(--shiki-dark);
+    font-style: var(--shiki-dark-font-style, normal);
+  }
+}
+
+:root[data-theme="dark"] .shiki span {
+  color: var(--shiki-dark);
+  font-style: var(--shiki-dark-font-style, normal);
+}
+
+/* the JSON state dumps (highlightJson.ts) use the same palette as the snippets */
+.hljs-attr {
+  color: var(--tok-attr);
+}
+
+.hljs-string {
+  color: var(--tok-string);
+}
+
+.hljs-number {
+  color: var(--tok-number);
+}
+
+.hljs-literal {
+  color: var(--tok-literal);
+}

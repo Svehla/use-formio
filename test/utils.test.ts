@@ -1,6 +1,13 @@
+import { describe, expect, it } from "vitest";
 import { formioUtils } from "../src/utils";
 
-const { getStableObjectValues, mapObjectValues, notNullable, promiseAllObjectValues } = formioUtils;
+const {
+  getStableObjectValues,
+  mapObjectValues,
+  notNullable,
+  promiseAllObjectValues,
+  shallowEqual
+} = formioUtils;
 
 describe("promiseAllObjectValues", () => {
   it("1", async () => {
@@ -16,6 +23,29 @@ describe("promiseAllObjectValues", () => {
       b: "b",
       c: "c"
     });
+  });
+});
+
+describe("promiseAllObjectValues", () => {
+  it("empty object and mixed promise / plain values", async () => {
+    expect(await promiseAllObjectValues({})).toEqual({});
+    expect(await promiseAllObjectValues({ a: Promise.resolve(1), b: 2 })).toEqual({ a: 1, b: 2 });
+  });
+});
+
+describe("shallowEqual", () => {
+  it("compares primitives with Object.is and objects one level deep", () => {
+    expect(shallowEqual(undefined, undefined)).toBe(true);
+    expect(shallowEqual(NaN, NaN)).toBe(true);
+    expect(shallowEqual("a", "a")).toBe(true);
+    expect(shallowEqual("a", "b")).toBe(false);
+    expect(shallowEqual(null, {})).toBe(false);
+    expect(shallowEqual({ a: 1, b: "x" }, { a: 1, b: "x" })).toBe(true);
+    expect(shallowEqual({ a: 1 }, { a: 1, b: undefined })).toBe(false);
+    expect(shallowEqual({ a: 1 }, { a: 2 })).toBe(false);
+    expect(shallowEqual({ a: {} }, { a: {} })).toBe(false);
+    expect(shallowEqual([1, 2], [1, 2])).toBe(true);
+    expect(shallowEqual([1, 2], { 0: 1, 1: 2 })).toBe(false);
   });
 });
 
@@ -69,6 +99,22 @@ describe("mapObjectValues", () => {
         c: "c-c"
       });
     });
+  });
+
+  it("stableKeyOrder keeps the key order of the input object in the result", () => {
+    const data = { c: 1, a: 2, b: 3 };
+    const visited: string[] = [];
+    const result = mapObjectValues(
+      (v, k) => {
+        visited.push(k);
+        return v * 2;
+      },
+      data,
+      { stableKeyOrder: true }
+    );
+    expect(visited).toEqual(["a", "b", "c"]);
+    expect(Object.keys(result)).toEqual(["c", "a", "b"]);
+    expect(result).toEqual({ c: 2, a: 4, b: 6 });
   });
 
   describe("check order", () => {

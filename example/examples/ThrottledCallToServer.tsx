@@ -1,20 +1,21 @@
 import * as React from "react";
 import { DEBUG_FormWrapper } from "../DEBUG_FormWrapper";
-import { useFormio } from "../../dist";
+import { useFormio } from "../../src";
 
 const delay = (time: number) => new Promise(res => setTimeout(res, time));
 
-const throttle = (func: Function, limit: number) => {
-  let lastFunc;
-  let lastRan;
-  return function(...args: any) {
+const throttle = <Args extends any[]>(func: (...args: Args) => void, limit: number) => {
+  let lastFunc: ReturnType<typeof setTimeout> | undefined;
+  let lastRan: number | undefined;
+
+  return (...args: Args) => {
     if (!lastRan) {
       func(...args);
       lastRan = Date.now();
     } else {
       clearTimeout(lastFunc);
-      lastFunc = setTimeout(function() {
-        if (Date.now() - lastRan >= limit) {
+      lastFunc = setTimeout(() => {
+        if (Date.now() - (lastRan as number) >= limit) {
           func(...args);
           lastRan = Date.now();
         }
@@ -41,17 +42,18 @@ export const ThrottledCallToServer = () => {
     setLoading(false);
   }, []);
 
-  const throttledFetchData = React.useCallback(throttle(fetchData, 1000), []);
+  const throttledFetchData = React.useMemo(() => throttle(fetchData, 1000), [fetchData]);
 
   return (
     <DEBUG_FormWrapper form={form}>
       <form onSubmit={async e => e.preventDefault()}>
         <label>
           Search
-          {loading && <span>(loading)</span>}
+          {loading && <span data-testid="ThrottledCallToServer-loading">(loading)</span>}
         </label>
         <input
           type="text"
+          data-testid="ThrottledCallToServer-search-input"
           onChange={e => {
             const newValue = e.target.value;
             form.fields.search.set(newValue);
@@ -60,12 +62,14 @@ export const ThrottledCallToServer = () => {
           value={form.fields.search.value}
         />
         {results.length > 0 && <div>we found:</div>}
-        <ul>
+        <ul data-testid="ThrottledCallToServer-result">
           {results.map((result, index) => (
             <li key={index}>{result}</li>
           ))}
         </ul>
-        <div>you did: {callsToServer} calls to server</div>
+        <div data-testid="ThrottledCallToServer-calls-count">
+          you did: {callsToServer} calls to server
+        </div>
       </form>
     </DEBUG_FormWrapper>
   );

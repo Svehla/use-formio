@@ -3,4 +3,7 @@
 node_modules
 .cache
 dist
+coverage
+.eslintcache
 __generated_examples__
+bench-results
