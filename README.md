@@ -1,6 +1,6 @@
 <div align="center">
 
-<a href="http://use-formio.svehlik.eu">
+<a href="https://svehla.github.io/use-formio/">
   <img src="https://raw.githubusercontent.com/Svehla/use-formio/main/example/assets/useformio-horizontal.svg" alt="use-formio" width="420" />
 </a>
 
@@ -11,7 +11,7 @@
 [![bundle size](https://img.shields.io/bundlephobia/minzip/use-formio?label=bundle)](https://bundlephobia.com/package/use-formio)
 [![license](https://img.shields.io/npm/l/use-formio.svg?color=blue)](./LICENSE)
 
-[**Interactive documentation → use-formio.svehlik.eu**](http://use-formio.svehlik.eu)
+[**Interactive documentation → svehla.github.io/use-formio**](https://svehla.github.io/use-formio/)
 
 </div>
 
@@ -508,7 +508,7 @@ later render is used by the next `validate()`, and a hook closing over fresh pro
 
 Every recipe below is a trimmed version of a runnable example in
 [`example/examples`](./example/examples); see them live at
-[use-formio.svehlik.eu](http://use-formio.svehlik.eu).
+[svehla.github.io/use-formio](https://svehla.github.io/use-formio/).
 
 ### Async validation
 

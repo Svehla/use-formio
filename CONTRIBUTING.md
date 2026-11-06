@@ -15,7 +15,8 @@ npm test
 
 The library itself is `src/` (five files, no dependencies). `test/` holds the unit, type-level and
 regression tests, `bench/` the benchmarks and performance gates, and `example/` the interactive
-docs app published at <http://use-formio.svehlik.eu>.
+docs app published at <https://svehla.github.io/use-formio/> (built and deployed by
+`.github/workflows/pages.yml` on every push to `main`).
 
 ## Scripts
 

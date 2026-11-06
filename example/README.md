@@ -1,6 +1,6 @@
 # use-formio — interactive docs (example app)
 
-The live docs site for `use-formio`: <http://use-formio.svehlik.eu>
+The live docs site for `use-formio`: <https://svehla.github.io/use-formio/>
 
 It is a [Vite](https://vite.dev) + React 19 + TypeScript single page app that renders every
 example twice — once as a **live, interactive form** and once as its **source code** — so the
