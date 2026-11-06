@@ -1,0 +1,54 @@
+name: Docs
+
+# builds the interactive docs (`example/`) and deploys them to https://svehla.github.io/use-formio/
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# a new push to the same branch/PR supersedes the previous run
+concurrency:
+  group: pages-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: example/package-lock.json
+
+      - name: Install example dependencies
+        working-directory: example
+        run: npm ci
+
+      # vite `base: "./"` keeps every URL relative, so the site works under /use-formio/
+      - name: Build the docs
+        working-directory: example
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: example/dist
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
