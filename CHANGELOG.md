@@ -5,7 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] — Unreleased
+## [2.0.1] — 2026-11-06
+
+### Changed
+
+- **The interactive docs moved to GitHub Pages:** <https://svehla.github.io/use-formio/>. The old
+  address, use-formio.svehlik.eu, is shut down. `homepage` in `package.json` and every README link
+  point to the new address; `.github/workflows/pages.yml` builds and deploys the docs on every push
+  to `main`. No code changes.
+
+## [2.0.0] — 2026-09-07
 
 The form state moved out of `useState` into a component-local external store read through
 `useSyncExternalStore`. That single change is what makes the rest of this release possible: reads
@@ -183,5 +192,6 @@ shouldChangeValue }` entry (a base `shouldChangeValue` silently disappeared), th
 
 _Baseline release; earlier history is not documented._
 
-[2.0.0]: https://github.com/Svehla/use-formio/compare/v1.0.6...HEAD
+[2.0.1]: https://github.com/Svehla/use-formio/compare/v2.0.0...v2.0.1
+[2.0.0]: https://github.com/Svehla/use-formio/compare/v1.0.6...v2.0.0
 [1.0.6]: https://github.com/Svehla/use-formio/releases/tag/v1.0.6

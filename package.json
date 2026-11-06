@@ -1,6 +1,6 @@
 {
   "name": "use-formio",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Tiny, fully type-inferred React form state hook — sync + async validation, zero dependencies, no form components",
   "keywords": [
     "react",
